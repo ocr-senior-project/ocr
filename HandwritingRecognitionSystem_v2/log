@@ -1,0 +1,21 @@
+Initializing...
+
+######################################################
+Training Data
+Epoch 0, Batch: 0, Loss: 1027.016235, Error: 2.306080, Good
+Epoch 0, Batch: 1, Loss: 575.578613, Error: 0.818913, Good
+Training loss: 801.297424, Training error: 1.562497
+Training imporving.
+
+Validation Data
+Batch: 0, Loss: 283.148010, Error: 0.978678
+Batch: 1, Loss: 305.819885, Error: 0.980198
+Validation loss: 294.483948, Validation error: 0.979438
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+[Error/Interruption] 
+Clossing TF Session...
+Terminating Program...
