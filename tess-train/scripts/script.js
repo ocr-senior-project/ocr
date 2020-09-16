@@ -5,7 +5,7 @@ Date: 16 September 2020
 ============================================================================= */
 
 // there is only one file in the directory. this is basically test code
-const src = "images/780.png";
+const src = "images/matricula_p9-page-001.jpg";
 
 // the amount of padding on the left and top of the canvas
 const pad = 10;
@@ -19,7 +19,7 @@ let cvs = document.getElementById("canvas"),
 
 // create image
 let img = new Image();
-img.src = "images/780.png";
+img.src = src;
 
 // the first x and y coords that are clicked
 let firstX, firstY;
