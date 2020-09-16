@@ -46,6 +46,8 @@ function loadImage() {
 
 // log the coords to the console
 function mdFunc(event) {
+  ctx.clearRect(0, 0, cvs.width, cvs.height); // get rid of everything on the canvas
+  loadImage(); // reload the image
   firstX = event.pageX;
   firstY = event.pageY;
 }
