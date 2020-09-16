@@ -164,9 +164,11 @@ try:
 
 			LogFile.write("Epoch %d, Batch: %d, Loss: %.6f, Error: %.6f, " % (epoch, batch, Loss, Error))
 
-			if currTrainLoss < Loss: LogFile.write("Bad\n")
-			else: LogFile.write("Good\n")
-
+			if currTrainLoss < Loss:
+				LogFile.write("Bad\n")
+			else:
+				LogFile.write("Good\n")
+				
 			start += cfg.BatchSize
 			end += cfg.BatchSize
 			batch += 1
@@ -178,16 +180,16 @@ try:
 
 		if TrainingLoss < currTrainLoss:
 			currTrainLoss = TrainingLoss
-			LogFile.write("Training imporving.\n")
+			LogFile.write("Training improving.\n")
 		else:
-			LogFile.write("Training not imporving.\n")
+			LogFile.write("Training not improving.\n")
 
 		if (epoch + 1) % cfg.SaveEachNEpochs == 0:
 			SaveModel(session, cfg.SaveDir+'/'+cfg.ModelName, epoch)
 
 		if (cfg.VAL_NB > 0):
 
-			LogFile.write("\nValidation Data\n");
+			LogFile.write("\nValidation Data\n")
 
 			session.run(tf.compat.v1.assign(phase_train, False))
 
