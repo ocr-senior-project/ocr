@@ -70,7 +70,8 @@ function muFunc(event) {
     firstX = swap;
   }
 
-  console.log(firstX, firstY, x, y);
+  console.log("Tesseract training boundary box coordinates:");
+  console.log(firstX, firstY, x, y, "0");
 
   // find the absolute distance between the mouse down and mouse up locations
   let distX = Math.abs(firstX - x),
