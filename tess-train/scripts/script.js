@@ -46,20 +46,13 @@ function loadImage() {
 
 // log the coords to the console
 function mdFunc(event) {
-  firstX = event.pageX - pad;
-  firstY = event.pageY - pad;
+  firstX = event.pageX;
+  firstY = event.pageY;
 }
 
 function muFunc(event) {
   let x = event.pageX;
   let y = event.pageY;
-
-  // the first x needs to be on the left
-  if (firstX > x) {
-    let swap = x;
-    x = firstX;
-    firstX = swap;
-  }
 
   // the first y needs to be on the bottom
   if (firstY < y) {
@@ -68,34 +61,42 @@ function muFunc(event) {
     firstY = swap;
   }
 
+  // the first x needs to be on the left
+  if (firstX > x) {
+    let swap = x;
+    x = firstX;
+    firstX = swap;
+  }
+
   console.log(firstX, firstY, x, y);
+
+  // find the absolute distance between the mouse down and mouse up locations
+  let distX = Math.abs(firstX - x),
+    distY = Math.abs(firstY - y);
 
   // draw a rectangle
   ctx.beginPath;
+  // draw the vertical lines
   // left boundary
-  ctx.rect(
-    firstX - outline,
-    firstY - outline,
-    outline,
-    y - firstY - pad + outline
-  );
+  ctx.rect(firstX - outline - pad, y - pad, outline, distY + 2 * outline);
 
+  // right boundary
+  ctx.rect(x - pad, y - pad, outline, distY + 2 * outline);
+
+  // draw the horizontal lines
   // top boundary
   ctx.rect(
-    firstX - outline,
-    firstY - outline,
-    x - firstX - pad + outline,
+    firstX - pad - outline,
+    y - pad - outline,
+    distX + 2 * outline,
     outline
   );
 
-  // right boundary
-  ctx.rect(x - pad, firstY - outline, outline, y - firstY - pad + outline);
-
   // bottom boundary
   ctx.rect(
-    firstX - outline,
-    y - pad - outline,
-    x - firstX - pad + outline,
+    firstX - pad - outline,
+    firstY - pad + outline,
+    distX + 2 * outline,
     outline
   );
   ctx.fill();
