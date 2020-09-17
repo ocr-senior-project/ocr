@@ -5,7 +5,7 @@ Date: 16 September 2020
 ============================================================================= */
 
 // there is only one file in the directory. this is basically test code
-const src = "images/matricula_p9-page-001.jpg";
+const src = "images/p9_r1.png";
 
 // the amount of padding on the left and top of the canvas
 const pad = 10;
