@@ -1,0 +1,6 @@
+000033/MATRICULA.line1pg9 P i
+000033/MATRICULA.line2pg9 P l
+000033/MATRICULA.line3pg9 ic i s o o ra aaaaaaaa a a a a daa a a eda
+000033/MATRICULA.line4pg9 X l l xii e e e e e e
+000033/MATRICULA.line4pg12 Xiele
+000033/MATRICULA.line5pg12 i i i i i iaaaaaaaaa a a d d d d da

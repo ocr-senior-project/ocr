@@ -18,8 +18,11 @@ def label_to_text(relativepath):
     text = text.replace('<SPACE>', ' ')
     return text
 
-def text_to_label(text):
+def text_to_label(relativepath):
     """ Converts a text string into a string of indices of the chars in CHAR_LIST """
+    with open(relativepath) as f:
+        text = f.read()
+    print(text)
     label = ''
     for letter in text:
         if letter == ' ':
@@ -31,10 +34,14 @@ def text_to_label(text):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Convert text file to label string.')
+    parser = argparse.ArgumentParser(description='Convert text file to label string or vice versa.')
     parser.add_argument('relativepath', type=str,
-                        help='the relative path to the text file.')
+                        help='the relative path to the file.')
+    parser.add_argument('textorlabel', type=str,
+                        help='"text" if the input is a .txt file, any other input will assume a label file.')
     args = parser.parse_args()
-    text = label_to_text(args.relativepath)
-    print(text)
-    print(text_to_label(text))
+    if args.textorlabel == 'text':
+        result = text_to_label(args.relativepath)
+    else:
+        result = label_to_text(args.relativepath)
+    print(result)
