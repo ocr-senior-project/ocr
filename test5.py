@@ -76,6 +76,8 @@ class Ui_test:
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\',"Image files (*.jpeg *.pdf)")
         #dir = QtWidgets.QFileDialog.getExistingDirectory()
         #print(dir)
+        if not fname[0]:
+            return
         images = convert_from_path(fname[0])
         images[0].save('out.jpg','JPEG')
         resized = resize_image('out.jpg')
