@@ -6801,4 +6801,3066 @@ Validation improving.
 
 ######################################################
 Training Data
-Epoch 115, Batch: 0, Loss: 41.842194, Error: 0.152318, 
+Epoch 115, Batch: 0, Loss: 41.842194, Error: 0.152318, Initializing...
+
+######################################################
+Training Data
+Epoch 0, Batch: 0, Loss: 551.594238, Error: 0.967105, Good
+Epoch 0, Batch: 1, Loss: 441.999329, Error: 0.709677, Good
+Training loss: 496.796783, Training error: 0.838391
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 367.517822, Error: 0.782895
+Batch: 1, Loss: 375.019897, Error: 0.800000
+Validation loss: 371.268860, Validation error: 0.791447
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 1, Batch: 0, Loss: 340.304504, Error: 0.788079, Good
+Epoch 1, Batch: 1, Loss: 318.980804, Error: 0.814103, Good
+Training loss: 329.642639, Training error: 0.801091
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 284.877625, Error: 0.796053
+Batch: 1, Loss: 297.318542, Error: 0.806452
+Validation loss: 291.098083, Validation error: 0.801252
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 2, Batch: 0, Loss: 291.994690, Error: 0.807947, Good
+Epoch 2, Batch: 1, Loss: 271.057312, Error: 0.788462, Good
+Training loss: 281.526001, Training error: 0.798204
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 253.007690, Error: 0.756579
+Batch: 1, Loss: 265.026917, Error: 0.761290
+Validation loss: 259.017303, Validation error: 0.758935
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 3, Batch: 0, Loss: 258.191589, Error: 0.750000, Good
+Epoch 3, Batch: 1, Loss: 251.890930, Error: 0.761589, Good
+Training loss: 255.041260, Training error: 0.755795
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 235.456833, Error: 0.809211
+Batch: 1, Loss: 251.261826, Error: 0.845161
+Validation loss: 243.359329, Validation error: 0.827186
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 4, Batch: 0, Loss: 251.329514, Error: 0.845161, Good
+Epoch 4, Batch: 1, Loss: 229.389252, Error: 0.789474, Good
+Training loss: 240.359375, Training error: 0.817317
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 223.944489, Error: 0.789474
+Batch: 1, Loss: 239.134644, Error: 0.793548
+Validation loss: 231.539566, Validation error: 0.791511
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 5, Batch: 0, Loss: 223.960968, Error: 0.789474, Good
+Epoch 5, Batch: 1, Loss: 239.074738, Error: 0.800000, Good
+Training loss: 231.517853, Training error: 0.794737
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 216.824814, Error: 0.789474
+Batch: 1, Loss: 235.912003, Error: 0.793548
+Validation loss: 226.368408, Validation error: 0.791511
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 6, Batch: 0, Loss: 224.903198, Error: 0.788462, Good
+Epoch 6, Batch: 1, Loss: 225.635040, Error: 0.794702, Good
+Training loss: 225.269119, Training error: 0.791582
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 212.549500, Error: 0.789474
+Batch: 1, Loss: 230.264740, Error: 0.780645
+Validation loss: 221.407120, Validation error: 0.785059
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 7, Batch: 0, Loss: 230.256409, Error: 0.793548, Bad
+Epoch 7, Batch: 1, Loss: 213.045959, Error: 0.750000, Good
+Training loss: 221.651184, Training error: 0.771774
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 212.117218, Error: 0.750000
+Batch: 1, Loss: 225.982834, Error: 0.761290
+Validation loss: 219.050018, Validation error: 0.755645
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 8, Batch: 0, Loss: 214.916595, Error: 0.750000, Good
+Epoch 8, Batch: 1, Loss: 225.687714, Error: 0.768212, Bad
+Training loss: 220.302155, Training error: 0.759106
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 209.842346, Error: 0.776316
+Batch: 1, Loss: 224.482620, Error: 0.774194
+Validation loss: 217.162476, Validation error: 0.775255
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 9, Batch: 0, Loss: 216.899811, Error: 0.775641, Good
+Epoch 9, Batch: 1, Loss: 216.949203, Error: 0.794702, Good
+Training loss: 216.924500, Training error: 0.785172
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 207.475830, Error: 0.789474
+Batch: 1, Loss: 224.189407, Error: 0.793548
+Validation loss: 215.832611, Validation error: 0.791511
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 10, Batch: 0, Loss: 215.860474, Error: 0.788462, Good
+Epoch 10, Batch: 1, Loss: 215.285370, Error: 0.794702, Good
+Training loss: 215.572922, Training error: 0.791582
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 205.851898, Error: 0.789474
+Batch: 1, Loss: 222.961151, Error: 0.793548
+Validation loss: 214.406525, Validation error: 0.791511
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 11, Batch: 0, Loss: 216.137283, Error: 0.781457, Bad
+Epoch 11, Batch: 1, Loss: 216.257568, Error: 0.782051, Bad
+Training loss: 216.197418, Training error: 0.781754
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 207.173248, Error: 0.730263
+Batch: 1, Loss: 222.897614, Error: 0.722581
+Validation loss: 215.035431, Validation error: 0.726422
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 12, Batch: 0, Loss: 222.872986, Error: 0.716129, Bad
+Epoch 12, Batch: 1, Loss: 207.341309, Error: 0.756579, Good
+Training loss: 215.107147, Training error: 0.736354
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 206.203613, Error: 0.776316
+Batch: 1, Loss: 219.744019, Error: 0.780645
+Validation loss: 212.973816, Validation error: 0.778480
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 13, Batch: 0, Loss: 215.294113, Error: 0.782051, Bad
+Epoch 13, Batch: 1, Loss: 210.749756, Error: 0.788079, Good
+Training loss: 213.021942, Training error: 0.785065
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 204.986740, Error: 0.789474
+Batch: 1, Loss: 218.306885, Error: 0.780645
+Validation loss: 211.646820, Validation error: 0.785059
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 14, Batch: 0, Loss: 213.023621, Error: 0.782051, Bad
+Epoch 14, Batch: 1, Loss: 210.910706, Error: 0.788079, Good
+Training loss: 211.967163, Training error: 0.785065
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 204.533569, Error: 0.789474
+Batch: 1, Loss: 217.630096, Error: 0.780645
+Validation loss: 211.081833, Validation error: 0.785059
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 15, Batch: 0, Loss: 211.822327, Error: 0.782051, Good
+Epoch 15, Batch: 1, Loss: 210.447998, Error: 0.788079, Good
+Training loss: 211.135162, Training error: 0.785065
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 203.153198, Error: 0.782895
+Batch: 1, Loss: 216.389420, Error: 0.774194
+Validation loss: 209.771301, Validation error: 0.778544
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 16, Batch: 0, Loss: 212.248856, Error: 0.761589, Bad
+Epoch 16, Batch: 1, Loss: 211.870728, Error: 0.782051, Bad
+Training loss: 212.059784, Training error: 0.771820
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 202.825150, Error: 0.756579
+Batch: 1, Loss: 215.216812, Error: 0.767742
+Validation loss: 209.020981, Validation error: 0.762160
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 17, Batch: 0, Loss: 210.226791, Error: 0.762821, Good
+Epoch 17, Batch: 1, Loss: 207.620178, Error: 0.768212, Good
+Training loss: 208.923492, Training error: 0.765516
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 201.850250, Error: 0.782895
+Batch: 1, Loss: 213.461151, Error: 0.767742
+Validation loss: 207.655701, Validation error: 0.775318
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 18, Batch: 0, Loss: 208.438477, Error: 0.775641, Good
+Epoch 18, Batch: 1, Loss: 206.105103, Error: 0.748344, Good
+Training loss: 207.271790, Training error: 0.761993
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 200.021606, Error: 0.736842
+Batch: 1, Loss: 211.753540, Error: 0.729032
+Validation loss: 205.887573, Validation error: 0.732937
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 19, Batch: 0, Loss: 200.062805, Error: 0.736842, Good
+Epoch 19, Batch: 1, Loss: 211.914871, Error: 0.729032, Bad
+Training loss: 205.988831, Training error: 0.732937
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 198.442688, Error: 0.717105
+Batch: 1, Loss: 210.618744, Error: 0.709677
+Validation loss: 204.530716, Validation error: 0.713391
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 20, Batch: 0, Loss: 198.462570, Error: 0.717105, Good
+Epoch 20, Batch: 1, Loss: 210.834885, Error: 0.709677, Bad
+Training loss: 204.648727, Training error: 0.713391
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 197.514954, Error: 0.723684
+Batch: 1, Loss: 209.111755, Error: 0.703226
+Validation loss: 203.313354, Validation error: 0.713455
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 21, Batch: 0, Loss: 209.121475, Error: 0.703226, Bad
+Epoch 21, Batch: 1, Loss: 199.192596, Error: 0.703947, Good
+Training loss: 204.157043, Training error: 0.703587
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 199.164001, Error: 0.723684
+Batch: 1, Loss: 217.136673, Error: 0.767742
+Validation loss: 208.150330, Validation error: 0.745713
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 22, Batch: 0, Loss: 205.010834, Error: 0.748344, Bad
+Epoch 22, Batch: 1, Loss: 217.133865, Error: 0.756410, Bad
+Training loss: 211.072357, Training error: 0.752377
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 197.779327, Error: 0.710526
+Batch: 1, Loss: 218.545929, Error: 0.774194
+Validation loss: 208.162628, Validation error: 0.742360
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 23, Batch: 0, Loss: 214.407043, Error: 0.762821, Bad
+Epoch 23, Batch: 1, Loss: 202.859253, Error: 0.735099, Good
+Training loss: 208.633148, Training error: 0.748960
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 198.884064, Error: 0.736842
+Batch: 1, Loss: 209.672089, Error: 0.735484
+Validation loss: 204.278076, Validation error: 0.736163
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 24, Batch: 0, Loss: 210.057281, Error: 0.716129, Bad
+Epoch 24, Batch: 1, Loss: 198.740387, Error: 0.723684, Good
+Training loss: 204.398834, Training error: 0.719907
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 199.985107, Error: 0.723684
+Batch: 1, Loss: 207.621307, Error: 0.696774
+Validation loss: 203.803207, Validation error: 0.710229
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 25, Batch: 0, Loss: 209.974030, Error: 0.741722, Bad
+Epoch 25, Batch: 1, Loss: 202.669617, Error: 0.756410, Good
+Training loss: 206.321823, Training error: 0.749066
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 196.915192, Error: 0.756579
+Batch: 1, Loss: 207.577393, Error: 0.767742
+Validation loss: 202.246292, Validation error: 0.762160
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 26, Batch: 0, Loss: 207.554062, Error: 0.767742, Bad
+Epoch 26, Batch: 1, Loss: 197.787247, Error: 0.723684, Good
+Training loss: 202.670654, Training error: 0.745713
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 196.997437, Error: 0.710526
+Batch: 1, Loss: 205.398712, Error: 0.735484
+Validation loss: 201.198074, Validation error: 0.723005
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 27, Batch: 0, Loss: 199.135727, Error: 0.715232, Good
+Epoch 27, Batch: 1, Loss: 204.024811, Error: 0.724359, Bad
+Training loss: 201.580261, Training error: 0.719795
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 195.706512, Error: 0.717105
+Batch: 1, Loss: 204.481903, Error: 0.716129
+Validation loss: 200.094208, Validation error: 0.716617
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 28, Batch: 0, Loss: 195.801575, Error: 0.717105, Good
+Epoch 28, Batch: 1, Loss: 204.679260, Error: 0.696774, Bad
+Training loss: 200.240417, Training error: 0.706940
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 194.474045, Error: 0.684211
+Batch: 1, Loss: 203.877014, Error: 0.677419
+Validation loss: 199.175537, Validation error: 0.680815
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 29, Batch: 0, Loss: 198.418594, Error: 0.647436, Good
+Epoch 29, Batch: 1, Loss: 199.296448, Error: 0.721854, Good
+Training loss: 198.857513, Training error: 0.684645
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 194.491257, Error: 0.703947
+Batch: 1, Loss: 201.904999, Error: 0.703226
+Validation loss: 198.198120, Validation error: 0.703587
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 30, Batch: 0, Loss: 201.752319, Error: 0.703226, Bad
+Epoch 30, Batch: 1, Loss: 195.609940, Error: 0.710526, Good
+Training loss: 198.681122, Training error: 0.706876
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 194.985306, Error: 0.703947
+Batch: 1, Loss: 210.537292, Error: 0.748387
+Validation loss: 202.761292, Validation error: 0.726167
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 31, Batch: 0, Loss: 195.021942, Error: 0.703947, Good
+Epoch 31, Batch: 1, Loss: 208.235413, Error: 0.735484, Bad
+Training loss: 201.628677, Training error: 0.719716
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 192.805817, Error: 0.671053
+Batch: 1, Loss: 200.906158, Error: 0.690323
+Validation loss: 196.855988, Validation error: 0.680688
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 32, Batch: 0, Loss: 200.479126, Error: 0.677419, Bad
+Epoch 32, Batch: 1, Loss: 192.947342, Error: 0.677632, Good
+Training loss: 196.713226, Training error: 0.677525
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 192.176727, Error: 0.703947
+Batch: 1, Loss: 201.178497, Error: 0.677419
+Validation loss: 196.677612, Validation error: 0.690683
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 33, Batch: 0, Loss: 201.858185, Error: 0.728477, Bad
+Epoch 33, Batch: 1, Loss: 195.166046, Error: 0.685897, Good
+Training loss: 198.512115, Training error: 0.707187
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 191.802673, Error: 0.671053
+Batch: 1, Loss: 200.884491, Error: 0.645161
+Validation loss: 196.343582, Validation error: 0.658107
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 34, Batch: 0, Loss: 194.390808, Error: 0.660256, Good
+Epoch 34, Batch: 1, Loss: 197.121506, Error: 0.662252, Bad
+Training loss: 195.756165, Training error: 0.661254
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 191.756622, Error: 0.684211
+Batch: 1, Loss: 200.193634, Error: 0.651613
+Validation loss: 195.975128, Validation error: 0.667912
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 35, Batch: 0, Loss: 197.537338, Error: 0.660256, Bad
+Epoch 35, Batch: 1, Loss: 194.496124, Error: 0.715232, Good
+Training loss: 196.016724, Training error: 0.687744
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 191.495972, Error: 0.730263
+Batch: 1, Loss: 197.129852, Error: 0.690323
+Validation loss: 194.312912, Validation error: 0.710293
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 36, Batch: 0, Loss: 194.563782, Error: 0.705128, Good
+Epoch 36, Batch: 1, Loss: 193.685852, Error: 0.721854, Good
+Training loss: 194.124817, Training error: 0.713491
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 193.867126, Error: 0.703947
+Batch: 1, Loss: 195.296692, Error: 0.664516
+Validation loss: 194.581909, Validation error: 0.684232
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 37, Batch: 0, Loss: 192.561127, Error: 0.666667, Good
+Epoch 37, Batch: 1, Loss: 195.410828, Error: 0.701987, Bad
+Training loss: 193.985977, Training error: 0.684327
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 190.309814, Error: 0.703947
+Batch: 1, Loss: 193.095917, Error: 0.690323
+Validation loss: 191.702866, Validation error: 0.697135
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 38, Batch: 0, Loss: 191.461334, Error: 0.666667, Good
+Epoch 38, Batch: 1, Loss: 192.272339, Error: 0.721854, Good
+Training loss: 191.866837, Training error: 0.694260
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 191.355927, Error: 0.684211
+Batch: 1, Loss: 191.448227, Error: 0.670968
+Validation loss: 191.402069, Validation error: 0.677589
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 39, Batch: 0, Loss: 190.328506, Error: 0.677632, Good
+Epoch 39, Batch: 1, Loss: 191.441345, Error: 0.670968, Good
+Training loss: 190.884918, Training error: 0.674300
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 187.769516, Error: 0.690789
+Batch: 1, Loss: 190.679840, Error: 0.677419
+Validation loss: 189.224670, Validation error: 0.684104
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 40, Batch: 0, Loss: 195.194992, Error: 0.711538, Bad
+Epoch 40, Batch: 1, Loss: 190.966644, Error: 0.708609, Bad
+Training loss: 193.080811, Training error: 0.710074
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 188.654663, Error: 0.684211
+Batch: 1, Loss: 189.389008, Error: 0.690323
+Validation loss: 189.021835, Validation error: 0.687267
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 41, Batch: 0, Loss: 189.031982, Error: 0.690323, Good
+Epoch 41, Batch: 1, Loss: 189.586594, Error: 0.677632, Good
+Training loss: 189.309296, Training error: 0.683977
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 188.277985, Error: 0.684211
+Batch: 1, Loss: 187.923172, Error: 0.703226
+Validation loss: 188.100586, Validation error: 0.693718
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 42, Batch: 0, Loss: 188.257812, Error: 0.677632, Good
+Epoch 42, Batch: 1, Loss: 188.597977, Error: 0.683871, Good
+Training loss: 188.427887, Training error: 0.680751
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 185.858231, Error: 0.664474
+Batch: 1, Loss: 187.173859, Error: 0.658065
+Validation loss: 186.516052, Validation error: 0.661269
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 43, Batch: 0, Loss: 186.064667, Error: 0.695364, Good
+Epoch 43, Batch: 1, Loss: 194.121353, Error: 0.660256, Bad
+Training loss: 190.093018, Training error: 0.677810
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 188.073425, Error: 0.664474
+Batch: 1, Loss: 188.146240, Error: 0.645161
+Validation loss: 188.109833, Validation error: 0.654817
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 44, Batch: 0, Loss: 187.992828, Error: 0.671053, Good
+Epoch 44, Batch: 1, Loss: 187.734177, Error: 0.632258, Good
+Training loss: 187.863495, Training error: 0.651655
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 186.163940, Error: 0.684211
+Batch: 1, Loss: 185.098663, Error: 0.664516
+Validation loss: 185.631302, Validation error: 0.674363
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 45, Batch: 0, Loss: 186.745605, Error: 0.653846, Good
+Epoch 45, Batch: 1, Loss: 184.928253, Error: 0.701987, Good
+Training loss: 185.836929, Training error: 0.677916
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 186.161804, Error: 0.664474
+Batch: 1, Loss: 184.603821, Error: 0.670968
+Validation loss: 185.382812, Validation error: 0.667721
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 46, Batch: 0, Loss: 186.144806, Error: 0.666667, Bad
+Epoch 46, Batch: 1, Loss: 184.623749, Error: 0.662252, Good
+Training loss: 185.384277, Training error: 0.664459
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 185.265366, Error: 0.631579
+Batch: 1, Loss: 182.283722, Error: 0.638710
+Validation loss: 183.774536, Validation error: 0.635144
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 47, Batch: 0, Loss: 182.079086, Error: 0.651613, Good
+Epoch 47, Batch: 1, Loss: 185.399078, Error: 0.671053, Bad
+Training loss: 183.739075, Training error: 0.661333
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 184.043884, Error: 0.677632
+Batch: 1, Loss: 182.221985, Error: 0.670968
+Validation loss: 183.132935, Validation error: 0.674300
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 48, Batch: 0, Loss: 185.451462, Error: 0.673077, Bad
+Epoch 48, Batch: 1, Loss: 181.548721, Error: 0.635762, Good
+Training loss: 183.500092, Training error: 0.654419
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 183.024750, Error: 0.664474
+Batch: 1, Loss: 183.270691, Error: 0.658065
+Validation loss: 183.147720, Validation error: 0.661269
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 49, Batch: 0, Loss: 181.132874, Error: 0.645161, Good
+Epoch 49, Batch: 1, Loss: 182.624481, Error: 0.638158, Good
+Training loss: 181.878677, Training error: 0.641660
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 181.878754, Error: 0.651316
+Batch: 1, Loss: 187.688126, Error: 0.716129
+Validation loss: 184.783447, Validation error: 0.683722
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 50, Batch: 0, Loss: 190.922241, Error: 0.698718, Bad
+Epoch 50, Batch: 1, Loss: 177.874390, Error: 0.688742, Good
+Training loss: 184.398315, Training error: 0.693730
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 179.462570, Error: 0.657895
+Batch: 1, Loss: 181.219086, Error: 0.670968
+Validation loss: 180.340820, Validation error: 0.664431
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 51, Batch: 0, Loss: 179.178757, Error: 0.695364, Good
+Epoch 51, Batch: 1, Loss: 183.896942, Error: 0.641026, Bad
+Training loss: 181.537842, Training error: 0.668195
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 178.094330, Error: 0.657895
+Batch: 1, Loss: 181.330200, Error: 0.645161
+Validation loss: 179.712265, Validation error: 0.651528
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 52, Batch: 0, Loss: 179.683975, Error: 0.638710, Good
+Epoch 52, Batch: 1, Loss: 178.968750, Error: 0.657895, Good
+Training loss: 179.326355, Training error: 0.648302
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 177.762360, Error: 0.657895
+Batch: 1, Loss: 177.022552, Error: 0.651613
+Validation loss: 177.392456, Validation error: 0.654754
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 53, Batch: 0, Loss: 176.187897, Error: 0.675497, Good
+Epoch 53, Batch: 1, Loss: 179.738495, Error: 0.647436, Bad
+Training loss: 177.963196, Training error: 0.661466
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 176.122940, Error: 0.638158
+Batch: 1, Loss: 176.131989, Error: 0.670968
+Validation loss: 176.127472, Validation error: 0.654563
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 54, Batch: 0, Loss: 180.306427, Error: 0.660256, Bad
+Epoch 54, Batch: 1, Loss: 172.330597, Error: 0.615894, Good
+Training loss: 176.318512, Training error: 0.638075
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 176.603333, Error: 0.631579
+Batch: 1, Loss: 173.646896, Error: 0.606452
+Validation loss: 175.125122, Validation error: 0.619015
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 55, Batch: 0, Loss: 174.737701, Error: 0.649007, Good
+Epoch 55, Batch: 1, Loss: 177.644745, Error: 0.596154, Bad
+Training loss: 176.191223, Training error: 0.622580
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 176.758987, Error: 0.644737
+Batch: 1, Loss: 175.054672, Error: 0.619355
+Validation loss: 175.906830, Validation error: 0.632046
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 56, Batch: 0, Loss: 174.770386, Error: 0.642384, Good
+Epoch 56, Batch: 1, Loss: 173.488495, Error: 0.621795, Good
+Training loss: 174.129440, Training error: 0.632089
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 174.985352, Error: 0.631579
+Batch: 1, Loss: 172.922943, Error: 0.658065
+Validation loss: 173.954147, Validation error: 0.644822
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 57, Batch: 0, Loss: 171.984863, Error: 0.651613, Good
+Epoch 57, Batch: 1, Loss: 174.849915, Error: 0.638158, Bad
+Training loss: 173.417389, Training error: 0.644885
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 173.375092, Error: 0.618421
+Batch: 1, Loss: 169.474487, Error: 0.625806
+Validation loss: 171.424789, Validation error: 0.622114
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 58, Batch: 0, Loss: 170.737930, Error: 0.596154, Good
+Epoch 58, Batch: 1, Loss: 176.841888, Error: 0.655629, Bad
+Training loss: 173.789917, Training error: 0.625892
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 172.069611, Error: 0.651316
+Batch: 1, Loss: 169.038452, Error: 0.619355
+Validation loss: 170.554031, Validation error: 0.635335
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 59, Batch: 0, Loss: 167.433884, Error: 0.615385, Good
+Epoch 59, Batch: 1, Loss: 173.145264, Error: 0.642384, Good
+Training loss: 170.289581, Training error: 0.628884
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 171.485931, Error: 0.625000
+Batch: 1, Loss: 165.383255, Error: 0.619355
+Validation loss: 168.434601, Validation error: 0.622177
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 60, Batch: 0, Loss: 170.511826, Error: 0.625000, Bad
+Epoch 60, Batch: 1, Loss: 166.116257, Error: 0.619355, Good
+Training loss: 168.314041, Training error: 0.622177
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 168.445587, Error: 0.644737
+Batch: 1, Loss: 164.025711, Error: 0.593548
+Validation loss: 166.235657, Validation error: 0.619143
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 61, Batch: 0, Loss: 161.834900, Error: 0.609272, Good
+Epoch 61, Batch: 1, Loss: 169.242706, Error: 0.621795, Bad
+Training loss: 165.538803, Training error: 0.615533
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 166.790802, Error: 0.625000
+Batch: 1, Loss: 163.935944, Error: 0.593548
+Validation loss: 165.363373, Validation error: 0.609274
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 62, Batch: 0, Loss: 165.725128, Error: 0.618421, Bad
+Epoch 62, Batch: 1, Loss: 163.872070, Error: 0.587097, Good
+Training loss: 164.798599, Training error: 0.602759
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 163.723389, Error: 0.592105
+Batch: 1, Loss: 160.375580, Error: 0.580645
+Validation loss: 162.049484, Validation error: 0.586375
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 63, Batch: 0, Loss: 163.051849, Error: 0.609272, Good
+Epoch 63, Batch: 1, Loss: 163.871246, Error: 0.538462, Good
+Training loss: 163.461548, Training error: 0.573867
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 164.982300, Error: 0.605263
+Batch: 1, Loss: 163.276245, Error: 0.580645
+Validation loss: 164.129272, Validation error: 0.592954
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 64, Batch: 0, Loss: 161.724228, Error: 0.562914, Good
+Epoch 64, Batch: 1, Loss: 165.292206, Error: 0.608974, Bad
+Training loss: 163.508209, Training error: 0.585944
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 163.541046, Error: 0.638158
+Batch: 1, Loss: 157.239853, Error: 0.574194
+Validation loss: 160.390442, Validation error: 0.606176
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 65, Batch: 0, Loss: 159.196075, Error: 0.589744, Good
+Epoch 65, Batch: 1, Loss: 161.226166, Error: 0.622517, Good
+Training loss: 160.211121, Training error: 0.606130
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 163.939026, Error: 0.572368
+Batch: 1, Loss: 154.502151, Error: 0.561290
+Validation loss: 159.220581, Validation error: 0.566829
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 66, Batch: 0, Loss: 157.007141, Error: 0.551282, Good
+Epoch 66, Batch: 1, Loss: 159.102966, Error: 0.589404, Good
+Training loss: 158.055054, Training error: 0.570343
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 160.372620, Error: 0.578947
+Batch: 1, Loss: 152.059296, Error: 0.554839
+Validation loss: 156.215958, Validation error: 0.566893
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 67, Batch: 0, Loss: 158.013489, Error: 0.582781, Good
+Epoch 67, Batch: 1, Loss: 154.540451, Error: 0.551282, Good
+Training loss: 156.276978, Training error: 0.567032
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 158.931442, Error: 0.598684
+Batch: 1, Loss: 152.074829, Error: 0.554839
+Validation loss: 155.503143, Validation error: 0.576761
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 68, Batch: 0, Loss: 157.666000, Error: 0.602564, Bad
+Epoch 68, Batch: 1, Loss: 156.932678, Error: 0.556291, Bad
+Training loss: 157.299347, Training error: 0.579428
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 157.384186, Error: 0.598684
+Batch: 1, Loss: 149.412231, Error: 0.548387
+Validation loss: 153.398209, Validation error: 0.573536
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 69, Batch: 0, Loss: 150.287384, Error: 0.562914, Good
+Epoch 69, Batch: 1, Loss: 156.344513, Error: 0.589744, Bad
+Training loss: 153.315948, Training error: 0.576329
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 157.806732, Error: 0.618421
+Batch: 1, Loss: 155.605804, Error: 0.580645
+Validation loss: 156.706268, Validation error: 0.599533
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 70, Batch: 0, Loss: 155.471649, Error: 0.609272, Bad
+Epoch 70, Batch: 1, Loss: 152.733398, Error: 0.570513, Good
+Training loss: 154.102524, Training error: 0.589892
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 157.552521, Error: 0.625000
+Batch: 1, Loss: 150.534576, Error: 0.567742
+Validation loss: 154.043549, Validation error: 0.596371
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 71, Batch: 0, Loss: 152.692688, Error: 0.596026, Good
+Epoch 71, Batch: 1, Loss: 148.892792, Error: 0.570513, Good
+Training loss: 150.792740, Training error: 0.583270
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 152.043121, Error: 0.592105
+Batch: 1, Loss: 147.682922, Error: 0.600000
+Validation loss: 149.863022, Validation error: 0.596053
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 72, Batch: 0, Loss: 151.955307, Error: 0.605263, Bad
+Epoch 72, Batch: 1, Loss: 145.432220, Error: 0.587097, Good
+Training loss: 148.693756, Training error: 0.596180
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 151.706635, Error: 0.572368
+Batch: 1, Loss: 143.624283, Error: 0.554839
+Validation loss: 147.665466, Validation error: 0.563604
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 73, Batch: 0, Loss: 145.906113, Error: 0.562914, Good
+Epoch 73, Batch: 1, Loss: 150.564423, Error: 0.551282, Bad
+Training loss: 148.235260, Training error: 0.557098
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 150.880386, Error: 0.592105
+Batch: 1, Loss: 141.805176, Error: 0.503226
+Validation loss: 146.342773, Validation error: 0.547666
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 74, Batch: 0, Loss: 143.687531, Error: 0.543046, Good
+Epoch 74, Batch: 1, Loss: 147.955994, Error: 0.557692, Good
+Training loss: 145.821762, Training error: 0.550369
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 147.843353, Error: 0.585526
+Batch: 1, Loss: 139.036102, Error: 0.535484
+Validation loss: 143.439728, Validation error: 0.560505
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 75, Batch: 0, Loss: 141.569763, Error: 0.551282, Good
+Epoch 75, Batch: 1, Loss: 146.846558, Error: 0.569536, Bad
+Training loss: 144.208160, Training error: 0.560409
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 146.733231, Error: 0.565789
+Batch: 1, Loss: 139.131500, Error: 0.541936
+Validation loss: 142.932373, Validation error: 0.553862
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 76, Batch: 0, Loss: 146.663345, Error: 0.565789, Bad
+Epoch 76, Batch: 1, Loss: 137.907440, Error: 0.548387, Good
+Training loss: 142.285400, Training error: 0.557088
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 144.921097, Error: 0.559211
+Batch: 1, Loss: 134.991302, Error: 0.548387
+Validation loss: 139.956207, Validation error: 0.553799
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 77, Batch: 0, Loss: 142.760345, Error: 0.551282, Bad
+Epoch 77, Batch: 1, Loss: 137.817413, Error: 0.549669, Good
+Training loss: 140.288879, Training error: 0.550475
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 145.778595, Error: 0.578947
+Batch: 1, Loss: 145.954620, Error: 0.554839
+Validation loss: 145.866608, Validation error: 0.566893
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 78, Batch: 0, Loss: 143.292450, Error: 0.564103, Bad
+Epoch 78, Batch: 1, Loss: 135.531006, Error: 0.523179, Good
+Training loss: 139.411728, Training error: 0.543641
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 142.520142, Error: 0.572368
+Batch: 1, Loss: 132.734283, Error: 0.477419
+Validation loss: 137.627213, Validation error: 0.524894
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 79, Batch: 0, Loss: 140.595566, Error: 0.576159, Bad
+Epoch 79, Batch: 1, Loss: 135.746613, Error: 0.500000, Good
+Training loss: 138.171082, Training error: 0.538080
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 145.082214, Error: 0.565789
+Batch: 1, Loss: 132.125473, Error: 0.509677
+Validation loss: 138.603851, Validation error: 0.537733
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 80, Batch: 0, Loss: 139.615936, Error: 0.543046, Bad
+Epoch 80, Batch: 1, Loss: 132.361389, Error: 0.519231, Good
+Training loss: 135.988663, Training error: 0.531139
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 137.380524, Error: 0.565789
+Batch: 1, Loss: 129.279449, Error: 0.490323
+Validation loss: 133.329987, Validation error: 0.528056
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 81, Batch: 0, Loss: 135.242325, Error: 0.549669, Good
+Epoch 81, Batch: 1, Loss: 130.649811, Error: 0.474359, Good
+Training loss: 132.946075, Training error: 0.512014
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 136.510483, Error: 0.526316
+Batch: 1, Loss: 127.119637, Error: 0.470968
+Validation loss: 131.815063, Validation error: 0.498642
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 82, Batch: 0, Loss: 133.931671, Error: 0.519737, Bad
+Epoch 82, Batch: 1, Loss: 126.309967, Error: 0.477419, Good
+Training loss: 130.120819, Training error: 0.498578
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 139.507202, Error: 0.572368
+Batch: 1, Loss: 124.052727, Error: 0.464516
+Validation loss: 131.779968, Validation error: 0.518442
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 83, Batch: 0, Loss: 127.303223, Error: 0.509934, Good
+Epoch 83, Batch: 1, Loss: 133.659882, Error: 0.544872, Bad
+Training loss: 130.481552, Training error: 0.527403
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 134.138687, Error: 0.552632
+Batch: 1, Loss: 123.471970, Error: 0.458065
+Validation loss: 128.805328, Validation error: 0.505348
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 84, Batch: 0, Loss: 128.456100, Error: 0.480769, Good
+Epoch 84, Batch: 1, Loss: 128.537277, Error: 0.562914, Good
+Training loss: 128.496689, Training error: 0.521842
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 132.061081, Error: 0.539474
+Batch: 1, Loss: 120.712502, Error: 0.470968
+Validation loss: 126.386795, Validation error: 0.505221
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 85, Batch: 0, Loss: 132.354477, Error: 0.532051, Bad
+Epoch 85, Batch: 1, Loss: 125.815109, Error: 0.490066, Good
+Training loss: 129.084793, Training error: 0.511059
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 133.951660, Error: 0.526316
+Batch: 1, Loss: 121.255898, Error: 0.458065
+Validation loss: 127.603775, Validation error: 0.492190
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 86, Batch: 0, Loss: 127.310493, Error: 0.500000, Good
+Epoch 86, Batch: 1, Loss: 120.792084, Error: 0.450331, Good
+Training loss: 124.051285, Training error: 0.475166
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 130.173325, Error: 0.539474
+Batch: 1, Loss: 117.072525, Error: 0.458065
+Validation loss: 123.622925, Validation error: 0.498769
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 87, Batch: 0, Loss: 120.463043, Error: 0.493590, Good
+Epoch 87, Batch: 1, Loss: 122.586273, Error: 0.503311, Good
+Training loss: 121.524658, Training error: 0.498451
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 125.063271, Error: 0.513158
+Batch: 1, Loss: 115.615845, Error: 0.464516
+Validation loss: 120.339554, Validation error: 0.488837
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 88, Batch: 0, Loss: 114.640778, Error: 0.464516, Good
+Epoch 88, Batch: 1, Loss: 127.319130, Error: 0.519737, Bad
+Training loss: 120.979950, Training error: 0.492126
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 122.498383, Error: 0.513158
+Batch: 1, Loss: 113.639214, Error: 0.445161
+Validation loss: 118.068802, Validation error: 0.479160
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 89, Batch: 0, Loss: 122.777237, Error: 0.513158, Bad
+Epoch 89, Batch: 1, Loss: 114.397232, Error: 0.477419, Good
+Training loss: 118.587234, Training error: 0.495289
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 124.876076, Error: 0.526316
+Batch: 1, Loss: 112.928726, Error: 0.438710
+Validation loss: 118.902405, Validation error: 0.482513
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 90, Batch: 0, Loss: 117.745743, Error: 0.493590, Good
+Epoch 90, Batch: 1, Loss: 116.257568, Error: 0.456954, Good
+Training loss: 117.001656, Training error: 0.475272
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 120.665161, Error: 0.480263
+Batch: 1, Loss: 108.619644, Error: 0.406452
+Validation loss: 114.642403, Validation error: 0.443357
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 91, Batch: 0, Loss: 112.753525, Error: 0.450331, Good
+Epoch 91, Batch: 1, Loss: 117.263741, Error: 0.455128, Bad
+Training loss: 115.008636, Training error: 0.452730
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 118.675316, Error: 0.493421
+Batch: 1, Loss: 108.256088, Error: 0.458065
+Validation loss: 113.465698, Validation error: 0.475743
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 92, Batch: 0, Loss: 114.136978, Error: 0.461538, Good
+Epoch 92, Batch: 1, Loss: 116.062927, Error: 0.463576, Bad
+Training loss: 115.099953, Training error: 0.462557
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 118.597115, Error: 0.460526
+Batch: 1, Loss: 106.989883, Error: 0.406452
+Validation loss: 112.793503, Validation error: 0.433489
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 93, Batch: 0, Loss: 111.081619, Error: 0.456954, Good
+Epoch 93, Batch: 1, Loss: 120.161606, Error: 0.435897, Bad
+Training loss: 115.621613, Training error: 0.446426
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 117.349701, Error: 0.493421
+Batch: 1, Loss: 115.940857, Error: 0.464516
+Validation loss: 116.645279, Validation error: 0.478969
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 94, Batch: 0, Loss: 111.528748, Error: 0.463576, Good
+Epoch 94, Batch: 1, Loss: 113.138268, Error: 0.480769, Good
+Training loss: 112.333511, Training error: 0.472173
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 118.921875, Error: 0.493421
+Batch: 1, Loss: 107.863174, Error: 0.432258
+Validation loss: 113.392525, Validation error: 0.462840
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 95, Batch: 0, Loss: 113.568939, Error: 0.448718, Bad
+Epoch 95, Batch: 1, Loss: 105.750839, Error: 0.430464, Good
+Training loss: 109.659889, Training error: 0.439591
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 108.405838, Error: 0.447368
+Batch: 1, Loss: 101.337929, Error: 0.387097
+Validation loss: 104.871887, Validation error: 0.417233
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 96, Batch: 0, Loss: 107.434875, Error: 0.403846, Good
+Epoch 96, Batch: 1, Loss: 101.410431, Error: 0.470199, Good
+Training loss: 104.422653, Training error: 0.437022
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 108.339668, Error: 0.460526
+Batch: 1, Loss: 98.890106, Error: 0.419355
+Validation loss: 103.614883, Validation error: 0.439941
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 97, Batch: 0, Loss: 99.246643, Error: 0.419355, Good
+Epoch 97, Batch: 1, Loss: 109.926636, Error: 0.453947, Bad
+Training loss: 104.586639, Training error: 0.436651
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 105.292023, Error: 0.453947
+Batch: 1, Loss: 103.432869, Error: 0.393548
+Validation loss: 104.362442, Validation error: 0.423748
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 98, Batch: 0, Loss: 104.745560, Error: 0.410256, Bad
+Epoch 98, Batch: 1, Loss: 104.753647, Error: 0.463576, Bad
+Training loss: 104.749603, Training error: 0.436916
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 113.305420, Error: 0.500000
+Batch: 1, Loss: 105.077759, Error: 0.445161
+Validation loss: 109.191589, Validation error: 0.472581
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 99, Batch: 0, Loss: 106.820992, Error: 0.423077, Bad
+Epoch 99, Batch: 1, Loss: 99.207153, Error: 0.417219, Good
+Training loss: 103.014069, Training error: 0.420148
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 106.468185, Error: 0.440789
+Batch: 1, Loss: 95.362289, Error: 0.387097
+Validation loss: 100.915237, Validation error: 0.413943
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 100, Batch: 0, Loss: 99.538406, Error: 0.416667, Good
+Epoch 100, Batch: 1, Loss: 96.236656, Error: 0.377483, Good
+Training loss: 97.887527, Training error: 0.397075
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 102.263824, Error: 0.394737
+Batch: 1, Loss: 92.595352, Error: 0.393548
+Validation loss: 97.429588, Validation error: 0.394143
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 101, Batch: 0, Loss: 92.493484, Error: 0.393548, Good
+Epoch 101, Batch: 1, Loss: 101.555962, Error: 0.407895, Bad
+Training loss: 97.024719, Training error: 0.400722
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 98.887024, Error: 0.421053
+Batch: 1, Loss: 90.796608, Error: 0.400000
+Validation loss: 94.841812, Validation error: 0.410526
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 102, Batch: 0, Loss: 98.004715, Error: 0.421053, Bad
+Epoch 102, Batch: 1, Loss: 94.721100, Error: 0.406452, Good
+Training loss: 96.362907, Training error: 0.413752
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 98.536995, Error: 0.401316
+Batch: 1, Loss: 90.447449, Error: 0.393548
+Validation loss: 94.492218, Validation error: 0.397432
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 103, Batch: 0, Loss: 89.648140, Error: 0.380645, Good
+Epoch 103, Batch: 1, Loss: 98.804085, Error: 0.401316, Bad
+Training loss: 94.226112, Training error: 0.390980
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 96.905441, Error: 0.368421
+Batch: 1, Loss: 92.778778, Error: 0.393548
+Validation loss: 94.842110, Validation error: 0.380985
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 104, Batch: 0, Loss: 89.918381, Error: 0.331126, Good
+Epoch 104, Batch: 1, Loss: 95.236954, Error: 0.410256, Bad
+Training loss: 92.577667, Training error: 0.370691
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 91.368820, Error: 0.335526
+Batch: 1, Loss: 90.539406, Error: 0.361290
+Validation loss: 90.954117, Validation error: 0.348408
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 105, Batch: 0, Loss: 85.101776, Error: 0.298013, Good
+Epoch 105, Batch: 1, Loss: 92.169273, Error: 0.391026, Good
+Training loss: 88.635529, Training error: 0.344519
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 89.157333, Error: 0.328947
+Batch: 1, Loss: 84.059357, Error: 0.348387
+Validation loss: 86.608345, Validation error: 0.338667
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 106, Batch: 0, Loss: 89.265274, Error: 0.371795, Bad
+Epoch 106, Batch: 1, Loss: 80.692459, Error: 0.337748, Good
+Training loss: 84.978867, Training error: 0.354772
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 86.424255, Error: 0.315789
+Batch: 1, Loss: 81.055771, Error: 0.374194
+Validation loss: 83.740013, Validation error: 0.344992
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 107, Batch: 0, Loss: 80.859863, Error: 0.331126, Good
+Epoch 107, Batch: 1, Loss: 87.241074, Error: 0.339744, Bad
+Training loss: 84.050468, Training error: 0.335435
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 83.059067, Error: 0.296053
+Batch: 1, Loss: 81.175644, Error: 0.296774
+Validation loss: 82.117355, Validation error: 0.296413
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 108, Batch: 0, Loss: 79.364044, Error: 0.303226, Good
+Epoch 108, Batch: 1, Loss: 83.544662, Error: 0.348684, Good
+Training loss: 81.454353, Training error: 0.325955
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 81.043114, Error: 0.328947
+Batch: 1, Loss: 79.196693, Error: 0.316129
+Validation loss: 80.119904, Validation error: 0.322538
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 109, Batch: 0, Loss: 83.450348, Error: 0.358974, Bad
+Epoch 109, Batch: 1, Loss: 75.363281, Error: 0.304636, Good
+Training loss: 79.406815, Training error: 0.331805
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 80.648178, Error: 0.322368
+Batch: 1, Loss: 75.036285, Error: 0.322581
+Validation loss: 77.842232, Validation error: 0.322475
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 110, Batch: 0, Loss: 80.474548, Error: 0.328947, Bad
+Epoch 110, Batch: 1, Loss: 76.240311, Error: 0.303226, Good
+Training loss: 78.357430, Training error: 0.316087
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 78.412827, Error: 0.335526
+Batch: 1, Loss: 74.902878, Error: 0.309677
+Validation loss: 76.657852, Validation error: 0.322602
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 111, Batch: 0, Loss: 72.815445, Error: 0.277419, Good
+Epoch 111, Batch: 1, Loss: 77.068390, Error: 0.309211, Good
+Training loss: 74.941917, Training error: 0.293315
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 75.128464, Error: 0.315789
+Batch: 1, Loss: 74.787704, Error: 0.316129
+Validation loss: 74.958084, Validation error: 0.315959
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 112, Batch: 0, Loss: 74.484955, Error: 0.315789, Good
+Epoch 112, Batch: 1, Loss: 77.909073, Error: 0.374194, Bad
+Training loss: 76.197014, Training error: 0.344992
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 74.967392, Error: 0.276316
+Batch: 1, Loss: 72.332993, Error: 0.309677
+Validation loss: 73.650192, Validation error: 0.292997
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 113, Batch: 0, Loss: 72.159607, Error: 0.304636, Good
+Epoch 113, Batch: 1, Loss: 77.819656, Error: 0.262821, Bad
+Training loss: 74.989632, Training error: 0.283728
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 72.517166, Error: 0.243421
+Batch: 1, Loss: 70.361870, Error: 0.290323
+Validation loss: 71.439514, Validation error: 0.266872
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 114, Batch: 0, Loss: 66.898018, Error: 0.251656, Good
+Epoch 114, Batch: 1, Loss: 71.889542, Error: 0.224359, Good
+Training loss: 69.393784, Training error: 0.238007
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 69.707062, Error: 0.243421
+Batch: 1, Loss: 69.872803, Error: 0.277419
+Validation loss: 69.789932, Validation error: 0.260420
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 115, Batch: 0, Loss: 69.231064, Error: 0.237179, Good
+Epoch 115, Batch: 1, Loss: 71.595078, Error: 0.311258, Bad
+Training loss: 70.413071, Training error: 0.274219
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 69.517685, Error: 0.296053
+Batch: 1, Loss: 68.820511, Error: 0.290323
+Validation loss: 69.169098, Validation error: 0.293188
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 116, Batch: 0, Loss: 69.411560, Error: 0.294872, Bad
+Epoch 116, Batch: 1, Loss: 65.934624, Error: 0.284768, Good
+Training loss: 67.673096, Training error: 0.289820
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 65.929825, Error: 0.243421
+Batch: 1, Loss: 64.208580, Error: 0.251613
+Validation loss: 65.069199, Validation error: 0.247517
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 117, Batch: 0, Loss: 63.919624, Error: 0.258065, Good
+Epoch 117, Batch: 1, Loss: 67.133331, Error: 0.263158, Good
+Training loss: 65.526474, Training error: 0.260611
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 66.662643, Error: 0.250000
+Batch: 1, Loss: 65.583191, Error: 0.245161
+Validation loss: 66.122917, Validation error: 0.247581
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 118, Batch: 0, Loss: 67.499832, Error: 0.250000, Bad
+Epoch 118, Batch: 1, Loss: 70.937698, Error: 0.258278, Bad
+Training loss: 69.218765, Training error: 0.254139
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 68.987900, Error: 0.250000
+Batch: 1, Loss: 63.457191, Error: 0.258065
+Validation loss: 66.222549, Validation error: 0.254032
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 119, Batch: 0, Loss: 66.818390, Error: 0.250000, Bad
+Epoch 119, Batch: 1, Loss: 63.338768, Error: 0.270968, Good
+Training loss: 65.078583, Training error: 0.260484
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 63.391319, Error: 0.236842
+Batch: 1, Loss: 60.377037, Error: 0.232258
+Validation loss: 61.884178, Validation error: 0.234550
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 120, Batch: 0, Loss: 62.734253, Error: 0.250000, Good
+Epoch 120, Batch: 1, Loss: 59.556015, Error: 0.225806, Good
+Training loss: 61.145134, Training error: 0.237903
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 61.601936, Error: 0.243421
+Batch: 1, Loss: 57.784393, Error: 0.187097
+Validation loss: 59.693165, Validation error: 0.215259
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 121, Batch: 0, Loss: 54.624531, Error: 0.178808, Good
+Epoch 121, Batch: 1, Loss: 65.997269, Error: 0.275641, Bad
+Training loss: 60.310898, Training error: 0.227224
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 59.708645, Error: 0.223684
+Batch: 1, Loss: 56.940247, Error: 0.200000
+Validation loss: 58.324448, Validation error: 0.211842
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 122, Batch: 0, Loss: 56.507927, Error: 0.211921, Good
+Epoch 122, Batch: 1, Loss: 61.059483, Error: 0.230769, Bad
+Training loss: 58.783707, Training error: 0.221345
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 63.907593, Error: 0.236842
+Batch: 1, Loss: 58.769257, Error: 0.225806
+Validation loss: 61.338425, Validation error: 0.231324
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 123, Batch: 0, Loss: 57.478447, Error: 0.173077, Good
+Epoch 123, Batch: 1, Loss: 57.898308, Error: 0.225166, Good
+Training loss: 57.688377, Training error: 0.199121
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 58.893059, Error: 0.243421
+Batch: 1, Loss: 56.754681, Error: 0.251613
+Validation loss: 57.823868, Validation error: 0.247517
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 124, Batch: 0, Loss: 52.415016, Error: 0.218543, Good
+Epoch 124, Batch: 1, Loss: 63.361744, Error: 0.288462, Bad
+Training loss: 57.888382, Training error: 0.253502
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 55.784931, Error: 0.177632
+Batch: 1, Loss: 53.575806, Error: 0.200000
+Validation loss: 54.680367, Validation error: 0.188816
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 125, Batch: 0, Loss: 55.335358, Error: 0.184211, Good
+Epoch 125, Batch: 1, Loss: 53.840767, Error: 0.225806, Good
+Training loss: 54.588062, Training error: 0.205008
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 58.610405, Error: 0.236842
+Batch: 1, Loss: 51.432205, Error: 0.161290
+Validation loss: 55.021305, Validation error: 0.199066
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 126, Batch: 0, Loss: 51.472267, Error: 0.187097, Good
+Epoch 126, Batch: 1, Loss: 57.122650, Error: 0.223684, Bad
+Training loss: 54.297459, Training error: 0.205390
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 53.407127, Error: 0.177632
+Batch: 1, Loss: 53.921856, Error: 0.219355
+Validation loss: 53.664490, Validation error: 0.198493
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 127, Batch: 0, Loss: 47.387238, Error: 0.145695, Good
+Epoch 127, Batch: 1, Loss: 62.695511, Error: 0.288462, Bad
+Training loss: 55.041374, Training error: 0.217078
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 65.155510, Error: 0.269737
+Batch: 1, Loss: 57.971073, Error: 0.277419
+Validation loss: 61.563293, Validation error: 0.273578
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 128, Batch: 0, Loss: 50.873222, Error: 0.192053, Good
+Epoch 128, Batch: 1, Loss: 62.780144, Error: 0.269231, Bad
+Training loss: 56.826683, Training error: 0.230642
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 59.696312, Error: 0.197368
+Batch: 1, Loss: 49.880653, Error: 0.161290
+Validation loss: 54.788483, Validation error: 0.179329
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 129, Batch: 0, Loss: 55.073772, Error: 0.185897, Bad
+Epoch 129, Batch: 1, Loss: 48.738930, Error: 0.165563, Good
+Training loss: 51.906349, Training error: 0.175730
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 51.080383, Error: 0.177632
+Batch: 1, Loss: 47.884605, Error: 0.174194
+Validation loss: 49.482494, Validation error: 0.175913
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 130, Batch: 0, Loss: 50.170181, Error: 0.160256, Good
+Epoch 130, Batch: 1, Loss: 50.832695, Error: 0.192053, Good
+Training loss: 50.501438, Training error: 0.176155
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 59.962471, Error: 0.250000
+Batch: 1, Loss: 48.132370, Error: 0.154839
+Validation loss: 54.047421, Validation error: 0.202419
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 131, Batch: 0, Loss: 47.285923, Error: 0.165563, Good
+Epoch 131, Batch: 1, Loss: 54.712944, Error: 0.237179, Bad
+Training loss: 50.999435, Training error: 0.201371
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 55.077751, Error: 0.197368
+Batch: 1, Loss: 47.438736, Error: 0.167742
+Validation loss: 51.258244, Validation error: 0.182555
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 132, Batch: 0, Loss: 46.581459, Error: 0.187097, Good
+Epoch 132, Batch: 1, Loss: 53.510509, Error: 0.197368, Bad
+Training loss: 50.045982, Training error: 0.192233
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 52.166451, Error: 0.197368
+Batch: 1, Loss: 46.328041, Error: 0.161290
+Validation loss: 49.247246, Validation error: 0.179329
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 133, Batch: 0, Loss: 52.412228, Error: 0.173077, Bad
+Epoch 133, Batch: 1, Loss: 41.879189, Error: 0.132450, Good
+Training loss: 47.145706, Training error: 0.152764
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 45.449966, Error: 0.125000
+Batch: 1, Loss: 44.189125, Error: 0.161290
+Validation loss: 44.819546, Validation error: 0.143145
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 134, Batch: 0, Loss: 44.906158, Error: 0.111842, Good
+Epoch 134, Batch: 1, Loss: 43.609108, Error: 0.161290, Good
+Training loss: 44.257633, Training error: 0.136566
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 44.788094, Error: 0.151316
+Batch: 1, Loss: 41.979671, Error: 0.135484
+Validation loss: 43.383881, Validation error: 0.143400
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 135, Batch: 0, Loss: 43.493042, Error: 0.160256, Good
+Epoch 135, Batch: 1, Loss: 43.591587, Error: 0.139073, Good
+Training loss: 43.542313, Training error: 0.149665
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 44.258537, Error: 0.138158
+Batch: 1, Loss: 42.807049, Error: 0.154839
+Validation loss: 43.532791, Validation error: 0.146498
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 136, Batch: 0, Loss: 41.507889, Error: 0.135484, Good
+Epoch 136, Batch: 1, Loss: 42.710823, Error: 0.131579, Good
+Training loss: 42.109356, Training error: 0.133531
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 40.220501, Error: 0.131579
+Batch: 1, Loss: 41.377968, Error: 0.116129
+Validation loss: 40.799232, Validation error: 0.123854
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 137, Batch: 0, Loss: 40.129951, Error: 0.138158, Good
+Epoch 137, Batch: 1, Loss: 42.647778, Error: 0.135484, Bad
+Training loss: 41.388863, Training error: 0.136821
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 40.938934, Error: 0.131579
+Batch: 1, Loss: 39.964287, Error: 0.141935
+Validation loss: 40.451611, Validation error: 0.136757
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 138, Batch: 0, Loss: 44.413506, Error: 0.160256, Bad
+Epoch 138, Batch: 1, Loss: 36.528580, Error: 0.092715, Good
+Training loss: 40.471043, Training error: 0.126486
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 39.286236, Error: 0.105263
+Batch: 1, Loss: 39.623741, Error: 0.141935
+Validation loss: 39.454987, Validation error: 0.123599
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 139, Batch: 0, Loss: 40.535992, Error: 0.147436, Bad
+Epoch 139, Batch: 1, Loss: 38.545929, Error: 0.139073, Good
+Training loss: 39.540962, Training error: 0.143254
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 39.437851, Error: 0.105263
+Batch: 1, Loss: 38.232689, Error: 0.109677
+Validation loss: 38.835270, Validation error: 0.107470
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 140, Batch: 0, Loss: 38.049759, Error: 0.129032, Good
+Epoch 140, Batch: 1, Loss: 38.858898, Error: 0.118421, Good
+Training loss: 38.454330, Training error: 0.123727
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 36.153854, Error: 0.085526
+Batch: 1, Loss: 37.505867, Error: 0.103226
+Validation loss: 36.829861, Validation error: 0.094376
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 141, Batch: 0, Loss: 35.746296, Error: 0.072848, Good
+Epoch 141, Batch: 1, Loss: 36.624435, Error: 0.102564, Good
+Training loss: 36.185364, Training error: 0.087706
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 33.950584, Error: 0.072368
+Batch: 1, Loss: 35.258080, Error: 0.116129
+Validation loss: 34.604332, Validation error: 0.094249
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 142, Batch: 0, Loss: 35.194759, Error: 0.109677, Good
+Epoch 142, Batch: 1, Loss: 34.031040, Error: 0.078947, Good
+Training loss: 34.612900, Training error: 0.094312
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 32.949081, Error: 0.065789
+Batch: 1, Loss: 35.015244, Error: 0.090323
+Validation loss: 33.982162, Validation error: 0.078056
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 143, Batch: 0, Loss: 28.439732, Error: 0.052980, Good
+Epoch 143, Batch: 1, Loss: 39.333504, Error: 0.160256, Bad
+Training loss: 33.886620, Training error: 0.106618
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 32.369217, Error: 0.092105
+Batch: 1, Loss: 33.273083, Error: 0.090323
+Validation loss: 32.821152, Validation error: 0.091214
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 144, Batch: 0, Loss: 27.363348, Error: 0.052980, Good
+Epoch 144, Batch: 1, Loss: 36.213379, Error: 0.115385, Bad
+Training loss: 31.788364, Training error: 0.084182
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 29.975597, Error: 0.072368
+Batch: 1, Loss: 31.205240, Error: 0.064516
+Validation loss: 30.590420, Validation error: 0.068442
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 145, Batch: 0, Loss: 29.973358, Error: 0.078947, Good
+Epoch 145, Batch: 1, Loss: 30.992405, Error: 0.077419, Good
+Training loss: 30.482882, Training error: 0.078183
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 29.896852, Error: 0.078947
+Batch: 1, Loss: 29.723930, Error: 0.058065
+Validation loss: 29.810390, Validation error: 0.068506
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 146, Batch: 0, Loss: 33.988705, Error: 0.096154, Bad
+Epoch 146, Batch: 1, Loss: 26.373920, Error: 0.052980, Good
+Training loss: 30.181313, Training error: 0.074567
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 28.735954, Error: 0.059211
+Batch: 1, Loss: 32.812260, Error: 0.109677
+Validation loss: 30.774107, Validation error: 0.084444
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 147, Batch: 0, Loss: 33.344223, Error: 0.108974, Bad
+Epoch 147, Batch: 1, Loss: 24.548954, Error: 0.059603, Good
+Training loss: 28.946589, Training error: 0.084289
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 27.913040, Error: 0.039474
+Batch: 1, Loss: 27.987698, Error: 0.077419
+Validation loss: 27.950369, Validation error: 0.058447
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 148, Batch: 0, Loss: 28.036289, Error: 0.089744, Good
+Epoch 148, Batch: 1, Loss: 27.912336, Error: 0.033113, Good
+Training loss: 27.974312, Training error: 0.061428
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 26.848499, Error: 0.052632
+Batch: 1, Loss: 28.173012, Error: 0.058065
+Validation loss: 27.510756, Validation error: 0.055348
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 149, Batch: 0, Loss: 31.846518, Error: 0.083333, Bad
+Epoch 149, Batch: 1, Loss: 23.004932, Error: 0.026490, Good
+Training loss: 27.425724, Training error: 0.054912
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 25.924528, Error: 0.065789
+Batch: 1, Loss: 26.027946, Error: 0.045161
+Validation loss: 25.976238, Validation error: 0.055475
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 150, Batch: 0, Loss: 25.953915, Error: 0.065789, Good
+Epoch 150, Batch: 1, Loss: 26.358971, Error: 0.058065, Good
+Training loss: 26.156443, Training error: 0.061927
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 25.203304, Error: 0.072368
+Batch: 1, Loss: 25.284292, Error: 0.038710
+Validation loss: 25.243797, Validation error: 0.055539
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 151, Batch: 0, Loss: 20.602232, Error: 0.026490, Good
+Epoch 151, Batch: 1, Loss: 29.884748, Error: 0.083333, Bad
+Training loss: 25.243490, Training error: 0.054912
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 23.647331, Error: 0.032895
+Batch: 1, Loss: 25.762865, Error: 0.077419
+Validation loss: 24.705097, Validation error: 0.055157
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 152, Batch: 0, Loss: 20.621361, Error: 0.019868, Good
+Epoch 152, Batch: 1, Loss: 27.644066, Error: 0.070513, Bad
+Training loss: 24.132713, Training error: 0.045190
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 21.636803, Error: 0.019737
+Batch: 1, Loss: 23.869541, Error: 0.045161
+Validation loss: 22.753172, Validation error: 0.032449
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 153, Batch: 0, Loss: 21.619783, Error: 0.019737, Good
+Epoch 153, Batch: 1, Loss: 23.658602, Error: 0.064516, Good
+Training loss: 22.639193, Training error: 0.042126
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 22.224564, Error: 0.046053
+Batch: 1, Loss: 22.692940, Error: 0.045161
+Validation loss: 22.458752, Validation error: 0.045607
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 154, Batch: 0, Loss: 26.695778, Error: 0.064103, Bad
+Epoch 154, Batch: 1, Loss: 18.002636, Error: 0.019868, Good
+Training loss: 22.349207, Training error: 0.041985
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 20.872259, Error: 0.039474
+Batch: 1, Loss: 22.674210, Error: 0.058065
+Validation loss: 21.773235, Validation error: 0.048769
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 155, Batch: 0, Loss: 21.454727, Error: 0.057692, Good
+Epoch 155, Batch: 1, Loss: 22.899017, Error: 0.046358, Bad
+Training loss: 22.176872, Training error: 0.052025
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 20.657461, Error: 0.039474
+Batch: 1, Loss: 21.620916, Error: 0.019355
+Validation loss: 21.139189, Validation error: 0.029414
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 156, Batch: 0, Loss: 20.674309, Error: 0.032051, Good
+Epoch 156, Batch: 1, Loss: 20.698532, Error: 0.013245, Good
+Training loss: 20.686420, Training error: 0.022648
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 19.252464, Error: 0.026316
+Batch: 1, Loss: 20.558750, Error: 0.038710
+Validation loss: 19.905607, Validation error: 0.032513
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 157, Batch: 0, Loss: 20.501919, Error: 0.032258, Good
+Epoch 157, Batch: 1, Loss: 19.859688, Error: 0.039474, Good
+Training loss: 20.180803, Training error: 0.035866
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 18.156507, Error: 0.019737
+Batch: 1, Loss: 21.373455, Error: 0.064516
+Validation loss: 19.764980, Validation error: 0.042126
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 158, Batch: 0, Loss: 22.997868, Error: 0.051282, Bad
+Epoch 158, Batch: 1, Loss: 17.133610, Error: 0.046358, Good
+Training loss: 20.065739, Training error: 0.048820
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 18.441914, Error: 0.026316
+Batch: 1, Loss: 21.025854, Error: 0.045161
+Validation loss: 19.733883, Validation error: 0.035739
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 159, Batch: 0, Loss: 18.398380, Error: 0.026316, Good
+Epoch 159, Batch: 1, Loss: 19.930332, Error: 0.038710, Good
+Training loss: 19.164356, Training error: 0.032513
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 18.157946, Error: 0.032895
+Batch: 1, Loss: 18.582165, Error: 0.025806
+Validation loss: 18.370056, Validation error: 0.029351
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 160, Batch: 0, Loss: 17.396851, Error: 0.038462, Good
+Epoch 160, Batch: 1, Loss: 20.128847, Error: 0.026490, Bad
+Training loss: 18.762848, Training error: 0.032476
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 18.896523, Error: 0.039474
+Batch: 1, Loss: 19.369034, Error: 0.045161
+Validation loss: 19.132778, Validation error: 0.042317
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 161, Batch: 0, Loss: 18.398533, Error: 0.051282, Good
+Epoch 161, Batch: 1, Loss: 17.867374, Error: 0.026490, Good
+Training loss: 18.132954, Training error: 0.038886
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 15.746314, Error: 0.013158
+Batch: 1, Loss: 17.893286, Error: 0.012903
+Validation loss: 16.819799, Validation error: 0.013031
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 162, Batch: 0, Loss: 19.934464, Error: 0.025641, Bad
+Epoch 162, Batch: 1, Loss: 14.354767, Error: 0.013245, Good
+Training loss: 17.144615, Training error: 0.019443
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 16.494198, Error: 0.019737
+Batch: 1, Loss: 17.385658, Error: 0.025806
+Validation loss: 16.939928, Validation error: 0.022772
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 163, Batch: 0, Loss: 17.365467, Error: 0.012903, Bad
+Epoch 163, Batch: 1, Loss: 16.566883, Error: 0.032895, Good
+Training loss: 16.966175, Training error: 0.022899
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 14.847276, Error: 0.006579
+Batch: 1, Loss: 17.602262, Error: 0.064516
+Validation loss: 16.224770, Validation error: 0.035548
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 164, Batch: 0, Loss: 16.736446, Error: 0.026490, Good
+Epoch 164, Batch: 1, Loss: 16.738605, Error: 0.064103, Good
+Training loss: 16.737526, Training error: 0.045296
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 14.955307, Error: 0.013158
+Batch: 1, Loss: 18.125336, Error: 0.045161
+Validation loss: 16.540321, Validation error: 0.029160
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 165, Batch: 0, Loss: 12.571285, Error: 0.013245, Good
+Epoch 165, Batch: 1, Loss: 19.345280, Error: 0.057692, Bad
+Training loss: 15.958282, Training error: 0.035469
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 14.910471, Error: 0.026316
+Batch: 1, Loss: 16.404406, Error: 0.019355
+Validation loss: 15.657438, Validation error: 0.022835
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 166, Batch: 0, Loss: 15.939097, Error: 0.019868, Good
+Epoch 166, Batch: 1, Loss: 18.170782, Error: 0.083333, Bad
+Training loss: 17.054939, Training error: 0.051600
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 15.656721, Error: 0.019737
+Batch: 1, Loss: 16.498131, Error: 0.032258
+Validation loss: 16.077427, Validation error: 0.025997
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 167, Batch: 0, Loss: 15.053503, Error: 0.013158, Good
+Epoch 167, Batch: 1, Loss: 16.090219, Error: 0.032258, Bad
+Training loss: 15.571861, Training error: 0.022708
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 14.117009, Error: 0.026316
+Batch: 1, Loss: 15.236530, Error: 0.025806
+Validation loss: 14.676769, Validation error: 0.026061
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 168, Batch: 0, Loss: 15.221899, Error: 0.025806, Good
+Epoch 168, Batch: 1, Loss: 15.160490, Error: 0.046053, Good
+Training loss: 15.191195, Training error: 0.035930
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 13.580706, Error: 0.013158
+Batch: 1, Loss: 15.644768, Error: 0.032258
+Validation loss: 14.612737, Validation error: 0.022708
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 169, Batch: 0, Loss: 17.104256, Error: 0.038462, Bad
+Epoch 169, Batch: 1, Loss: 11.773073, Error: 0.019868, Good
+Training loss: 14.438664, Training error: 0.029165
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 13.244091, Error: 0.019737
+Batch: 1, Loss: 15.039148, Error: 0.032258
+Validation loss: 14.141620, Validation error: 0.025997
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 170, Batch: 0, Loss: 14.840210, Error: 0.025806, Bad
+Epoch 170, Batch: 1, Loss: 13.516785, Error: 0.019737, Good
+Training loss: 14.178497, Training error: 0.022772
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 12.438797, Error: 0.013158
+Batch: 1, Loss: 15.437563, Error: 0.025806
+Validation loss: 13.938180, Validation error: 0.019482
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 171, Batch: 0, Loss: 15.294939, Error: 0.019231, Bad
+Epoch 171, Batch: 1, Loss: 12.484246, Error: 0.026490, Good
+Training loss: 13.889593, Training error: 0.022860
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 12.129547, Error: 0.019737
+Batch: 1, Loss: 14.266360, Error: 0.025806
+Validation loss: 13.197954, Validation error: 0.022772
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 172, Batch: 0, Loss: 15.490343, Error: 0.038462, Bad
+Epoch 172, Batch: 1, Loss: 10.627453, Error: 0.006623, Good
+Training loss: 13.058898, Training error: 0.022542
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 11.572059, Error: 0.026316
+Batch: 1, Loss: 13.179138, Error: 0.012903
+Validation loss: 12.375599, Validation error: 0.019610
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 173, Batch: 0, Loss: 12.916588, Error: 0.026490, Good
+Epoch 173, Batch: 1, Loss: 12.394529, Error: 0.032051, Good
+Training loss: 12.655559, Training error: 0.029271
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 10.920904, Error: 0.006579
+Batch: 1, Loss: 13.879751, Error: 0.019355
+Validation loss: 12.400328, Validation error: 0.012967
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 174, Batch: 0, Loss: 13.970540, Error: 0.019231, Bad
+Epoch 174, Batch: 1, Loss: 11.210066, Error: 0.006623, Good
+Training loss: 12.590303, Training error: 0.012927
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 10.861772, Error: 0.000000
+Batch: 1, Loss: 16.808907, Error: 0.045161
+Validation loss: 13.835339, Validation error: 0.022581
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 175, Batch: 0, Loss: 11.904255, Error: 0.012821, Good
+Epoch 175, Batch: 1, Loss: 12.942972, Error: 0.013245, Bad
+Training loss: 12.423614, Training error: 0.013033
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 10.419586, Error: 0.006579
+Batch: 1, Loss: 12.929095, Error: 0.019355
+Validation loss: 11.674341, Validation error: 0.012967
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 176, Batch: 0, Loss: 12.536848, Error: 0.019355, Bad
+Epoch 176, Batch: 1, Loss: 10.253826, Error: 0.006579, Good
+Training loss: 11.395337, Training error: 0.012967
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 9.357262, Error: 0.000000
+Batch: 1, Loss: 11.826732, Error: 0.006452
+Validation loss: 10.591997, Validation error: 0.003226
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 177, Batch: 0, Loss: 11.985289, Error: 0.000000, Bad
+Epoch 177, Batch: 1, Loss: 9.518003, Error: 0.006623, Good
+Training loss: 10.751646, Training error: 0.003311
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 10.360469, Error: 0.013158
+Batch: 1, Loss: 12.549140, Error: 0.012903
+Validation loss: 11.454804, Validation error: 0.013031
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 178, Batch: 0, Loss: 13.113710, Error: 0.019231, Bad
+Epoch 178, Batch: 1, Loss: 8.439564, Error: 0.000000, Good
+Training loss: 10.776637, Training error: 0.009615
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 9.245941, Error: 0.006579
+Batch: 1, Loss: 10.967298, Error: 0.000000
+Validation loss: 10.106619, Validation error: 0.003289
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 179, Batch: 0, Loss: 10.580408, Error: 0.006623, Good
+Epoch 179, Batch: 1, Loss: 9.489084, Error: 0.000000, Good
+Training loss: 10.034746, Training error: 0.003311
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 8.861684, Error: 0.006579
+Batch: 1, Loss: 10.446877, Error: 0.000000
+Validation loss: 9.654280, Validation error: 0.003289
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 180, Batch: 0, Loss: 10.386589, Error: 0.006623, Bad
+Epoch 180, Batch: 1, Loss: 8.891481, Error: 0.006410, Good
+Training loss: 9.639035, Training error: 0.006516
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 8.489698, Error: 0.000000
+Batch: 1, Loss: 9.514208, Error: 0.000000
+Validation loss: 9.001953, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 181, Batch: 0, Loss: 9.678134, Error: 0.000000, Bad
+Epoch 181, Batch: 1, Loss: 9.000671, Error: 0.013158, Good
+Training loss: 9.339403, Training error: 0.006579
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 7.989314, Error: 0.000000
+Batch: 1, Loss: 10.736578, Error: 0.012903
+Validation loss: 9.362946, Validation error: 0.006452
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 182, Batch: 0, Loss: 7.076352, Error: 0.000000, Good
+Epoch 182, Batch: 1, Loss: 12.253172, Error: 0.038462, Bad
+Training loss: 9.664762, Training error: 0.019231
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 8.572140, Error: 0.013158
+Batch: 1, Loss: 9.628790, Error: 0.006452
+Validation loss: 9.100465, Validation error: 0.009805
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 183, Batch: 0, Loss: 10.850597, Error: 0.019231, Bad
+Epoch 183, Batch: 1, Loss: 8.562168, Error: 0.019868, Good
+Training loss: 9.706383, Training error: 0.019549
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 8.570761, Error: 0.000000
+Batch: 1, Loss: 11.240606, Error: 0.038710
+Validation loss: 9.905684, Validation error: 0.019355
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 184, Batch: 0, Loss: 11.220818, Error: 0.019231, Bad
+Epoch 184, Batch: 1, Loss: 6.660912, Error: 0.000000, Good
+Training loss: 8.940865, Training error: 0.009615
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 7.508668, Error: 0.000000
+Batch: 1, Loss: 9.795633, Error: 0.006452
+Validation loss: 8.652151, Validation error: 0.003226
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 185, Batch: 0, Loss: 8.661688, Error: 0.006623, Good
+Epoch 185, Batch: 1, Loss: 8.597398, Error: 0.006410, Good
+Training loss: 8.629543, Training error: 0.006516
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 7.892497, Error: 0.006579
+Batch: 1, Loss: 8.867002, Error: 0.006452
+Validation loss: 8.379749, Validation error: 0.006515
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 186, Batch: 0, Loss: 6.704677, Error: 0.006623, Good
+Epoch 186, Batch: 1, Loss: 10.091922, Error: 0.032051, Bad
+Training loss: 8.398299, Training error: 0.019337
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 7.123955, Error: 0.006579
+Batch: 1, Loss: 8.235429, Error: 0.025806
+Validation loss: 7.679692, Validation error: 0.016193
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 187, Batch: 0, Loss: 6.994728, Error: 0.006579, Good
+Epoch 187, Batch: 1, Loss: 8.419919, Error: 0.006452, Bad
+Training loss: 7.707324, Training error: 0.006515
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 7.015216, Error: 0.000000
+Batch: 1, Loss: 7.713554, Error: 0.006452
+Validation loss: 7.364385, Validation error: 0.003226
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 188, Batch: 0, Loss: 7.652991, Error: 0.006452, Good
+Epoch 188, Batch: 1, Loss: 7.914986, Error: 0.013158, Bad
+Training loss: 7.783988, Training error: 0.009805
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 7.130964, Error: 0.000000
+Batch: 1, Loss: 9.500233, Error: 0.019355
+Validation loss: 8.315598, Validation error: 0.009677
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 189, Batch: 0, Loss: 6.553446, Error: 0.006623, Good
+Epoch 189, Batch: 1, Loss: 10.733032, Error: 0.019231, Bad
+Training loss: 8.643239, Training error: 0.012927
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 6.800694, Error: 0.000000
+Batch: 1, Loss: 8.239986, Error: 0.019355
+Validation loss: 7.520340, Validation error: 0.009677
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 190, Batch: 0, Loss: 8.859917, Error: 0.012821, Bad
+Epoch 190, Batch: 1, Loss: 6.646199, Error: 0.013245, Good
+Training loss: 7.753058, Training error: 0.013033
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 6.530760, Error: 0.000000
+Batch: 1, Loss: 8.083492, Error: 0.000000
+Validation loss: 7.307126, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 191, Batch: 0, Loss: 8.434383, Error: 0.000000, Bad
+Epoch 191, Batch: 1, Loss: 5.377333, Error: 0.000000, Good
+Training loss: 6.905858, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 5.927405, Error: 0.000000
+Batch: 1, Loss: 7.009841, Error: 0.012903
+Validation loss: 6.468623, Validation error: 0.006452
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 192, Batch: 0, Loss: 4.860564, Error: 0.000000, Good
+Epoch 192, Batch: 1, Loss: 8.666509, Error: 0.012821, Bad
+Training loss: 6.763536, Training error: 0.006410
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 5.696975, Error: 0.000000
+Batch: 1, Loss: 7.277320, Error: 0.000000
+Validation loss: 6.487148, Validation error: 0.000000
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 193, Batch: 0, Loss: 5.156922, Error: 0.000000, Good
+Epoch 193, Batch: 1, Loss: 7.221647, Error: 0.000000, Bad
+Training loss: 6.189285, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 5.344531, Error: 0.000000
+Batch: 1, Loss: 6.422879, Error: 0.000000
+Validation loss: 5.883705, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 194, Batch: 0, Loss: 6.280046, Error: 0.000000, Bad
+Epoch 194, Batch: 1, Loss: 5.238226, Error: 0.000000, Good
+Training loss: 5.759136, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 4.809855, Error: 0.000000
+Batch: 1, Loss: 6.340501, Error: 0.000000
+Validation loss: 5.575178, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 195, Batch: 0, Loss: 5.997266, Error: 0.000000, Bad
+Epoch 195, Batch: 1, Loss: 5.544379, Error: 0.019231, Good
+Training loss: 5.770823, Training error: 0.009615
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 4.751562, Error: 0.000000
+Batch: 1, Loss: 6.044885, Error: 0.000000
+Validation loss: 5.398224, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 196, Batch: 0, Loss: 4.848548, Error: 0.000000, Good
+Epoch 196, Batch: 1, Loss: 6.208406, Error: 0.000000, Bad
+Training loss: 5.528477, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 4.440217, Error: 0.000000
+Batch: 1, Loss: 6.389135, Error: 0.012903
+Validation loss: 5.414676, Validation error: 0.006452
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 197, Batch: 0, Loss: 4.475767, Error: 0.000000, Good
+Epoch 197, Batch: 1, Loss: 7.074656, Error: 0.019355, Bad
+Training loss: 5.775211, Training error: 0.009677
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 5.513258, Error: 0.006579
+Batch: 1, Loss: 6.550330, Error: 0.012903
+Validation loss: 6.031794, Validation error: 0.009741
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 198, Batch: 0, Loss: 6.380350, Error: 0.000000, Bad
+Epoch 198, Batch: 1, Loss: 4.867617, Error: 0.012821, Good
+Training loss: 5.623983, Training error: 0.006410
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 4.764562, Error: 0.000000
+Batch: 1, Loss: 5.172599, Error: 0.000000
+Validation loss: 4.968580, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 199, Batch: 0, Loss: 4.081310, Error: 0.000000, Good
+Epoch 199, Batch: 1, Loss: 5.707359, Error: 0.000000, Bad
+Training loss: 4.894335, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 4.210618, Error: 0.000000
+Batch: 1, Loss: 5.746544, Error: 0.012903
+Validation loss: 4.978581, Validation error: 0.006452
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 200, Batch: 0, Loss: 5.576430, Error: 0.000000, Bad
+Epoch 200, Batch: 1, Loss: 4.281003, Error: 0.000000, Good
+Training loss: 4.928717, Training error: 0.000000
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 3.684016, Error: 0.000000
+Batch: 1, Loss: 5.084834, Error: 0.000000
+Validation loss: 4.384425, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 201, Batch: 0, Loss: 5.038233, Error: 0.000000, Bad
+Epoch 201, Batch: 1, Loss: 4.025374, Error: 0.000000, Good
+Training loss: 4.531804, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 3.622523, Error: 0.000000
+Batch: 1, Loss: 4.700535, Error: 0.000000
+Validation loss: 4.161529, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 202, Batch: 0, Loss: 3.564771, Error: 0.000000, Good
+Epoch 202, Batch: 1, Loss: 5.023003, Error: 0.000000, Bad
+Training loss: 4.293887, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 3.626518, Error: 0.000000
+Batch: 1, Loss: 4.544883, Error: 0.000000
+Validation loss: 4.085701, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 203, Batch: 0, Loss: 4.626564, Error: 0.000000, Bad
+Epoch 203, Batch: 1, Loss: 3.413414, Error: 0.000000, Good
+Training loss: 4.019989, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 3.145697, Error: 0.000000
+Batch: 1, Loss: 4.346775, Error: 0.000000
+Validation loss: 3.746236, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 204, Batch: 0, Loss: 4.363490, Error: 0.000000, Bad
+Epoch 204, Batch: 1, Loss: 3.296310, Error: 0.000000, Good
+Training loss: 3.829900, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 2.833229, Error: 0.000000
+Batch: 1, Loss: 4.210421, Error: 0.000000
+Validation loss: 3.521825, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 205, Batch: 0, Loss: 3.078775, Error: 0.000000, Good
+Epoch 205, Batch: 1, Loss: 4.203135, Error: 0.000000, Bad
+Training loss: 3.640955, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 2.676988, Error: 0.000000
+Batch: 1, Loss: 3.932214, Error: 0.000000
+Validation loss: 3.304601, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 206, Batch: 0, Loss: 2.783871, Error: 0.000000, Good
+Epoch 206, Batch: 1, Loss: 3.622003, Error: 0.000000, Good
+Training loss: 3.202937, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 2.484484, Error: 0.000000
+Batch: 1, Loss: 3.513671, Error: 0.000000
+Validation loss: 2.999078, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 207, Batch: 0, Loss: 2.609872, Error: 0.000000, Good
+Epoch 207, Batch: 1, Loss: 3.412356, Error: 0.000000, Bad
+Training loss: 3.011114, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 2.368168, Error: 0.000000
+Batch: 1, Loss: 3.494359, Error: 0.000000
+Validation loss: 2.931264, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 208, Batch: 0, Loss: 2.261959, Error: 0.000000, Good
+Epoch 208, Batch: 1, Loss: 3.916765, Error: 0.000000, Bad
+Training loss: 3.089362, Training error: 0.000000
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 2.328524, Error: 0.000000
+Batch: 1, Loss: 3.378693, Error: 0.000000
+Validation loss: 2.853608, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 209, Batch: 0, Loss: 3.277411, Error: 0.000000, Bad
+Epoch 209, Batch: 1, Loss: 2.670624, Error: 0.000000, Good
+Training loss: 2.974017, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 2.245299, Error: 0.000000
+Batch: 1, Loss: 3.988177, Error: 0.000000
+Validation loss: 3.116738, Validation error: 0.000000
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 210, Batch: 0, Loss: 3.757393, Error: 0.000000, Bad
+Epoch 210, Batch: 1, Loss: 2.086915, Error: 0.000000, Good
+Training loss: 2.922154, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 1.861244, Error: 0.000000
+Batch: 1, Loss: 3.258475, Error: 0.000000
+Validation loss: 2.559860, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 211, Batch: 0, Loss: 2.038674, Error: 0.000000, Good
+Epoch 211, Batch: 1, Loss: 3.434223, Error: 0.000000, Bad
+Training loss: 2.736448, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 1.981845, Error: 0.000000
+Batch: 1, Loss: 3.693643, Error: 0.000000
+Validation loss: 2.837744, Validation error: 0.000000
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 212, Batch: 0, Loss: 2.966044, Error: 0.000000, Bad
+Epoch 212, Batch: 1, Loss: 3.043320, Error: 0.000000, Bad
+Training loss: 3.004682, Training error: 0.000000
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 3.710550, Error: 0.013158
+Batch: 1, Loss: 3.781842, Error: 0.006452
+Validation loss: 3.746196, Validation error: 0.009805
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 213, Batch: 0, Loss: 3.952569, Error: 0.013245, Bad
+Epoch 213, Batch: 1, Loss: 2.196082, Error: 0.000000, Good
+Training loss: 3.074326, Training error: 0.006623
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 2.241052, Error: 0.000000
+Batch: 1, Loss: 3.289513, Error: 0.006452
+Validation loss: 2.765282, Validation error: 0.003226
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 214, Batch: 0, Loss: 2.555461, Error: 0.000000, Good
+Epoch 214, Batch: 1, Loss: 2.812936, Error: 0.000000, Bad
+Training loss: 2.684198, Training error: 0.000000
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 1.766058, Error: 0.000000
+Batch: 1, Loss: 2.932221, Error: 0.000000
+Validation loss: 2.349140, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 215, Batch: 0, Loss: 2.361712, Error: 0.000000, Good
+Epoch 215, Batch: 1, Loss: 2.504300, Error: 0.006623, Good
+Training loss: 2.433006, Training error: 0.003311
+Training improving.
+
+Validation Data
+Batch: 0, Loss: 1.882336, Error: 0.000000
+Batch: 1, Loss: 2.988665, Error: 0.000000
+Validation loss: 2.435500, Validation error: 0.000000
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 216, Batch: 0, Loss: 1.956708, Error: 0.000000, Good
+Epoch 216, Batch: 1, Loss: 3.194924, Error: 0.000000, Bad
+Training loss: 2.575816, Training error: 0.000000
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 1.749443, Error: 0.000000
+Batch: 1, Loss: 2.787328, Error: 0.000000
+Validation loss: 2.268386, Validation error: 0.000000
+Validation improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 217, Batch: 0, Loss: 1.755185, Error: 0.000000, Good
+Epoch 217, Batch: 1, Loss: 3.124509, Error: 0.000000, Bad
+Training loss: 2.439847, Training error: 0.000000
+Training not improving.
+
+Validation Data
+Batch: 0, Loss: 1.970577, Error: 0.000000
+Batch: 1, Loss: 2.657053, Error: 0.000000
+Validation loss: 2.313815, Validation error: 0.000000
+Validation not improving.
+######################################################
+
+######################################################
+Training Data
+Epoch 218, Batch: 0, Loss: 2.722825, Error: 0.000000, Bad
+Epoch 218, Batch: 1, Loss: 2.017904, Error: 0.000000, Good
+Training loss: 2.370364, Training error: 0.000000
+Training improving.
+[Error/Interruption] 
+Clossing TF Session...
+Terminating Program...
