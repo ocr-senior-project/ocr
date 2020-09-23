@@ -43,20 +43,30 @@ class Ui_test:
         self.label = QtWidgets.QLabel(test)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
+
         self.textBrowser = QtWidgets.QTextBrowser(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.horizontalLayout.addWidget(self.textBrowser)
+        self.textLayout = QtWidgets.QHBoxLayout(self.textBrowser)
+        #self.child_label = QtWidgets.QLabel(self.textBrowser)
+        #self.child_label_2 = QtWidgets.QLabel(self.textBrowser)
+        #self.textLayout.addWidget(self.child_label)
+        #self.textLayout.addWidget(self.child_label_2)
+
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.child_label= QtWidgets.QLabel(self.textBrowser)
 
         self.pushButton_2 = QtWidgets.QPushButton(test)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.pushButton_2.clicked.connect(self.get_file)
-
         self.verticalLayout.addWidget(self.pushButton_2)
+
         self.pushButton_3 = QtWidgets.QPushButton(test)
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self.pushButton_3.clicked.connect(self.show_text)
         self.verticalLayout.addWidget(self.pushButton_3)
+
         self.pushButton = QtWidgets.QPushButton(test)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
@@ -68,6 +78,8 @@ class Ui_test:
     def retranslateUi(self, test):
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
+        #self.child_label.setText(_translate("test","y",None))
+        #self.child_label_2.setText(_translate("test","uh",None))
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton.setText(_translate("test", "Editing Mode", None))
@@ -81,6 +93,22 @@ class Ui_test:
         resized = resize_image('out.jpg')
         self.label.setPixmap(QtGui.QPixmap('out.jpg'))
 
+    def select(self,label):
+        label.setFlat(False)
+        #label.setText(_translate("test","NOPE",None))
+
+    def show_text(self):
+        string = "This is example text! asdfasdfasdf"
+        #characters = []
+        #self.labels = []
+        for i in range(0,len(string)):
+            new_label = QtWidgets.QPushButton(test)
+            self.labels.append(new_label)
+            #characters.append(new_label)
+            new_label.setFlat(True)
+            new_label.setText(_translate("test",string[i],None))
+            self.textLayout.addWidget(new_label)
+            new_label.clicked.connect(lambda: self.select(new_label))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
