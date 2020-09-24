@@ -11,6 +11,8 @@ import sys
 from pdf2image import convert_from_path, convert_from_bytes
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QRubberBand
+from PyQt5.QtCore import QRect, QSize
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -33,6 +35,7 @@ def resize_image(image):
     wsize = int((float(img.size[0]) * float(hpercent)))
     img = img.resize((wsize, baseheight), Image.ANTIALIAS)
     img.save(image)
+
 
 class Ui_test:
     def setupUi(self, test):
@@ -112,10 +115,32 @@ class Ui_test:
             self.textLayout.addWidget(new_label)
             new_label.clicked.connect(lambda: self.select(new_label))
 
+
+class MyLabel(QtWidgets.QWidget):
+    def __init__(self):
+        super(MyLabel, self).__init__()
+        self.ui = Ui_test()
+        self.ui.setupUi(self)
+        self.rubberBand = 0
+        # self.setMouseTracking(True)
+
+    def mousePressEvent(self, event):
+        self.origin = event.pos()
+        if not self.rubberBand:
+            self.rubberBand = QRubberBand(QRubberBand.Rectangle, self)
+        self.rubberBand.setGeometry(QRect(self.origin, QSize()))
+        self.rubberBand.show()
+
+    def mouseMoveEvent(self, event):
+        self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
+
+    def mouseReleaseEvent(self, event):
+        self.rubberBand.hide()
+        print(self.origin, event.pos())
+
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    test = QtWidgets.QWidget()
-    ui = Ui_test()
-    ui.setupUi(test)
+    test = MyLabel()
     test.show()
     sys.exit(app.exec_())
