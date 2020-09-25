@@ -19,9 +19,9 @@ def scale(image, percent=100):
     return cv2.resize(image, (width, height))
 
 # display an image, closing the window when the escape key is pressed
-def display(image):
+def display(image, size):
     # resize the output window to be 720p
-    cv2.imshow("image", scale(image, 40))
+    cv2.imshow("image", scale(image, size))
 
     # loop until the window is closed
     while True:
@@ -79,7 +79,6 @@ def color_mask(image, max):
 # invert the black and white sections
 def invert_bw(image):
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV)[1]
-
 
 # get the first line of text in the image
 def get_first_line(image):
