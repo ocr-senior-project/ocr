@@ -6,14 +6,14 @@ import image_processing as ip
 fpath = "matricula_p9-page-001.jpg"
 
 # image scale
-scale = 40
+scale = 100
 
 img = ip.read(fpath)
 
-ip.display(img)
+ip.display(img, scale)
 
 # mask the image
-img = ip.color_mask(img, 185)
+img = ip.color_mask(img, 90)
 ip.display(img, scale)
 
 # invert the black and white sections
