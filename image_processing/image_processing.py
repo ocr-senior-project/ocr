@@ -62,14 +62,11 @@ def blur(image, sigma):
      return cv2.GaussianBlur(image, (sigma, sigma), 0)
 
 # apply a color mask to the image
-def color_mask(image):
+def color_mask(image, max):
     hsv_color = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # the darkest value allowed by the color mask
     low = np.array([0, 0, 0])
-
-    # the brightest value for each of RGB allowed by the color mask
-    max = 185
 
     # the lightest value allowed by the color mask
     high = np.array([max, max, max])
