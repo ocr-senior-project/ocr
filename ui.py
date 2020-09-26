@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'test.ui'
-#
-# Created: Thu Sep 10 20:52:52 2020
-#      by: PyQt4 UI code generator 4.10.1
-#
-# WARNING! All changes made in this file will be lost!
-
 import sys
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -48,10 +41,6 @@ class Ui_test:
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.horizontalLayout.addWidget(self.textBrowser)
         self.textLayout = QtWidgets.QHBoxLayout(self.textBrowser)
-        #self.child_label = QtWidgets.QLabel(self.textBrowser)
-        #self.child_label_2 = QtWidgets.QLabel(self.textBrowser)
-        #self.textLayout.addWidget(self.child_label)
-        #self.textLayout.addWidget(self.child_label_2)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -78,21 +67,13 @@ class Ui_test:
     def retranslateUi(self, test):
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
-        #self.child_label.setText(_translate("test","y",None))
-        #self.child_label_2.setText(_translate("test","uh",None))
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton.setText(_translate("test", "Editing Mode", None))
 
     def get_file(self):
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
-        #dir = QtWidgets.QFileDialog.getExistingDirectory()
-        #print(dir)
         imgs = pp.get_jpgs(fname[0])
-        # images = convert_from_path(fname[0])
-        # images[0].save('out.jpg','JPEG')
-        # resized = resize_image('out.jpg')
-        # self.label.setPixmap(QtGui.QPixmap('out.jpg'))
         resized = resize_image(imgs[0])
         self.label.setPixmap(QtGui.QPixmap(imgs[0]))
 
@@ -102,12 +83,9 @@ class Ui_test:
 
     def show_text(self):
         string = "This is example text! asdfasdfasdf"
-        #characters = []
-        #self.labels = []
         for i in range(0,len(string)):
             new_label = QtWidgets.QPushButton(test)
             self.labels.append(new_label)
-            #characters.append(new_label)
             new_label.setFlat(True)
             new_label.setText(_translate("test",string[i],None))
             self.textLayout.addWidget(new_label)
