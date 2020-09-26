@@ -16,6 +16,7 @@ ip.display(img, scale)
 img = ip.color_mask(img, 185, True)
 ip.display(img, scale)
 
+
 # # mask the image
 # img = ip.color_mask(img, 90)
 # ip.display(img, scale)

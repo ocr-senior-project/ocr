@@ -8,10 +8,9 @@
 # WARNING! All changes made in this file will be lost!
 
 import sys
-# from pdf2image import convert_from_path, convert_from_bytes
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
-from pdf import pdf_processing as pp
+from file_manipulation.pdf import pdf_processing as pp
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -89,7 +88,7 @@ class Ui_test:
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         #dir = QtWidgets.QFileDialog.getExistingDirectory()
         #print(dir)
-        imgs = pp.get_jpgs(fname)
+        imgs = pp.get_jpgs(fname[0])
         # images = convert_from_path(fname[0])
         # images[0].save('out.jpg','JPEG')
         # resized = resize_image('out.jpg')
