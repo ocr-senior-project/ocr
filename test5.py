@@ -43,7 +43,8 @@ class Ui_test:
         test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtWidgets.QLabel(test)
+        # self.label = QtWidgets.QLabel(test)
+        self.label = ImageLabel()
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
@@ -115,16 +116,20 @@ class Ui_test:
             self.textLayout.addWidget(new_label)
             new_label.clicked.connect(lambda: self.select(new_label))
 
-
-class MyLabel(QtWidgets.QWidget):
+class ImageLabel(QtWidgets.QLabel):
     def __init__(self):
-        super(MyLabel, self).__init__()
-        self.ui = Ui_test()
-        self.ui.setupUi(self)
+        """ Provides event support for the image label """
+        super(ImageLabel, self).__init__()
         self.rubberBand = 0
+        self.selectPolygon = False
+        self.polygonPoints = []
         # self.setMouseTracking(True)
 
     def mousePressEvent(self, event):
+        """ Collects points for the polygon and creates selection boxes """
+        if self.selectPolygon:
+            self.polygonPoints.append((event.x(),event.y()))
+
         self.origin = event.pos()
         if not self.rubberBand:
             self.rubberBand = QRubberBand(QRubberBand.Rectangle, self)
@@ -132,15 +137,32 @@ class MyLabel(QtWidgets.QWidget):
         self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
+        """ Displays the selection box """
         self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
 
     def mouseReleaseEvent(self, event):
+        """ Hides the selection box """
         self.rubberBand.hide()
         print(self.origin, event.pos())
 
 
+# https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
+class MainWidget(QtWidgets.QWidget):
+    def __init__(self):
+        """ Calls the UI immediately and provides event support """
+        super(MainWidget, self).__init__()
+        self.ui = Ui_test()
+        self.ui.setupUi(self)
+
+    def keyPressEvent(self, event):
+        """ Called when a key is pressed """
+        if event.key() == QtCore.Qt.Key_Return:
+            self.ui.label.selectPolygon = not self.ui.label.selectPolygon
+            print(self.ui.label.polygonPoints)
+
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    test = MyLabel()
+    test = MainWidget()
     test.show()
     sys.exit(app.exec_())
