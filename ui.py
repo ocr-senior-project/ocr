@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+## -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'test.ui'
 #
@@ -11,8 +11,6 @@ import sys
 from PIL import Image
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
-
-print("HIII")
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -98,18 +96,12 @@ class Ui_test:
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
-
     def get_file(self):
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
-        #dir = QtWidgets.QFileDialog.getExistingDirectory()
-        #print(dir)
         imgs = pp.get_jpgs(fname[0])
-        # images = convert_from_path(fname[0])
-        # images[0].save('out.jpg','JPEG')
-        # resized = resize_image('out.jpg')
-        # self.label.setPixmap(QtGui.QPixmap('out.jpg'))
-        resized = resize_image(imgs[0])
-        self.label.setPixmap(QtGui.QPixmap(imgs[0]))
+        self.page = 0
+        resized = resize_image(imgs[self.page])
+        self.label.setPixmap(QtGui.QPixmap(imgs[self.page]))
 
     def select(self,label):
         label.setFlat(False)
@@ -166,7 +158,6 @@ class MyLabel(QtWidgets.QWidget):
 
 
 if __name__ == "__main__":
-    print("HIIIIIIIIIIiii")
     app = QtWidgets.QApplication(sys.argv)
     test = MyLabel()
     test.show()
