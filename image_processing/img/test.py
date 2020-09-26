@@ -6,7 +6,7 @@ import image_processing as ip
 fpath = "matricula_p9-page-001.jpg"
 
 # image scale
-scale = 40
+scale = 100
 
 img = ip.read(fpath)
 
