@@ -8,7 +8,7 @@ import time
 
 # create jpg files for every jpg found in the pdf
 # return a list of all the file names
-def get_jpgs(fname, enc="ansi", start_tag="ÿØÿà", end_tag="endstream", wait=False):
+def get_jpgs(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wait=False):
     # open the file
     file = open(fname, "rb")
 
