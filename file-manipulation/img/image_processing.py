@@ -20,7 +20,7 @@ def scale(image, percent=100):
     return cv2.resize(image, (width, height))
 
 # display an image, closing the window when the escape key is pressed
-def display(image, size):
+def display(image, size=100):
     # resize the output window to be 720p
     cv2.imshow("image", scale(image, size))
 
@@ -64,16 +64,16 @@ def blur(image, sigma):
 
 # find and return the darkest color in the image
 # TODO: add multithreading to increase speed
-def get_darkest(image):
+def get_darkest(image, step=4):
     # a placeholder for the darkext pixel value, this value is pure white and
     # should be overwritten later
     darkest = [255, 255, 255]
 
     # look at fourth row
-    for i in range(0, len(image), 4):
+    for i in range(0, len(image), step):
         row = image[i]
         # look at every fourth pixel
-        for j in range(0, len(row), 4):
+        for j in range(0, len(row), step):
             pixel = row[j]
             if sum(pixel) < sum(darkest):
                 darkest = pixel
@@ -82,7 +82,7 @@ def get_darkest(image):
     return darkest
 
 # apply a color mask to the image
-def color_mask(image, max, magic=False):
+def color_mask(image, max, step=4, magic=False):
     # check to see if we should use magic numbers
     if magic:
         # change the colorspace of the image
@@ -97,7 +97,7 @@ def color_mask(image, max, magic=False):
     # use smart color masking
     else:
         # the darkest value allowed by the color mask
-        low = get_darkest(image)
+        low = get_darkest(image, step)
 
         # the lightest value allowed by the color mask
         high = np.array([
