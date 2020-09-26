@@ -94,6 +94,7 @@ def color_mask(image, max, magic=False):
         # take the user's magic number input for the max brightnesss
         high = np.array([max, max, max])
 
+    # use smart color masking
     else:
         # the darkest value allowed by the color mask
         low = get_darkest(image)
