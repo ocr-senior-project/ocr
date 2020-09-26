@@ -4,9 +4,11 @@ Date: 25 September 2020
 Desc: a slightly more refined way of ripping jpgs from a pdf
 """
 
+import time
+
 # create jpg files for every jpg found in the pdf
 # return a list of all the file names
-def get_jpgs(fname, enc="ansi", start_tag="ÿØÿà", end_tag="endstream"):
+def get_jpgs(fname, enc="ansi", start_tag="ÿØÿà", end_tag="endstream", wait=False):
     # open the file
     file = open(fname, "rb")
 
@@ -49,6 +51,9 @@ def get_jpgs(fname, enc="ansi", start_tag="ÿØÿà", end_tag="endstream"):
 
         # start looking at the end of the last jpg that was found
         start = stream_end
+
+        if wait:
+            time.sleep(1)
 
     # return the list of filenames
     return imgs
