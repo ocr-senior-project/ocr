@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PIL import Image
+import numpy
+from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 
@@ -94,18 +95,20 @@ class Ui_test:
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self):
         """ Provides event support for the image label """
+        # CITE: # https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
         super(ImageLabel, self).__init__()
         self.rubberBand = 0
-        self.selectPolygon = False
+        self.line = 0
+        self.selectPolygon = True
         self.polygonPoints = []
         # self.setMouseTracking(True)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
+        self.origin = event.pos()
         if self.selectPolygon:
             self.polygonPoints.append((event.x(),event.y()))
 
-        self.origin = event.pos()
         if not self.rubberBand:
             self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
         self.rubberBand.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
@@ -120,8 +123,6 @@ class ImageLabel(QtWidgets.QLabel):
         self.rubberBand.hide()
         print(self.origin, event.pos())
 
-
-# https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
 class MainWidget(QtWidgets.QWidget):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
@@ -131,9 +132,38 @@ class MainWidget(QtWidgets.QWidget):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
-        if event.key() == QtCore.Qt.Key_Return:
-            self.ui.label.selectPolygon = not self.ui.label.selectPolygon
+        self.ui.label.selectPolygon = not self.ui.label.selectPolygon
+        if event.key() == QtCore.Qt.Key_Return and self.ui.label.polygonPoints != []:
             print(self.ui.label.polygonPoints)
+            self.polygonCrop()
+            self.ui.label.polygonPoints = []
+
+    def polygonCrop(self):
+        # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
+        # read image as RGB and add alpha (transparency)
+        im = Image.open("jpg0.jpg").convert("RGBA")
+
+        # convert to numpy (for convenience)
+        imArray = numpy.asarray(im)
+
+        # create mask
+        maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
+        ImageDraw.Draw(maskIm).polygon(self.ui.label.polygonPoints, outline=1, fill=1)
+        mask = numpy.array(maskIm)
+
+        # assemble new image (uint8: 0-255)
+        newImArray = numpy.empty(imArray.shape, dtype='uint8')
+
+        # colors (three first columns, RGB)
+        newImArray[:,:,:3] = imArray[:,:,:3]
+
+        # transparency (4th column)
+        newImArray[:,:,3] = mask*255
+
+        # back to Image from numpy
+        newIm = Image.fromarray(newImArray, "RGBA")
+        newIm.save("out.png")
+            
 
 
 if __name__ == "__main__":
