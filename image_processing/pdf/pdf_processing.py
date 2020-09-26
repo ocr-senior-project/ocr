@@ -36,15 +36,12 @@ def get_jpgs(
             # save the filename so we can append it to the list as well
             fname = "jpg" + str(n_images) + ".jpg"
 
-            # open a .jpg file for writing bytes
+            # open a .jpg file for writing bytes and write the image to the file
             jpg = open(fname, "wb")
-
-            # encode and write the bytes
             jpg.write(stream.encode(enc))
 
             # close the file
             jpg.close()
-            print("written")
 
             # append the filename to the list
             imgs.append(fname)
