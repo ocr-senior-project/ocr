@@ -40,7 +40,7 @@ def resize_image(image):
 class Ui_test:
     def setupUi(self, test):
         test.setObjectName(_fromUtf8("test"))
-        test.resize(1092, 589)
+        test.resize(1092, 589) #1092, 589
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         # self.label = QtWidgets.QLabel(test)
@@ -76,6 +76,16 @@ class Ui_test:
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
 
+        self.pushButton_4 = QtWidgets.QPushButton(test)
+        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
+        self.pushButton_4.clicked.connect(self.previous_page)
+        self.verticalLayout.addWidget(self.pushButton_4)
+
+        self.pushButton_5 = QtWidgets.QPushButton(test)
+        self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
+        self.pushButton_5.clicked.connect(self.next_page)
+        self.verticalLayout.addWidget(self.pushButton_5)
+
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
@@ -87,6 +97,8 @@ class Ui_test:
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton.setText(_translate("test", "Editing Mode", None))
+        self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
+        self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
     def get_file(self):
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\',"Image files (*.jpeg *.pdf)")
@@ -94,8 +106,9 @@ class Ui_test:
         #print(dir)
         if not fname[0]:
             return
-        images = convert_from_path(fname[0])
-        images[0].save('out.jpg','JPEG')
+        self.page = 0
+        self.images = convert_from_path(fname[0])
+        self.images[self.page].save('out.jpg','JPEG')
         resized = resize_image('out.jpg')
         self.label.setPixmap(QtGui.QPixmap('out.jpg'))
 
@@ -115,6 +128,21 @@ class Ui_test:
             new_label.setText(_translate("test",string[i],None))
             self.textLayout.addWidget(new_label)
             new_label.clicked.connect(lambda: self.select(new_label))
+
+    def next_page(self):
+        if self.page < len(self.images) - 1:
+            self.page += 1
+            self.images[self.page].save('out.jpg','JPEG')
+            resized = resize_image('out.jpg')
+            self.label.setPixmap(QtGui.QPixmap('out.jpg'))
+
+    def previous_page(self):
+        if self.page > 0:
+            self.page -= 1
+            self.images[self.page].save('out.jpg','JPEG')
+            resized = resize_image('out.jpg')
+            self.label.setPixmap(QtGui.QPixmap('out.jpg'))
+
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self):

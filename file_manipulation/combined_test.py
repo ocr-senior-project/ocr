@@ -2,9 +2,9 @@ from img import image_processing as ip
 from pdf import pdf_processing as pp
 import os
 
-# get access to a file in a sub directory
+# get access to a file in a subdirectory
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'pdf/matricula_p9.pdf')
+filename = os.path.join(dirname, 'draft_1.pdf')
 
 # get all the jpgs from the pdf
 lst = pp.get_jpgs(filename)
