@@ -1,11 +1,3 @@
-"""
-Auth: Nate Koike
-Date: 26 September 2020
-Desc: the ocr test file, but as a module with more parameters instead of hard
-	  coded values
-"""
-
-from __future__ import print_function
 ###
 # Copyright 2018 Edgard Chammas. All Rights Reserved.
 # Licensed under the Creative Commons Attribution-NonCommercial International
@@ -16,6 +8,14 @@ from __future__ import print_function
 
 #!/usr/bin/python
 
+"""
+Auth: Nate Koike
+Date: 26 September 2020
+Desc: the ocr test file, but as a module with more parameters instead of hard
+	  coded values
+"""
+
+# standard python imports
 import tensorflow as tf
 import sys
 import os
@@ -24,47 +24,60 @@ import numpy as np
 import codecs
 import math
 
-try:
-	reload(sys)  # Python 2
-	sys.setdefaultencoding('utf8')
-except NameError:
-	pass         # Python 3
-
-from config import cfg
-from util import LoadClasses
-from util import LoadModel
-from util import ReadData
-from util import LoadList
-from cnn import CNN
-from cnn import WND_HEIGHT
-from cnn import WND_WIDTH
-from cnn import MPoolLayers_H
-from rnn import RNN
+# ocr package imports
+from HandwritingRecognitionSystem_v2.config import cfg
+from HandwritingRecognitionSystem_v2.util import LoadClasses
+from HandwritingRecognitionSystem_v2.util import LoadModel
+from HandwritingRecognitionSystem_v2.util import ReadData
+from HandwritingRecognitionSystem_v2.util import LoadList
+from HandwritingRecognitionSystem_v2.cnn import CNN
+from HandwritingRecognitionSystem_v2.cnn import WND_HEIGHT
+from HandwritingRecognitionSystem_v2.cnn import WND_WIDTH
+from HandwritingRecognitionSystem_v2.cnn import MPoolLayers_H
+from HandwritingRecognitionSystem_v2.rnn import RNN
 
 # the wrapper for the test code
-def ocr(output, charset):
-	Classes = LoadClasses(cfg.CHAR_LIST)
+def ocr(output, charset_path, img_list_path, img_dir, model_dir):
+    """
+           output: the file where we will write the transcription
+     charset_path: the path to the file containing all the usable characters
+    img_list_path: the path to the file containing the filename of every image
+                   without its file extension
+          img_dir: the path to the directory containing all the image files
+        model_dir: the path to the directory containing the trained neural
+                   network model
+    """
 
+    # get a list of all the characters that are usable in the text
+	Classes = LoadClasses(charset_path)
+
+    # the number of characters available to use
 	NClasses = len(Classes)
 
-	FilesList = LoadList(cfg.TEST_LIST)
+    # img_list_path is the path of a file with the filenames of all the images
+    # minus the file extension
+	FilesList = LoadList(img_list_path)
 
+    # magic code from the initial repo
 	WND_SHIFT = WND_WIDTH - 2
-
 	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
-
 	phase_train = tf.Variable(True, name='phase_train')
 
+    # more magic code
 	x = tf.compat.v1.placeholder(
 		tf.float32,
 		shape=[None, WND_HEIGHT, WND_WIDTH])
 
+    # look! magic code!
 	SeqLens = tf.compat.v1.placeholder(shape=[cfg.BatchSize], dtype=tf.int32)
 
+    # do you believe in magic...
 	x_expanded = tf.expand_dims(x, 3)
 
+    # in a young girl's heart?
 	Inputs = CNN(x_expanded, phase_train, 'CNN_1')
 
+    # how the music can free her, whenever it starts
 	logits = RNN(Inputs, SeqLens, 'RNN_1')
 
 	# CTC Beam Search Decoder to decode pred string from the prob map
@@ -74,28 +87,33 @@ def ocr(output, charset):
 
 	#Reading test data...
 	InputListTest, SeqLensTest, _ = ReadData(
-		cfg.TEST_LOCATION,
-		cfg.TEST_LIST,
-		cfg.TEST_NB,
-		WND_HEIGHT,
-		WND_WIDTH,
-		WND_SHIFT,
-		VEC_PER_WND,
-		'')
+		img_dir # the path to the directory containing the line image files
+		img_list_path,
+		len(FilesLists), # look at all the files, not just some of them
+		WND_HEIGHT, # magic...
+		WND_WIDTH, # numbers...
+		WND_SHIFT, # wee!!!
+		VEC_PER_WND) # woo!!!
 
+    # happy startup noises
 	print('Initializing...')
 
+    # start a session, i guess
 	session = tf.compat.v1.Session()
-
 	session.run(tf.compat.v1.global_variables_initializer())
 
-	LoadModel(session, cfg.SaveDir+'/')
+    # load the model from the place where the model is
+	LoadModel(session, model_dir+'/')
 
+    # under normal circumstances...
 	try:
+        # run a session, i guess?
 		session.run(tf.compat.v1.assign(phase_train, False))
 
+        # magic code wee
 		randIxs = range(0, len(InputListTest))
 
+        # magic numbers too? WOAH
 		start, end = (0, cfg.BatchSize)
 
 		batch = 0
@@ -140,15 +158,13 @@ def ocr(output, charset):
 
 				decodedStr = decodedStr[:] + "\n"
 
-				output.write(decodedStr)
-				else: print(decodedStr, end=' ')
+                # remove the filename since thats ugly
+				output.write(decodedStr.split(' ')[1:].join(' '))
 
 			start += cfg.BatchSize
 			end += cfg.BatchSize
 			batch += 1
-
-		DecodeLog.close()
-
+    # close gracefully
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
 		print("[Error/Interruption] %s" % str(e))
 		print("Clossing TF Session...")
