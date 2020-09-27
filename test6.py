@@ -40,26 +40,19 @@ def resize_image(image):
 class Ui_test:
     def setupUi(self, test):
         test.setObjectName(_fromUtf8("test"))
-        test.resize(1092, 589) #1092, 589
+        test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        # self.label = QtWidgets.QLabel(test)
-        self.label = ImageLabel()
+        self.label = QtWidgets.QLabel(test)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
-        self.textBrowser = QtWidgets.QTextBrowser(test)
+        self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.horizontalLayout.addWidget(self.textBrowser)
-        self.textLayout = QtWidgets.QHBoxLayout(self.textBrowser)
-        #self.child_label = QtWidgets.QLabel(self.textBrowser)
-        #self.child_label_2 = QtWidgets.QLabel(self.textBrowser)
-        #self.textLayout.addWidget(self.child_label)
-        #self.textLayout.addWidget(self.child_label_2)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.child_label= QtWidgets.QLabel(self.textBrowser)
 
         self.pushButton_2 = QtWidgets.QPushButton(test)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
@@ -68,37 +61,31 @@ class Ui_test:
 
         self.pushButton_3 = QtWidgets.QPushButton(test)
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.pushButton_3.clicked.connect(self.show_text)
         self.verticalLayout.addWidget(self.pushButton_3)
 
         self.pushButton = QtWidgets.QPushButton(test)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.pushButton.clicked.connect(self.get_char)
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
-
-        self.pushButton_4 = QtWidgets.QPushButton(test)
-        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
-        self.pushButton_4.clicked.connect(self.previous_page)
-        self.verticalLayout.addWidget(self.pushButton_4)
-
-        self.pushButton_5 = QtWidgets.QPushButton(test)
-        self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
-        self.pushButton_5.clicked.connect(self.next_page)
-        self.verticalLayout.addWidget(self.pushButton_5)
 
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
+
     def retranslateUi(self, test):
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
-        #self.child_label.setText(_translate("test","y",None))
-        #self.child_label_2.setText(_translate("test","uh",None))
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
-        self.pushButton.setText(_translate("test", "Editing Mode", None))
-        self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
-        self.pushButton_5.setText(_translate("test", "Next Page ->", None))
+        self.pushButton.setText(_translate("test", "Select Character", None))
+
+    def get_char(self):
+        self.textCursor = self.textBrowser.textCursor()
+        selected = self.textCursor.selectionStart()
+        text = self.textBrowser.toPlainText()
+        print(text[selected])
+
 
     def get_file(self):
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\',"Image files (*.jpeg *.pdf)")
@@ -106,58 +93,21 @@ class Ui_test:
         #print(dir)
         if not fname[0]:
             return
-        self.page = 0
-        self.images = convert_from_path(fname[0])
-        self.images[self.page].save('out.jpg','JPEG')
+        images = convert_from_path(fname[0])
+        images[0].save('out.jpg','JPEG')
         resized = resize_image('out.jpg')
         self.label.setPixmap(QtGui.QPixmap('out.jpg'))
 
-    def select(self,label):
-        label.setFlat(False)
-        #label.setText(_translate("test","NOPE",None))
 
-    def show_text(self):
-        string = "This is example text! asdfasdfasdf"
-        #characters = []
-        #self.labels = []
-        for i in range(0,len(string)):
-            new_label = QtWidgets.QPushButton(test)
-            self.labels.append(new_label)
-            #characters.append(new_label)
-            new_label.setFlat(True)
-            new_label.setText(_translate("test",string[i],None))
-            self.textLayout.addWidget(new_label)
-            new_label.clicked.connect(lambda: self.select(new_label))
-
-    def next_page(self):
-        if self.page < len(self.images) - 1:
-            self.page += 1
-            self.images[self.page].save('out.jpg','JPEG')
-            resized = resize_image('out.jpg')
-            self.label.setPixmap(QtGui.QPixmap('out.jpg'))
-
-    def previous_page(self):
-        if self.page > 0:
-            self.page -= 1
-            self.images[self.page].save('out.jpg','JPEG')
-            resized = resize_image('out.jpg')
-            self.label.setPixmap(QtGui.QPixmap('out.jpg'))
-
-
-class ImageLabel(QtWidgets.QLabel):
+class MyLabel(QtWidgets.QWidget):
     def __init__(self):
-        """ Provides event support for the image label """
-        super(ImageLabel, self).__init__()
+        super(MyLabel, self).__init__()
+        self.ui = Ui_test()
+        self.ui.setupUi(self)
         self.rubberBand = 0
-        self.selectPolygon = False
-        self.polygonPoints = []
         # self.setMouseTracking(True)
 
     def mousePressEvent(self, event):
-        """ Collects points for the polygon and creates selection boxes """
-        if self.selectPolygon:
-            self.polygonPoints.append((event.x(),event.y()))
-
         self.origin = event.pos()
         if not self.rubberBand:
             self.rubberBand = QRubberBand(QRubberBand.Rectangle, self)
@@ -165,32 +115,15 @@ class ImageLabel(QtWidgets.QLabel):
         self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
-        """ Displays the selection box """
         self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
 
     def mouseReleaseEvent(self, event):
-        """ Hides the selection box """
         self.rubberBand.hide()
         print(self.origin, event.pos())
 
 
-# https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
-class MainWidget(QtWidgets.QWidget):
-    def __init__(self):
-        """ Calls the UI immediately and provides event support """
-        super(MainWidget, self).__init__()
-        self.ui = Ui_test()
-        self.ui.setupUi(self)
-
-    def keyPressEvent(self, event):
-        """ Called when a key is pressed """
-        if event.key() == QtCore.Qt.Key_Return:
-            self.ui.label.selectPolygon = not self.ui.label.selectPolygon
-            print(self.ui.label.polygonPoints)
-
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    test = MainWidget()
+    test = MyLabel()
     test.show()
     sys.exit(app.exec_())

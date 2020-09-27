@@ -3,10 +3,8 @@ HandwritingRecognitionSystem_v2/summary
 HandwritingRecognitionSystem_v2/MATRICULAmodel
 HandwritingRecognitionSystem_v2/__pycache__
 HandwritingRecognitionSystem_v2/ocr-env
-<<<<<<< HEAD
 HandwritingRecognitionSystem_v2/log
-=======
-file-manipulation/img/__pycache__
-file-manipulation/pdf/__pycache__
-matricula.pdf
->>>>>>> origin/nate-dev
+HandwritingRecognitionSystem_v2/log
+file_manipulation/img/__pycache__
+file_manipulation/pdf/__pycache__
+file_manipulation/matricula.pdf

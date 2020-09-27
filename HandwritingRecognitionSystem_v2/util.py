@@ -210,4 +210,3 @@ def ReadData(filesLocation, filesList, numberOfFiles, WND_HEIGHT, WND_WIDTH, WND
 	    assert len(inputList) == len(targetList)
 
 	return inputList, seqLens, targetList
-
