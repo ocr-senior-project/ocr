@@ -16,10 +16,15 @@ try:
 	from cnn import FV
 	from cnn import NFeatures
 except:
-	from HandwritingRecognitionSystem_v2.config import cfg
-	from HandwritingRecognitionSystem_v2.util import LoadClasses
-	from HandwritingRecognitionSystem_v2.cnn import FV
-	from HandwritingRecognitionSystem_v2.cnn import NFeatures
+	# change the working directory to support this file being run from another
+	# file in a different directory
+	import os
+	os.chdir(os.path.dirname(__file__))
+
+	from .config import cfg
+	from .util import LoadClasses
+	from .cnn import FV
+	from .cnn import NFeatures
 
 Classes = LoadClasses(cfg.CHAR_LIST)
 

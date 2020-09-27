@@ -10,3 +10,5 @@ ocr(file,
     "./HandwritingRecognitionSystem_v2/formalsamples/list",
     "./HandwritingRecognitionSystem_v2/formalsamples/images",
     "./HandwritingRecognitionSystem_v2/MATRICULAmodel/")
+
+file.close()

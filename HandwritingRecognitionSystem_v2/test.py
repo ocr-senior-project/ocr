@@ -21,33 +21,18 @@ try:
 except NameError:
 	pass         # Python 3
 
-# allow the script to be run from a program in a parent directory
-try:
-    from config import cfg
-	from config import cfg
-	from config import cfg
-	from util import LoadClasses
-	from util import LoadModel
-	from util import ReadData
-	from util import LoadList
-	from cnn import CNN
-	from cnn import WND_HEIGHT
-	from cnn import WND_WIDTH
-	from cnn import MPoolLayers_H
-	from rnn import RNN
-except:
-    from HandwritingRecognitionSystem_v2.config import cfg
-	from HandwritingRecognitionSystem_v2.config import cfg
-	from HandwritingRecognitionSystem_v2.util import LoadClasses
-	from HandwritingRecognitionSystem_v2.util import LoadModel
-	from HandwritingRecognitionSystem_v2.util import ReadData
-	from HandwritingRecognitionSystem_v2.util import LoadList
-	from HandwritingRecognitionSystem_v2.cnn import CNN
-	from HandwritingRecognitionSystem_v2.cnn import WND_HEIGHT
-	from HandwritingRecognitionSystem_v2.cnn import WND_WIDTH
-	from HandwritingRecognitionSystem_v2.cnn import MPoolLayers_H
-	from HandwritingRecognitionSystem_v2.rnn import RNN
-
+from config import cfg
+from config import cfg
+from config import cfg
+from util import LoadClasses
+from util import LoadModel
+from util import ReadData
+from util import LoadList
+from cnn import CNN
+from cnn import WND_HEIGHT
+from cnn import WND_WIDTH
+from cnn import MPoolLayers_H
+from rnn import RNN
 
 if cfg.WriteDecodedToFile == True:
 	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")

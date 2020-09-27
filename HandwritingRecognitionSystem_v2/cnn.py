@@ -16,11 +16,16 @@ try:
 	from util import conv2d
 	from util import max_pool
 except:
-	from HandwritingRecognitionSystem_v2.config import cfg
-	from HandwritingRecognitionSystem_v2.util import batch_norm_conv
-	from HandwritingRecognitionSystem_v2.util import weight_variable
-	from HandwritingRecognitionSystem_v2.util import conv2d
-	from HandwritingRecognitionSystem_v2.util import max_pool
+	# change the working directory to support this file being run from another
+	# file in a different directory
+	import os
+	os.chdir(os.path.dirname(__file__))
+
+	from .config import cfg
+	from .util import batch_norm_conv
+	from .util import weight_variable
+	from .util import conv2d
+	from .util import max_pool
 
 ####################################################################
 #CNN-specific architecture configuration
