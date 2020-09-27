@@ -1,0 +1,147 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 7 files
+Detected 1 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: HandwritingRecognitionSystem/util.py
+--------------------------------------------------------------------------------
+HandwritingRecognitionSystem/util.py:84:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+================================================================================
+Detailed log follows:
+
+================================================================================
+================================================================================
+Input tree: 'HandwritingRecognitionSystem/'
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/config.py'
+ outputting to 'HandwritingRecognitionSystem_v2/config.py'
+--------------------------------------------------------------------------------
+
+12:8: INFO: Renamed 'tf.app.flags' to 'tf.compat.v1.app.flags'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/compute_probs.py'
+ outputting to 'HandwritingRecognitionSystem_v2/compute_probs.py'
+--------------------------------------------------------------------------------
+
+42:4: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+44:10: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+52:9: INFO: Renamed keyword argument for tf.nn.softmax from dim to axis
+59:10: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+61:12: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+66:13: INFO: Renamed 'tf.assign' to 'tf.compat.v1.assign'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/util.py'
+ outputting to 'HandwritingRecognitionSystem_v2/util.py'
+--------------------------------------------------------------------------------
+
+23:9: INFO: Renamed 'tf.variable_scope' to 'tf.compat.v1.variable_scope'
+26:32: INFO: Added keywords to args of function 'tf.nn.moments'
+34:20: INFO: Added keywords to args of function 'tf.cond'
+40:12: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+44:9: INFO: Added keywords to args of function 'tf.nn.conv2d'
+44:9: INFO: Renamed keyword argument for tf.nn.conv2d from filter to filters
+47:9: INFO: Added keywords to args of function 'tf.nn.max_pool'
+47:9: INFO: Renamed keyword argument for tf.nn.max_pool from value to input
+47:9: INFO: Renamed 'tf.nn.max_pool' to 'tf.nn.max_pool2d'
+72:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+83:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+84:4: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/test.py'
+ outputting to 'HandwritingRecognitionSystem_v2/test.py'
+--------------------------------------------------------------------------------
+
+51:4: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+53:10: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+62:20: INFO: Added keywords to args of function 'tf.nn.ctc_beam_search_decoder'
+69:10: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+71:12: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+76:13: INFO: Renamed 'tf.assign' to 'tf.compat.v1.assign'
+96:22: INFO: Renamed 'tf.sparse_tensor_to_dense' to 'tf.sparse.to_dense'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/cnn.py'
+ outputting to 'HandwritingRecognitionSystem_v2/cnn.py'
+--------------------------------------------------------------------------------
+
+36:6: INFO: Renamed 'tf.variable_scope' to 'tf.compat.v1.variable_scope'
+62:13: INFO: Added keywords to args of function 'tf.transpose'
+71:6: INFO: Renamed 'tf.variable_scope' to 'tf.compat.v1.variable_scope'
+109:14: INFO: Added keywords to args of function 'tf.transpose'
+117:6: INFO: Renamed 'tf.variable_scope' to 'tf.compat.v1.variable_scope'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/train.py'
+ outputting to 'HandwritingRecognitionSystem_v2/train.py'
+--------------------------------------------------------------------------------
+
+41:4: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+43:10: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+53:10: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+54:9: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+55:8: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+61:9: INFO: Renamed 'tf.nn.ctc_loss' to 'tf.compat.v1.nn.ctc_loss'
+63:7: INFO: Added keywords to args of function 'tf.reduce_mean'
+65:14: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+65:14: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+68:20: INFO: Added keywords to args of function 'tf.nn.ctc_beam_search_decoder'
+70:12: INFO: Changed tf.to_int32 call to tf.cast(..., dtype=tf.int32).
+72:13: INFO: Added keywords to args of function 'tf.reduce_sum'
+72:84: INFO: Changed tf.to_float call to tf.cast(..., dtype=tf.float32).
+72:96: INFO: Added keywords to args of function 'tf.size'
+74:15: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+74:15: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+76:8: INFO: Renamed 'tf.trainable_variables' to 'tf.compat.v1.trainable_variables'
+78:33: INFO: Added keywords to args of function 'tf.gradients'
+80:12: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+89:24: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+89:24: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+90:25: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+90:25: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+91:26: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+91:26: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+92:27: INFO: tf.summary.scalar requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+92:27: INFO: Renamed 'tf.summary.scalar' to 'tf.compat.v1.summary.scalar'
+103:10: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+105:12: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+107:20: INFO: tf.summary.merge requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+107:20: INFO: Renamed 'tf.summary.merge' to 'tf.compat.v1.summary.merge'
+109:17: INFO: tf.summary.merge requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+109:17: INFO: Renamed 'tf.summary.merge' to 'tf.compat.v1.summary.merge'
+111:16: INFO: tf.summary.FileWriter requires manual check. The TF 1.x summary API cannot be automatically migrated to TF 2.0, so symbols have been converted to tf.compat.v1.summary.* and must be migrated manually. Typical usage will only require changes to the summary writing logic, not to individual calls like scalar(). For examples of the new summary API, see the Effective TF 2.0 migration document or check the TF 2.0 TensorBoard tutorials.
+111:16: INFO: Renamed 'tf.summary.FileWriter' to 'tf.compat.v1.summary.FileWriter'
+129:14: INFO: Renamed 'tf.assign' to 'tf.compat.v1.assign'
+192:15: INFO: Renamed 'tf.assign' to 'tf.compat.v1.assign'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file 'HandwritingRecognitionSystem/rnn.py'
+ outputting to 'HandwritingRecognitionSystem_v2/rnn.py'
+--------------------------------------------------------------------------------
+
+24:6: INFO: Renamed 'tf.variable_scope' to 'tf.compat.v1.variable_scope'
+29:11: INFO: Added keywords to args of function 'tf.reduce_max'
+35:49: INFO: Added keywords to args of function 'tf.shape'
+45:50: INFO: Added keywords to args of function 'tf.shape'
+64:14: INFO: Added keywords to args of function 'tf.while_loop'
+69:16: INFO: Changing tf.contrib.layers xavier initializer to a tf.compat.v1.keras.initializers.VarianceScaling and converting arguments.
+
+73:30: INFO: Renamed 'tf.nn.rnn_cell.LSTMCell' to 'tf.compat.v1.nn.rnn_cell.LSTMCell'
+74:12: INFO: Renamed 'tf.nn.rnn_cell.MultiRNNCell' to 'tf.compat.v1.nn.rnn_cell.MultiRNNCell'
+78:31: INFO: Renamed 'tf.nn.rnn_cell.LSTMCell' to 'tf.compat.v1.nn.rnn_cell.LSTMCell'
+79:13: INFO: Renamed 'tf.nn.rnn_cell.MultiRNNCell' to 'tf.compat.v1.nn.rnn_cell.MultiRNNCell'
+81:24: INFO: Renamed 'tf.nn.bidirectional_dynamic_rnn' to 'tf.compat.v1.nn.bidirectional_dynamic_rnn'
+88:21: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+89:21: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+--------------------------------------------------------------------------------
+
