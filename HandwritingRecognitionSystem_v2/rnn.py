@@ -10,10 +10,16 @@ import tensorflow as tf
 import numpy as np
 import math
 
-from config import cfg
-from util import LoadClasses
-from cnn import FV
-from cnn import NFeatures
+try:
+	from config import cfg
+	from util import LoadClasses
+	from cnn import FV
+	from cnn import NFeatures
+except:
+	from HandwritingRecognitionSystem_v2.config import cfg
+	from HandwritingRecognitionSystem_v2.util import LoadClasses
+	from HandwritingRecognitionSystem_v2.cnn import FV
+	from HandwritingRecognitionSystem_v2.cnn import NFeatures
 
 Classes = LoadClasses(cfg.CHAR_LIST)
 
@@ -62,7 +68,7 @@ def RNN(Inputs, SeqLens, Scope):
 			return [tf.add(i, 1), next]
 
 		i, Inputs = tf.while_loop(cond=condition, body=body, loop_vars=[i, Inputs], shape_invariants=[i.get_shape(), tf.TensorShape([None, cfg.BatchSize, NFeatures])])
-		
+
 		###############################################################
 		#Construct LSTM layers
 
@@ -91,6 +97,5 @@ def RNN(Inputs, SeqLens, Scope):
 
 		# Perform an affine transformation
 		logits =  tf.add( tf.add( tf.matmul(fw_out,W_fw), tf.matmul(bw_out,W_bw) ), b_out )
-		
-		return tf.reshape(logits, [-1, cfg.BatchSize, NClasses])
 
+		return tf.reshape(logits, [-1, cfg.BatchSize, NClasses])

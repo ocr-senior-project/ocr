@@ -12,7 +12,12 @@ import cv2
 import math
 import os
 import codecs
-from config import cfg
+
+# allow the script to be run from a program in a parent directory
+try:
+    from config import cfg
+except:
+    from HandwritingRecognitionSystem_v2.config import cfg
 
 
 tf.compat.v1.disable_eager_execution()
@@ -210,4 +215,3 @@ def ReadData(filesLocation, filesList, numberOfFiles, WND_HEIGHT, WND_WIDTH, WND
 	    assert len(inputList) == len(targetList)
 
 	return inputList, seqLens, targetList
-

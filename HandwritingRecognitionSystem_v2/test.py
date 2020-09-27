@@ -21,16 +21,32 @@ try:
 except NameError:
 	pass         # Python 3
 
-from config import cfg
-from util import LoadClasses
-from util import LoadModel
-from util import ReadData
-from util import LoadList
-from cnn import CNN
-from cnn import WND_HEIGHT
-from cnn import WND_WIDTH
-from cnn import MPoolLayers_H
-from rnn import RNN
+# allow the script to be run from a program in a parent directory
+try:
+    from config import cfg
+	from config import cfg
+	from config import cfg
+	from util import LoadClasses
+	from util import LoadModel
+	from util import ReadData
+	from util import LoadList
+	from cnn import CNN
+	from cnn import WND_HEIGHT
+	from cnn import WND_WIDTH
+	from cnn import MPoolLayers_H
+	from rnn import RNN
+except:
+    from HandwritingRecognitionSystem_v2.config import cfg
+	from HandwritingRecognitionSystem_v2.config import cfg
+	from HandwritingRecognitionSystem_v2.util import LoadClasses
+	from HandwritingRecognitionSystem_v2.util import LoadModel
+	from HandwritingRecognitionSystem_v2.util import ReadData
+	from HandwritingRecognitionSystem_v2.util import LoadList
+	from HandwritingRecognitionSystem_v2.cnn import CNN
+	from HandwritingRecognitionSystem_v2.cnn import WND_HEIGHT
+	from HandwritingRecognitionSystem_v2.cnn import WND_WIDTH
+	from HandwritingRecognitionSystem_v2.cnn import MPoolLayers_H
+	from HandwritingRecognitionSystem_v2.rnn import RNN
 
 
 if cfg.WriteDecodedToFile == True:
@@ -100,15 +116,15 @@ try:
 			fileIndex = cfg.BatchSize * batch + i
 			filename = FilesList[fileIndex].strip()
 			decodedStr = " "
-			
+
 			for j in range(0, len(trans[i])):
-				if trans[i][j] == 0:					
+				if trans[i][j] == 0:
 					if (j != (len(trans[i]) - 1)):
 						if trans[i][j+1] == 0: break
 						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
 					else:
 						break
-				else:	
+				else:
 					if trans[i][j] == (NClasses - 2):
 						if (j != 0): decodedStr = "%s " % (decodedStr)
 						else: continue
@@ -133,5 +149,3 @@ except (KeyboardInterrupt, SystemExit, Exception) as e:
 	session.close()
 	print("Terminating Program...")
 	sys.exit(0)
-
-
