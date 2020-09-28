@@ -156,7 +156,7 @@ class MainWidget(QtWidgets.QWidget):
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
         self.ui.label.selectPolygon = not self.ui.label.selectPolygon
-        if event.key() == QtCore.Qt.Key_Return and self.ui.label.polygonPoints != []:
+        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
             print(self.ui.label.polygonPoints)
             self.polygonCrop()
             self.ui.label.polygonPoints = []
