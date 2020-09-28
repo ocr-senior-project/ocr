@@ -51,6 +51,8 @@ def ocr(output, charset_path, img_list_path, img_dir, model_dir):
     # get a list of all the characters that are usable in the text
     Classes = LoadClasses(charset_path)
 
+    print("HERE")
+
     # the number of characters available to use
     NClasses = len(Classes)
 
@@ -158,6 +160,7 @@ def ocr(output, charset_path, img_list_path, img_dir, model_dir):
 
                 # remove the filename since thats ugly
                 output.write(decodedStr.split(' ')[1:].join(' '))
+                print("REEE")
 
             start += cfg.BatchSize
             end += cfg.BatchSize

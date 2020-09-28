@@ -16,12 +16,7 @@ import codecs
 # allow the script to be run from a program in a parent directory
 try:
     from config import cfg
-
 except:
-    # change the working directory to support this file being run from another
-    # file in a different directory
-    import os
-    os.chdir(os.path.dirname(__file__))
     from .config import cfg
 
 tf.compat.v1.disable_eager_execution()
@@ -73,7 +68,8 @@ def target_list_to_sparse_tensor(targetList):
 def LoadClasses(path):
     data = {}
     with codecs.open(path, 'r', encoding='utf-8') as cF:
-	    data = cF.read().split('\n')
+        data = cF.read().split('\n')
+
     return data
 
 def LoadList(path):
