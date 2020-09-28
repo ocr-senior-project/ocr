@@ -21,6 +21,7 @@ except AttributeError:
         return QtWidgets.QApplication.translate(context, text, disambig)
 
 def resize_image(image):
+    """ Resizes a jpg image to fit on screen """
     baseheight = 640
     img = Image.open(image)
     hpercent = (baseheight / float(img.size[1]))
@@ -30,6 +31,7 @@ def resize_image(image):
 
 class Ui_test:
     def setupUi(self, test):
+        """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
@@ -74,6 +76,7 @@ class Ui_test:
         QtCore.QMetaObject.connectSlotsByName(test)
 
     def retranslateUi(self, test):
+        """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
@@ -83,12 +86,14 @@ class Ui_test:
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
     def get_char(self):
+        """ Outputs highlighted character in text box """
         self.textCursor = self.textBrowser.textCursor()
         selected = self.textCursor.selectionStart()
         text = self.textBrowser.toPlainText()
         print(text[selected])
 
     def get_file(self):
+        """ Gets the embedded jpg from a pdf """
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         self.page = 0
         self.imgs = pp.get_jpgs(fname[self.page])
@@ -96,12 +101,14 @@ class Ui_test:
         self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def next_page(self):
+        """ Next page button """
         if self.page < len(self.imgs) - 1:
             self.page += 1
             resized = resize_image(self.imgs[self.page])
             self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def previous_page(self):
+        """ Previous page button """
         if self.page > 0:
             self.page -= 1
             resized = resize_image(self.imgs[self.page])
@@ -117,7 +124,6 @@ class ImageLabel(QtWidgets.QLabel):
         self.line = 0
         self.selectPolygon = True
         self.polygonPoints = []
-        # self.setMouseTracking(True)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
