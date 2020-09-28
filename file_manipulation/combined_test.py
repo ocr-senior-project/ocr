@@ -4,7 +4,7 @@ import os
 
 # get access to a file in a subdirectory
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'matricula.pdf')
+filename = os.path.join(dirname, 'draft_1.pdf')
 
 # get all the jpgs from the pdf
 lst = pp.get_jpgs(filename, wait=True)

@@ -38,14 +38,12 @@ class Ui_test:
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
-        self.textBrowser = QtWidgets.QTextBrowser(test)
+        self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.horizontalLayout.addWidget(self.textBrowser)
-        self.textLayout = QtWidgets.QHBoxLayout(self.textBrowser)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.child_label= QtWidgets.QLabel(self.textBrowser)
 
         self.pushButton_2 = QtWidgets.QPushButton(test)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
@@ -54,13 +52,13 @@ class Ui_test:
 
         self.pushButton_3 = QtWidgets.QPushButton(test)
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.pushButton_3.clicked.connect(self.show_text)
         self.verticalLayout.addWidget(self.pushButton_3)
 
         self.pushButton = QtWidgets.QPushButton(test)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
+        self.pushButton.clicked.connect(self.get_char)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -84,26 +82,18 @@ class Ui_test:
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
+    def get_char(self):
+        self.textCursor = self.textBrowser.textCursor()
+        selected = self.textCursor.selectionStart()
+        text = self.textBrowser.toPlainText()
+        print(text[selected])
+
     def get_file(self):
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         self.page = 0
         self.imgs = pp.get_jpgs(fname[self.page])
         resized = resize_image(self.imgs[self.page])
         self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
-
-    def select(self,label):
-        label.setFlat(False)
-        #label.setText(_translate("test","NOPE",None))
-
-    def show_text(self):
-        string = "This is example text! asdfasdfasdf"
-        for i in range(0,len(string)):
-            new_label = QtWidgets.QPushButton(test)
-            self.labels.append(new_label)
-            new_label.setFlat(True)
-            new_label.setText(_translate("test",string[i],None))
-            self.textLayout.addWidget(new_label)
-            new_label.clicked.connect(lambda: self.select(new_label))
 
     def next_page(self):
         if self.page < len(self.imgs) - 1:
