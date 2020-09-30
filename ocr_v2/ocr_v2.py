@@ -52,3 +52,15 @@ def ocr(output, charset_path, img_list_path, img_dir, model_dir):
 
     # get a list of all the image files
     img_lst  = load_list(img_list_path)[0]
+
+    ####################################################################
+    #CNN-specific architecture configuration
+    ####################################################################
+    WND_HEIGHT = 64 		#Extraction window height
+    WND_WIDTH = 64			#Extraction window width
+    WND_SHIFT = WND_WIDTH - 2	#Window shift
+
+    MPoolLayers_ALL = 5	#Nbr of all maxpool layers
+    MPoolLayers_H = 2	#Nbr of maxpool in horizontal dimension
+    LastFilters = 512	#Nbr of feature maps at the last conv layer
+    ####################################################################

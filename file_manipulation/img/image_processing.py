@@ -99,6 +99,9 @@ def color_mask(image, max, step=4, magic=False):
         # the darkest value allowed by the color mask
         low = get_darkest(image, step)
 
+        # change the colorspace of the image
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
         # the lightest value allowed by the color mask
         high = np.array([
             np.uint8(low[0] + max),
@@ -115,5 +118,6 @@ def invert_bw(image):
 # project horizontal lines where the program thinks like breaks should be
 
 # get the first line of text in the image
-def get_first_line(image):
-    pass
+def get_lines(img, step=4):
+    # for every fourth row of the image
+    for r in range(0, len(img), step):
