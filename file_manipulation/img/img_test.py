@@ -16,6 +16,7 @@ img = ip.read(fpath)
 img = ip.color_mask(img, 185, magic=True)
 # ip.display(img, scale)
 
+img = ip.deskew(img)
 
 # # mask the image
 # img = ip.color_mask(img, 90)
@@ -33,9 +34,9 @@ img = ip.denoise(img, 3)
 img = ip.blur(img, 3)
 ip.display(img, scale)
 
-lines = ip.get_lines(img, change=20)
+lines = ip.get_lines(img, change=50)
 
 for line in lines:
     ip.project(img, line)
 
-ip.display(img, scale)
+ip.display(img, 40)

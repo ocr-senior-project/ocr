@@ -117,12 +117,18 @@ def invert_bw(image):
 
 # project horizontal lines where the program thinks like breaks should be
 def project(img, line):
-    cv2.line(img, (0, line), (len(img[0]), line), (0, 255, 0), thickness=4)
+    cv2.line(img, (0, line), (len(img[0]), line), (0, 255, 0), thickness=1)
 
 # get lines, but better (hopefully)
-def better_get_lines(img, step=4, diff=10):
+def better_get_lines(img, step=4, change=10):
+    # the row (y-coordinate) where there is a line break
+    lines = []
+
     # the largest number of marks in an image
     most_marks = 0
+
+    # if we are in a line
+    line = False
 
     # find the largest number of marks in a line
     for r in range(0, len(img), step):
@@ -131,15 +137,25 @@ def better_get_lines(img, step=4, diff=10):
 
         # if the number of marks is larger than the largesdt found so far
         if marks > most_marks:
-            # reassing the number of marks
+            # reassign the number of marks
             most_marks = marks
 
     # for every step-th row
     for r in range(0, len(img), step):
         # find the number of marks
         marks = img[r].tolist().count(0)
-        if marks > most_marks:
-            most_marks = marks
+
+        # if the line is within change% of the largest number of marks
+        if marks >= (most_marks * change // 100) and not line:
+            lines.append(r * step)
+            line = True
+
+        # if we are exiting a line
+        elif marks < (most_marks * change // 100) and line:
+            lines.append(r)
+            line = False
+
+    return lines
 
 # get the first line of text in the image
 def get_lines(img, step=4, change=10):
