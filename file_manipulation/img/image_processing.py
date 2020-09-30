@@ -116,8 +116,29 @@ def invert_bw(image):
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV)[1]
 
 # project horizontal lines where the program thinks like breaks should be
+def project(img, line):
+    cv2.line(img, (0, line), (len(img[0]), line), (0, 255, 0), thickness=4)
 
 # get the first line of text in the image
-def get_lines(img, step=4):
-    # for every fourth row of the image
+def get_lines(img, step=4, change=10):
+    # the row (y-coordinate) where there is a line break
+    lines = []
+
+    # the number that decides whether we are in a line or a line break
+    current = 0
+
+    # for every step-th row of the image
     for r in range(0, len(img), step):
+        # the number of marks in the current line
+        marks = img[r].tolist().count(0)
+
+        # decide if there has been a significant enough change
+        if marks > (current + (current * change // 100) + change) or \
+            marks < (current + (current * change // 100) + change):
+            # change the current number of marks to the number in this line
+            current = marks
+
+            # add the line to the list of lines
+            lines.append(r * step)
+
+    return lines[1::2]

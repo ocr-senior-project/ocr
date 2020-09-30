@@ -32,3 +32,10 @@ img = ip.denoise(img, 3)
 # slightly blur the image
 img = ip.blur(img, 3)
 ip.display(img, scale)
+
+lines = ip.get_lines(img, change=20)
+
+for line in lines:
+    ip.project(img, line)
+
+ip.display(img, scale)
