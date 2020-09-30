@@ -119,6 +119,28 @@ def invert_bw(image):
 def project(img, line):
     cv2.line(img, (0, line), (len(img[0]), line), (0, 255, 0), thickness=4)
 
+# get lines, but better (hopefully)
+def better_get_lines(img, step=4, diff=10):
+    # the largest number of marks in an image
+    most_marks = 0
+
+    # find the largest number of marks in a line
+    for r in range(0, len(img), step):
+        # find the number of marks
+        marks = img[r].tolist().count(0)
+
+        # if the number of marks is larger than the largesdt found so far
+        if marks > most_marks:
+            # reassing the number of marks
+            most_marks = marks
+
+    # for every step-th row
+    for r in range(0, len(img), step):
+        # find the number of marks
+        marks = img[r].tolist().count(0)
+        if marks > most_marks:
+            most_marks = marks
+
 # get the first line of text in the image
 def get_lines(img, step=4, change=10):
     # the row (y-coordinate) where there is a line break
