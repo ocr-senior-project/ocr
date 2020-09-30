@@ -12,6 +12,9 @@ import threading # multithreading
 def read(fname):
     return cv2.imread(fname)
 
+def write(fname, img):
+    cv2.imwrite(fname, img)
+
 # rescale an image
 def scale(image, percent=100):
     height = int(image.shape[0] * percent / 100)

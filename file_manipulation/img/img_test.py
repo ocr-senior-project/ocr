@@ -34,9 +34,11 @@ img = ip.denoise(img, 3)
 img = ip.blur(img, 3)
 ip.display(img, scale)
 
-lines = ip.get_lines(img, change=50)
+lines = ip.get_lines(img, change=10)
 
 for line in lines:
     ip.project(img, line)
 
-ip.display(img, 40)
+ip.display(img, 100)
+
+ip.write("out.jpg", img)
