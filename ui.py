@@ -36,7 +36,7 @@ class Ui_test:
         test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = ImageLabel()
+        self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
@@ -98,51 +98,75 @@ class Ui_test:
         self.page = 0
         self.imgs = pp.get_jpgs(fname[self.page])
         resized = resize_image(self.imgs[self.page])
-        self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+        self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+        self.label.update()
+        # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
             self.page += 1
             resized = resize_image(self.imgs[self.page])
-            self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+            self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
             self.page -= 1
             resized = resize_image(self.imgs[self.page])
-            self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+            self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
 
 class ImageLabel(QtWidgets.QLabel):
-    def __init__(self):
+    def __init__(self, ui):
         """ Provides event support for the image label """
         # CITE: # https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
         super(ImageLabel, self).__init__()
+        self.ui = ui
         self.rubberBand = 0
         self.line = 0
         self.selectPolygon = True
         self.polygonPoints = []
+        self.polygon = QtGui.QPolygon()
+        self.released = False
+        self.pixmap = []
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         self.origin = event.pos()
         if self.selectPolygon:
             self.polygonPoints.append((event.x(),event.y()))
+            self.polygon << event.pos()
 
-        if not self.rubberBand:
-            self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
-        self.rubberBand.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
-        self.rubberBand.show()
+        # if not self.rubberBand:
+        #     self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
+        # self.rubberBand.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
+        # self.rubberBand.show()
+
+    def paintEvent(self, event):
+        """ Paints a polygon on the pixmap """
+        painter = QtGui.QPainter(self)
+        if self.pixmap:
+            painter.drawPixmap(self.rect(), self.pixmap)
+        if self.released:
+            # myQpoly = QtGui.QPolygon()
+            # myQpoly << QtCore.QPoint(100, 0) << QtCore.QPoint(100, 100) << QtCore.QPoint(0,0)
+            painter.setPen(QtCore.Qt.green)
+            painter.drawConvexPolygon(self.polygon)
 
     def mouseMoveEvent(self, event):
         """ Displays the selection box """
-        self.rubberBand.setGeometry(QtCore.QRect(self.origin, event.pos()).normalized())
+        # self.rubberBand.setGeometry(QtCore.QRect(self.origin, event.pos()).normalized())
 
     def mouseReleaseEvent(self, event):
         """ Hides the selection box """
-        self.rubberBand.hide()
+        # self.rubberBand.hide()
+        # self.released = True
+        self.update()
         print(self.origin, event.pos())
 
 
@@ -157,6 +181,8 @@ class MainWidget(QtWidgets.QWidget):
         """ Called when a key is pressed """
         self.ui.label.selectPolygon = not self.ui.label.selectPolygon
         if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
+            self.ui.label.released = True
+            self.ui.label.update()
             print(self.ui.label.polygonPoints)
             self.polygonCrop()
             self.ui.label.polygonPoints = []
