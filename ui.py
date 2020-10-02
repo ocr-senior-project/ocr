@@ -129,18 +129,17 @@ class ImageLabel(QtWidgets.QLabel):
         self.ui = ui
         self.rubberBand = 0
         self.line = 0
-        self.selectPolygon = True
         self.polygonPoints = []
         self.polygon = QtGui.QPolygon()
+        self.polygons = []
         self.released = False
         self.pixmap = []
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         self.origin = event.pos()
-        if self.selectPolygon:
-            self.polygonPoints.append((event.x(),event.y()))
-            self.polygon << event.pos()
+        self.polygonPoints.append((event.x(),event.y()))
+        self.polygon << event.pos()
 
         # if not self.rubberBand:
         #     self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
@@ -152,11 +151,9 @@ class ImageLabel(QtWidgets.QLabel):
         painter = QtGui.QPainter(self)
         if self.pixmap:
             painter.drawPixmap(self.rect(), self.pixmap)
-        if self.released:
-            # myQpoly = QtGui.QPolygon()
-            # myQpoly << QtCore.QPoint(100, 0) << QtCore.QPoint(100, 100) << QtCore.QPoint(0,0)
-            painter.setPen(QtCore.Qt.green)
-            painter.drawConvexPolygon(self.polygon)
+            painter.setPen(QtCore.Qt.red)
+            for poly in self.polygons:
+                painter.drawConvexPolygon(poly)
 
     def mouseMoveEvent(self, event):
         """ Displays the selection box """
@@ -169,35 +166,26 @@ class ImageLabel(QtWidgets.QLabel):
         self.update()
         print(self.origin, event.pos())
 
-
-class MainWidget(QtWidgets.QWidget):
-    def __init__(self):
-        """ Calls the UI immediately and provides event support """
-        super(MainWidget, self).__init__()
-        self.ui = Ui_test()
-        self.ui.setupUi(self)
-
-    def keyPressEvent(self, event):
-        """ Called when a key is pressed """
-        self.ui.label.selectPolygon = not self.ui.label.selectPolygon
-        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
-            self.ui.label.released = True
-            self.ui.label.update()
-            print(self.ui.label.polygonPoints)
-            self.polygonCrop()
-            self.ui.label.polygonPoints = []
+    def selectPolygon(self):
+        self.released = True
+        self.update()
+        print(self.polygonPoints)
+        self.polygonCrop()
+        self.polygonPoints = []
+        self.polygons.append(self.polygon)
+        self.polygon = QtGui.QPolygon()
 
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
-        im = Image.open("jpg0.jpg").convert("RGBA")
+        im = Image.open(self.ui.imgs[self.ui.page]).convert("RGBA")
 
         # convert to numpy (for convenience)
         imArray = numpy.asarray(im)
 
         # create mask
         maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
-        ImageDraw.Draw(maskIm).polygon(self.ui.label.polygonPoints, outline=1, fill=1)
+        ImageDraw.Draw(maskIm).polygon(self.polygonPoints, outline=1, fill=1)
         mask = numpy.array(maskIm)
 
         # assemble new image (uint8: 0-255)
@@ -211,7 +199,21 @@ class MainWidget(QtWidgets.QWidget):
 
         # back to Image from numpy
         newIm = Image.fromarray(newImArray, "RGBA")
-        newIm.save("out.png")
+        numcuts = len(self.polygons)
+        newIm.save(f'out{numcuts}.png')
+
+class MainWidget(QtWidgets.QWidget):
+    def __init__(self):
+        """ Calls the UI immediately and provides event support """
+        super(MainWidget, self).__init__()
+        self.ui = Ui_test()
+        self.ui.setupUi(self)
+
+    def keyPressEvent(self, event):
+        """ Called when a key is pressed """
+        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
+            self.ui.label.selectPolygon()
+            
 
 
 if __name__ == "__main__":
