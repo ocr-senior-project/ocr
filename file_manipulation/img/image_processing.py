@@ -12,6 +12,7 @@ import threading # multithreading
 def read(fname):
     return cv2.imread(fname)
 
+# save an image to a file
 def write(fname, img):
     cv2.imwrite(fname, img)
 
