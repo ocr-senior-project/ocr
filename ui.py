@@ -129,47 +129,54 @@ class ImageLabel(QtWidgets.QLabel):
         self.ui = ui
         self.rubberBand = 0
         self.line = 0
+        self.lines = []
         self.polygonPoints = []
         self.polygon = QtGui.QPolygon()
         self.polygons = []
         self.released = False
         self.pixmap = []
-
-    def mousePressEvent(self, event):
-        """ Collects points for the polygon and creates selection boxes """
-        self.origin = event.pos()
-        self.polygonPoints.append((event.x(),event.y()))
-        self.polygon << event.pos()
-
-        # if not self.rubberBand:
-        #     self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
-        # self.rubberBand.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
-        # self.rubberBand.show()
+        self.origin = []
+        self.end = []
+        self.setMouseTracking(True)
 
     def paintEvent(self, event):
-        """ Paints a polygon on the pixmap """
+        """ Paints a polygon on the pixmap after selection
+            during selection of a polygon points the current line """
         painter = QtGui.QPainter(self)
         if self.pixmap:
             painter.drawPixmap(self.rect(), self.pixmap)
             painter.setPen(QtCore.Qt.red)
+            if self.origin and self.end:
+                painter.drawLine(self.origin, self.end)
+            for start, end in self.lines:
+                painter.drawLine(start, end)
             for poly in self.polygons:
                 painter.drawConvexPolygon(poly)
+                
+    def mousePressEvent(self, event):
+        """ Collects points for the polygon and creates selection boxes """
+        if self.origin:
+            self.lines.append((self.origin, event.pos()))
+        self.origin = event.pos()
+        self.polygonPoints.append((event.x(),event.y()))
+        self.polygon << event.pos()
 
     def mouseMoveEvent(self, event):
-        """ Displays the selection box """
-        # self.rubberBand.setGeometry(QtCore.QRect(self.origin, event.pos()).normalized())
+        """ updates the painter and lets it draw the line from
+            the last clicked point to end """
+        self.end = event.pos()
+        self.update()
 
     def mouseReleaseEvent(self, event):
-        """ Hides the selection box """
-        # self.rubberBand.hide()
-        # self.released = True
         self.update()
-        print(self.origin, event.pos())
 
     def selectPolygon(self):
+        """ Called when a polygon is done being selected
+            Crops polygon and stops drawing lines following mouse """
         self.released = True
+        self.lines = []
+        self.origin = []
         self.update()
-        print(self.polygonPoints)
         self.polygonCrop()
         self.polygonPoints = []
         self.polygons.append(self.polygon)
