@@ -36,12 +36,13 @@ class Ui_test:
         test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = ImageLabel()
+        self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.textBrowser.copyAvailable.connect(self.get_char)
         self.horizontalLayout.addWidget(self.textBrowser)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -60,7 +61,6 @@ class Ui_test:
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        self.pushButton.clicked.connect(self.get_char)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -85,93 +85,140 @@ class Ui_test:
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
+    def export_file(self):
+        text = self.textBrowser.toPlainText()
+        file = open('out.txt','w')
+        file.write(text)
+
     def get_char(self):
         """ Outputs highlighted character in text box """
         self.textCursor = self.textBrowser.textCursor()
-        selected = self.textCursor.selectionStart()
-        text = self.textBrowser.toPlainText()
-        print(text[selected])
+        if self.textCursor.hasSelection() == True:
+            selected = self.textCursor.selectionStart()
+            text = self.textBrowser.toPlainText()
+            if selected <= len(text)-1:
+                print(text[selected])
 
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         self.page = 0
+        self.pages = []
+        self.pages.append(Page())
         self.imgs = pp.get_jpgs(fname[self.page])
         resized = resize_image(self.imgs[self.page])
-        self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+        self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+        self.label.update()
+        # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
+            self.pages[self.page].text = self.textBrowser.toPlainText()
+            #self.pages[self.page].polygons = self.label.polygons
+            #self.label = ImageLabel(self)
             self.page += 1
+            if len(self.pages)-1 < self.page:
+                self.pages.append(Page())
+            self.textBrowser.setText(self.pages[self.page].text)
             resized = resize_image(self.imgs[self.page])
-            self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+            self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
+            self.pages[self.page].text = self.textBrowser.toPlainText()
+            #self.pages[self.page].polygons = self.label.polygons
+            #self.label = ImageLabel(self)
             self.page -= 1
+            self.textBrowser.setText(self.pages[self.page].text)
             resized = resize_image(self.imgs[self.page])
-            self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+            self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+
+
+class Page():
+    def __init__(self):
+        super(Page, self).__init__()
+        self.text = ""
+        self.polygons = []
 
 
 class ImageLabel(QtWidgets.QLabel):
-    def __init__(self):
+    def __init__(self, ui):
         """ Provides event support for the image label """
         # CITE: # https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
         super(ImageLabel, self).__init__()
+        self.ui = ui
         self.rubberBand = 0
         self.line = 0
-        self.selectPolygon = True
+        self.lines = []
         self.polygonPoints = []
+        self.polygon = QtGui.QPolygon()
+        self.polygons = []
+        self.released = False
+        self.pixmap = []
+        self.origin = []
+        self.end = []
+        self.setMouseTracking(True)
+
+    def paintEvent(self, event):
+        """ Paints a polygon on the pixmap after selection
+            during selection of a polygon points the current line """
+        painter = QtGui.QPainter(self)
+        if self.pixmap:
+            painter.drawPixmap(self.rect(), self.pixmap)
+            painter.setPen(QtCore.Qt.red)
+            if self.origin and self.end:
+                painter.drawLine(self.origin, self.end)
+            for start, end in self.lines:
+                painter.drawLine(start, end)
+            for poly in self.polygons:
+                painter.drawConvexPolygon(poly)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
+        if self.origin:
+            self.lines.append((self.origin, event.pos()))
         self.origin = event.pos()
-        if self.selectPolygon:
-            self.polygonPoints.append((event.x(),event.y()))
-
-        if not self.rubberBand:
-            self.rubberBand = QtWidgets.QRubberBand(QtWidgets.QRubberBand.Rectangle, self)
-        self.rubberBand.setGeometry(QtCore.QRect(self.origin, QtCore.QSize()))
-        self.rubberBand.show()
+        self.polygonPoints.append((event.x(),event.y()))
+        self.polygon << event.pos()
 
     def mouseMoveEvent(self, event):
-        """ Displays the selection box """
-        self.rubberBand.setGeometry(QtCore.QRect(self.origin, event.pos()).normalized())
+        """ updates the painter and lets it draw the line from
+            the last clicked point to end """
+        self.end = event.pos()
+        self.update()
 
     def mouseReleaseEvent(self, event):
-        """ Hides the selection box """
-        self.rubberBand.hide()
-        print(self.origin, event.pos())
+        self.update()
 
-
-class MainWidget(QtWidgets.QWidget):
-    def __init__(self):
-        """ Calls the UI immediately and provides event support """
-        super(MainWidget, self).__init__()
-        self.ui = Ui_test()
-        self.ui.setupUi(self)
-
-    def keyPressEvent(self, event):
-        """ Called when a key is pressed """
-        self.ui.label.selectPolygon = not self.ui.label.selectPolygon
-        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
-            print(self.ui.label.polygonPoints)
-            self.polygonCrop()
-            self.ui.label.polygonPoints = []
+    def selectPolygon(self):
+        """ Called when a polygon is done being selected
+            Crops polygon and stops drawing lines following mouse """
+        self.released = True
+        self.lines = []
+        self.origin = []
+        self.update()
+        self.polygonCrop()
+        self.polygonPoints = []
+        self.polygons.append(self.polygon)
+        self.polygon = QtGui.QPolygon()
 
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
-        im = Image.open("jpg0.jpg").convert("RGBA")
+        im = Image.open(self.ui.imgs[self.ui.page]).convert("RGBA")
 
         # convert to numpy (for convenience)
         imArray = numpy.asarray(im)
 
         # create mask
         maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
-        ImageDraw.Draw(maskIm).polygon(self.ui.label.polygonPoints, outline=1, fill=1)
+        ImageDraw.Draw(maskIm).polygon(self.polygonPoints, outline=1, fill=1)
         mask = numpy.array(maskIm)
 
         # assemble new image (uint8: 0-255)
@@ -185,7 +232,21 @@ class MainWidget(QtWidgets.QWidget):
 
         # back to Image from numpy
         newIm = Image.fromarray(newImArray, "RGBA")
-        newIm.save("out.png")
+        numcuts = len(self.polygons)
+        newIm.save(f'out{numcuts}.png')
+
+class MainWidget(QtWidgets.QWidget):
+    def __init__(self):
+        """ Calls the UI immediately and provides event support """
+        super(MainWidget, self).__init__()
+        self.ui = Ui_test()
+        self.ui.setupUi(self)
+
+    def keyPressEvent(self, event):
+        """ Called when a key is pressed """
+        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
+            self.ui.label.selectPolygon()
+
 
 
 if __name__ == "__main__":
