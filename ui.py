@@ -97,28 +97,25 @@ class Ui_test:
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         self.page = 0
         self.imgs = pp.get_jpgs(fname[self.page])
-        resized = resize_image(self.imgs[self.page])
+        # resized = resize_image(self.imgs[self.page])
         self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
         self.label.update()
-        # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
             self.page += 1
-            resized = resize_image(self.imgs[self.page])
+            # resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
-            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
             self.page -= 1
-            resized = resize_image(self.imgs[self.page])
+            # resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
-            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
 
 class ImageLabel(QtWidgets.QLabel):
@@ -137,6 +134,7 @@ class ImageLabel(QtWidgets.QLabel):
         self.pixmap = []
         self.origin = []
         self.end = []
+        self.scale = 1
         self.setMouseTracking(True)
 
     def paintEvent(self, event):
@@ -144,6 +142,8 @@ class ImageLabel(QtWidgets.QLabel):
             during selection of a polygon points the current line """
         painter = QtGui.QPainter(self)
         if self.pixmap:
+            # self.pixmap = self.pixmap.scaled(2000, 2000, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+
             painter.drawPixmap(self.rect(), self.pixmap)
             painter.setPen(QtCore.Qt.red)
             if self.origin and self.end:
@@ -186,6 +186,12 @@ class ImageLabel(QtWidgets.QLabel):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
         im = Image.open(self.ui.imgs[self.ui.page]).convert("RGBA")
+
+        xscale = im.size[0] / self.rect().width()
+        yscale = im.size[1] / self.rect().height()
+
+        for k, v in enumerate(self.polygonPoints):
+            self.polygonPoints[k] = (v[0] * xscale, v[1] * yscale)
 
         # convert to numpy (for convenience)
         imArray = numpy.asarray(im)
