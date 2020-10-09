@@ -115,12 +115,12 @@ class Ui_test:
         """ Next page button """
         if self.page < len(self.imgs) - 1:
             self.pages[self.page].text = self.textBrowser.toPlainText()
-            #self.pages[self.page].polygons = self.label.polygons
-            #self.label = ImageLabel(self)
+            self.pages[self.page].polygons = self.label.polygons
             self.page += 1
             if len(self.pages)-1 < self.page:
                 self.pages.append(Page())
             self.textBrowser.setText(self.pages[self.page].text)
+            self.label.polygons = self.pages[self.page].polygons
             resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
@@ -130,10 +130,10 @@ class Ui_test:
         """ Previous page button """
         if self.page > 0:
             self.pages[self.page].text = self.textBrowser.toPlainText()
-            #self.pages[self.page].polygons = self.label.polygons
-            #self.label = ImageLabel(self)
+            self.pages[self.page].polygons = self.label.polygons
             self.page -= 1
             self.textBrowser.setText(self.pages[self.page].text)
+            self.label.polygons = self.pages[self.page].polygons
             resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
