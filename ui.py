@@ -42,6 +42,7 @@ class Ui_test:
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.textBrowser.copyAvailable.connect(self.get_char)
         self.horizontalLayout.addWidget(self.textBrowser)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -60,7 +61,6 @@ class Ui_test:
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        self.pushButton.clicked.connect(self.get_char)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -85,17 +85,26 @@ class Ui_test:
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
+    def export_file(self):
+        text = self.textBrowser.toPlainText()
+        file = open('out.txt','w')
+        file.write(text)
+
     def get_char(self):
         """ Outputs highlighted character in text box """
         self.textCursor = self.textBrowser.textCursor()
-        selected = self.textCursor.selectionStart()
-        text = self.textBrowser.toPlainText()
-        print(text[selected])
+        if self.textCursor.hasSelection() == True:
+            selected = self.textCursor.selectionStart()
+            text = self.textBrowser.toPlainText()
+            if selected <= len(text)-1:
+                print(text[selected])
 
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
         self.page = 0
+        self.pages = []
+        self.pages.append(Page())
         self.imgs = pp.get_jpgs(fname[self.page])
         # resized = resize_image(self.imgs[self.page])
         self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
@@ -104,18 +113,37 @@ class Ui_test:
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
+            self.pages[self.page].text = self.textBrowser.toPlainText()
+            self.pages[self.page].polygons = self.label.polygons
             self.page += 1
+            if len(self.pages)-1 < self.page:
+                self.pages.append(Page())
+            self.textBrowser.setText(self.pages[self.page].text)
+            self.label.polygons = self.pages[self.page].polygons
             # resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
+            self.pages[self.page].text = self.textBrowser.toPlainText()
+            self.pages[self.page].polygons = self.label.polygons
             self.page -= 1
+            self.textBrowser.setText(self.pages[self.page].text)
+            self.label.polygons = self.pages[self.page].polygons
             # resized = resize_image(self.imgs[self.page])
             self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
             self.label.update()
+            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+
+
+class Page():
+    def __init__(self):
+        super(Page, self).__init__()
+        self.text = ""
+        self.polygons = []
 
 
 class ImageLabel(QtWidgets.QLabel):
@@ -226,7 +254,6 @@ class MainWidget(QtWidgets.QWidget):
         """ Called when a key is pressed """
         if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
             self.ui.label.selectPolygon()
-            
 
 
 if __name__ == "__main__":
