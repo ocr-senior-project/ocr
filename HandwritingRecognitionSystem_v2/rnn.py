@@ -9,22 +9,10 @@
 import tensorflow as tf
 import numpy as np
 import math
-
-try:
-	from config import cfg
-	from util import LoadClasses
-	from cnn import FV
-	from cnn import NFeatures
-except:
-	# change the working directory to support this file being run from another
-	# file in a different directory
-	import os
-	os.chdir(os.path.dirname(__file__))
-
-	from .config import cfg
-	from .util import LoadClasses
-	from .cnn import FV
-	from .cnn import NFeatures
+from config import cfg
+from util import LoadClasses
+from cnn import FV
+from cnn import NFeatures
 
 Classes = LoadClasses(cfg.CHAR_LIST)
 

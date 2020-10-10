@@ -35,7 +35,7 @@ def display(image, size=100):
             cv2.destroyAllWindows()
             break
 
-# remove small pieces of noise
+# remove medium pieces of noise
 def threshold(image):
     return cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_MEAN_C,\
             cv2.THRESH_BINARY, 7, 15)
