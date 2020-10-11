@@ -102,12 +102,27 @@ class Ui_test:
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+
+        # An integer of the page currently displayed
         self.page = 0
+
+        # Return if no file name is given
+        if not fname[self.page]:
+            return
+
+        # A list of page objects
         self.pages = []
-        self.pages.append(Page())
-        self.imgs = pp.get_jpgs(fname[self.page])
-        # resized = resize_image(self.imgs[self.page])
-        self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+
+        # Returns a list of all of the pixmaps of the pdf
+        self.imgs = pp.get_pdf_contents(fname[self.page])
+
+        # Make the appropriate number of pages and assign them pixmaps
+        for pixmap in self.imgs:
+            self.pages.append(Page())
+            self.pages[-1].pixmap = pixmap
+
+        # Set the displayed pixmap to be the pixmap of the current page object
+        self.label.pixmap = self.pages[self.page].pixmap
         self.label.update()
 
     def next_page(self):
@@ -120,8 +135,9 @@ class Ui_test:
                 self.pages.append(Page())
             self.textBrowser.setText(self.pages[self.page].text)
             self.label.polygons = self.pages[self.page].polygons
-            # resized = resize_image(self.imgs[self.page])
-            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+
+            # Set the displayed pixmap to be the pixmap of the current page object
+            self.label.pixmap = self.pages[self.page].pixmap
             self.label.update()
             # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
@@ -133,8 +149,9 @@ class Ui_test:
             self.page -= 1
             self.textBrowser.setText(self.pages[self.page].text)
             self.label.polygons = self.pages[self.page].polygons
-            # resized = resize_image(self.imgs[self.page])
-            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+            
+            # Set the displayed pixmap to be the pixmap of the current page object
+            self.label.pixmap = self.pages[self.page].pixmap
             self.label.update()
             # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
 
@@ -144,6 +161,7 @@ class Page():
         super(Page, self).__init__()
         self.text = ""
         self.polygons = []
+        self.pixmap = None
 
 
 class ImageLabel(QtWidgets.QLabel):
