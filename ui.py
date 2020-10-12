@@ -231,8 +231,17 @@ class ImageLabel(QtWidgets.QLabel):
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
-        im = Image.open(self.ui.imgs[self.ui.page]).convert("RGBA")
 
+        # The image is no longer stored in memory, so write the pixmap out to the image.
+        file_to_crop = QtCore.QFile("jpg.jpg")
+        file_to_crop.open(QtCore.QIODevice.WriteOnly)
+        self.pixmap.save(file_to_crop, "JPG")
+
+
+        im = Image.open('jpg.jpg').convert("RGBA")
+
+        # Scale each point clicked by the ratio of the original image to the 
+        # displayed image
         xscale = im.size[0] / self.rect().width()
         yscale = im.size[1] / self.rect().height()
 
@@ -278,4 +287,10 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     test = MainWidget()
     test.show()
+
+    # scene = QtWidgets.QGraphicsScene()
+    # scene.addText("Hello, world!")
+
+    # view = QtWidgets.QGraphicsView(scene)
+    # view.show()
     sys.exit(app.exec_())
