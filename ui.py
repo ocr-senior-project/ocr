@@ -138,7 +138,6 @@ class Ui_test:
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self):
         """ Provides event support for the image label """
-        # CITE: # https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
         super(ImageLabel, self).__init__()
         self._page = None
         self._lines = []
