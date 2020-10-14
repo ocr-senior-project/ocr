@@ -32,14 +32,14 @@ flags.DEFINE_string('VAL_TRANS', './formalsamples/Labels/', 'Location of validat
 
 ######################################
 #Test data configuration
-flags.DEFINE_integer('TEST_NB', 6, 'Number of test images to process')
+flags.DEFINE_integer('TEST_NB', 1, 'Number of test images to process')
 flags.DEFINE_string('TEST_LIST', './formalsamples/list', 'List of test data without file extension.')
 flags.DEFINE_string('TEST_LOCATION', './formalsamples/Images/', 'Location of test data. Could be included in the data list.')
 flags.DEFINE_boolean('WriteDecodedToFile', True, 'Write the decoded text to file or stdout?')
 
 ######################################
 #Classes information
-flags.DEFINE_string('CHAR_LIST', './samples/CHAR_LIST', 'Sorted list of classes/characters. First one must be <SPACE>')
+flags.DEFINE_string('CHAR_LIST', './formalsamples/CHAR_LIST', 'Sorted list of classes/characters. First one must be <SPACE>')
 
 ######################################
 #Model and logs files and directories
