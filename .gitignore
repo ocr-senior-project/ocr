@@ -9,3 +9,7 @@ file_manipulation/__pycache__
 file_manipulation/matricula.pdf
 ocr_v2/__pycache__
 __pycache__
+ocr_v2/modded/__pycache__
+ocr_v2/modded/MATRICULAmodel
+ocr_v2/modded/summary
+ocr_v2/modded/*.jpg
