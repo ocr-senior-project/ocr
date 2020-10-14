@@ -1,4 +1,4 @@
-class cfg():
+class CFG():
     def __init__(self):
         # -------- Images and labels file type --------
         # The file type of images
