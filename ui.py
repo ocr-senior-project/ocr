@@ -20,6 +20,8 @@ except AttributeError:
         return QtWidgets.QApplication.translate(context, text, disambig)
 
 
+mode = "polygon_selection"
+
 def p_line_key(p_line):
     a = p_line._polygon
     min_a = 999999999
@@ -84,6 +86,7 @@ class Ui_test:
 
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
+
 
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
@@ -157,12 +160,18 @@ class Ui_test:
 
         # Add dummy info to text boxes
         for p in poly_lines:
-            p.set_transcription("(" + str(p._polygon[0].x()) + ", " + str(p._polygon[0].y()) + ")")
+            image_name = p._image_name
+            transcript = self.label._page.transcribePolygon(image_name)
+            print(transcript)
+            p.set_transcription(transcript)
+            #p.set_transcription("(" + str(p._polygon[0].x()) + ", " + str(p._polygon[0].y()) + ")")
             self.textBrowser.append(p._transcription)
-
         # Remove polygons from image
 
     def get_polygon(self):
+        global mode
+        mode = "highlighting"
+        self.label.update()
         self.textCursor = self.textBrowser.textCursor()
         if self.textCursor.hasSelection() == True:
             start = self.textCursor.selectionStart()
@@ -171,8 +180,7 @@ class Ui_test:
             selection = text[start:end]
             for line in self.pages[self.page]._page_lines:
                 if line._transcription == selection:
-                    self.selected_polygon = line.polygon
-
+                    self.selected_polygon = line._polygon
         else:
             pass
 
@@ -204,11 +212,17 @@ class ImageLabel(QtWidgets.QLabel):
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
-        if self._start_of_line:
-            self._lines.append((self._start_of_line, event.pos()))
-        self._start_of_line = event.pos()
-        self._page._polygon_points.append((event.x(),event.y()))
-        self._page._polygon << event.pos()
+        global mode
+        if mode == "polygon_selection":
+            if self._start_of_line:
+                self._lines.append((self._start_of_line, event.pos()))
+            self._start_of_line = event.pos()
+            self._page._polygon_points.append((event.x(),event.y()))
+            self._page._polygon << event.pos()
+        if mode == "highlighting":
+            point = QtCore.QPoint(event.x(), event.y())
+            self._page.highlight(point)
+
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from

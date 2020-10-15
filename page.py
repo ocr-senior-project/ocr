@@ -1,15 +1,16 @@
 import numpy
 from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
+import os
 
 
 class Line():
-    def __init__(self, polygon):
+    def __init__(self, polygon, image_name):
         self._polygon = polygon
+        self._image_name = image_name
 
     def set_transcription(self, transcription):
         self._transcription = transcription
-
 
 class Page:
     def __init__(self, image_object):
@@ -28,12 +29,12 @@ class Page:
         self._image_object._start_of_line = []
 
         # Crop the image, add the polygon to the image
-        self.polygonCrop()
-        self.addPolygon()
+        file_name = self.polygonCrop()
+        self.addPolygon(self._polygon, file_name)
 
-    def addPolygon(self):
+    def addPolygon(self, poly, image_name):
         """ adds self._polygon to the page"""
-        line_object = Line(self._polygon)
+        line_object = Line(poly, image_name)
         self._page_lines.append(line_object)
 
         self._polygon = QtGui.QPolygon()
@@ -76,6 +77,18 @@ class Page:
         file_to_crop.open(QtCore.QIODevice.WriteOnly)
         self._pixmap.save(file_to_crop, "JPG")
 
+    def transcribePolygon(self, image_name):
+        f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
+        f.write(image_name)
+        f.close()
+        #os.system("cd HandwritingRecognitionSystem_v2; python test.py; cd -") # cd doesn't work here
+        os.chdir('HandwritingRecognitionSystem_v2')
+        os.system('python test.py')
+        os.chdir('..')
+        f = open("HandwritingRecognitionSystem_v2/decoded.txt", "r")
+        return f.read()
+
+
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
@@ -109,4 +122,14 @@ class Page:
         numcuts = len(self._page_lines)
 
         # crop to the bounding rectangle
-        newIm.crop(end_crop).save(f'out{numcuts}.png')
+        samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
+        image_name = f'000033/out{numcuts}'
+        newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
+        return image_name
+
+
+    def highlight(self, position):
+        for line in self._page_lines:
+            poly = line._polygon
+            if poly.containsPoint(position, 0):
+                print(poly)
