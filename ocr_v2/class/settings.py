@@ -101,6 +101,15 @@ class CFG():
         # Stop the training after n epochs with no improvement on validation
         self.TrainThreshold = 20
 
+        # Extraction window height
+        self._wnd_height = 64
+
+        # Extraction window width
+        self._wnd_width = 64
+
+        # Window shift
+        self._wnd_shift = self._wnd_width - 2
+
     def load_list(fpath, enc="utf-8"):
         '''
         load the charset into a string, using whitespace as a delineator
