@@ -39,33 +39,60 @@ class RNN:
         # reshape the padded tensor into something more useful
 		shaped_pad = tf.reshape(a_padded, [maxLen, NFeatures])
 
-        # do something (lemme figure out what real quick tho)
+        # progrssively sum and pad the input across its entirety (i think)
 		for n in range(1, cfg.BatchSize):
+            # get the sum of all tensors along axis 0
 			offset = tf.math.cumsum(seq_lens)[n-1]
 
-			ndxs = tf.reshape(tf.range(offset, seq_lens[n]+offset), [seq_lens[n], 1])
-			res = tf.gather_nd(inputs, [ndxs])
-			res = tf.reshape(res, [-1])
-			zero_padding = tf.zeros([NFeatures * maxLen] - tf.shape(input=res), dtype=res.dtype)
+            # create a very tall tensor containing consecutive numbers
+			ndxs = tf.reshape(
+                tf.range(offset, seq_lens[n] + offset),
+                [seq_lens[n], 1])
+
+            # sum the tensors in sequence[n] along axis 0 and coerce that into
+            # being a list of numbers
+			res = tf.reshape(tf.gather_nd(inputs, [ndxs]), [-1])
+
+            # pad the input
+			zero_padding = tf.zeros([NFeatures * maxLen] - tf.shape(res))
 			a_padded = tf.concat([res, zero_padding], 0)
 			result = tf.reshape(a_padded, [maxLen, NFeatures])
 			shaped_pad = tf.concat([shaped_pad, result], 0)
 
-		n = 0
-		ndxs = tf.reshape(tf.range(n, cfg.BatchSize * maxLen, maxLen), [cfg.BatchSize, 1])
+        # create a tall tensor containing every maxLen-th number
+		ndxs = tf.reshape(
+            tf.range(0, cfg.batch_size * maxLen, maxLen),
+            [cfg.batch_size, 1])
+
+        # take only select padded inputs
 		inputs = tf.gather_nd(shaped_pad, [ndxs])
 
-		i = tf.constant(1)
-
+        # now we need to progressively shape the input in a while loop
+        # the condition of a tensorflow while loop
 		def condition(i, prev): return tf.less(i, maxLen)
 
+        # the body of a tensorflow while loop
+        # progressively reshape forward an count the number of iterations
 		def body(i, prev):
-			ndxs = tf.reshape(tf.range(i, cfg.BatchSize * maxLen, maxLen), [cfg.BatchSize, 1])
+			ndxs = tf.reshape(
+                tf.range(i, cfg.BatchSize * maxLen, maxLen),
+                [cfg.BatchSize, 1])
+
 			result = tf.gather_nd(shaped_pad, [ndxs])
 			next = tf.concat([prev, result], 0)
+
 			return [tf.add(i, 1), next]
 
-		i, inputs = tf.while_loop(cond=condition, body=body, loop_vars=[i, inputs], shape_invariants=[i.get_shape(), tf.TensorShape([None, cfg.BatchSize, NFeatures])])
+        # progressively reshape the input and collect this reshaped input
+        # we don't care about the number of iterations, so we can toss that
+		_, inputs = tf.while_loop(
+            condition,
+            body,
+            [tf.constant(1), inputs],
+            shape_invariants=[
+                i.get_shape(),
+                tf.TensorShape([None, cfg.batch_size, cfg.n_eatures])
+            ])
 
 		###############################################################
 		#Construct LSTM layers
@@ -85,13 +112,13 @@ class RNN:
 		[fw_out, bw_out], _ = tf.compat.v1.nn.bidirectional_dynamic_rnn(cell_fw=forward, cell_bw=backward, inputs=inputs, time_major=True, dtype=tf.float32,sequence_length=tf.cast(seq_lens, tf.int64))
 
 		# Reshaping forward, and backward outputs for affine transformation
-		fw_out = tf.reshape(fw_out,[-1, cfg.NUnits])
-		bw_out = tf.reshape(bw_out,[-1, cfg.NUnits])
+		self._fw_out = tf.reshape(fw_out,[-1, cfg.NUnits])
+		self._bw_out = tf.reshape(bw_out,[-1, cfg.NUnits])
 
 		# Linear Layer params
-		W_fw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
-		W_bw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
-		b_out = tf.constant(0.1,shape=[NClasses], dtype=tf.float32)
+		self._w_fw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
+		self._w_bw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
+		self._b_out = tf.constant(0.1,shape=[NClasses], dtype=tf.float32)
 
     def call(self):
         with self._cfg as cfg:
@@ -99,7 +126,7 @@ class RNN:
     		logits = tf.add(
                 tf.add(
                     tf.matmul(self._fw_out, self._w_fw),
-                    tf.matmul(bw_out,W_bw)),
+                    tf.matmul(self._bw_out, self._w_bw)),
                 b_out)
 
             # reshape the tensor
