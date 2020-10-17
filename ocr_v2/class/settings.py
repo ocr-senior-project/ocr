@@ -79,7 +79,7 @@ class CFG():
         self.fv = int(WND_HEIGHT / (2 ** maxpool))
 
         # the number of features? idk
-        self.n_features = self._fv * self._last_filters
+        self.n_features = self.fv * self.last_layer
 
         # ----------------------------------------------------------------------
         # -------------------------- CNN Parameters ----------------------------

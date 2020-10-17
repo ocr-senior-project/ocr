@@ -19,8 +19,7 @@ class CNN:
             input = x.activate(),
             ksize = [1, k_size[0], k_size[1], 1],
             strides = [1, stride[0], stride[1], 1],
-            padding = 'SAME'
-        )
+            padding = 'SAME')
 
     # build and run the cnn
     def build(self, x_in):
@@ -92,8 +91,7 @@ class Conv_Layer(tf.keras.layers.Layer):
             input = x,
             filters = weights,
             strides = [1, stride[0], stride[1], 1],
-            padding = padding
-        )
+            padding = padding)
 
     def batch_norm_conv(self):
         pass
@@ -124,16 +122,14 @@ class Conv_Layer(tf.keras.layers.Layer):
         mean, variance = tf.cond(
             self.trainable,
             true_fn=mean_var_with_update,
-            false_fn=lambda: (ema.average(batch_mean), ema.average(batch_var))
-        )
+            false_fn=lambda: (ema.average(batch_mean), ema.average(batch_var)))
 
         # return the normalized, scaled, and offset tensor
         return tf.nn.batch_normalization(x, mean, variance, offset, scale, 1e-3)
 
-    # compute the next layer
+    # compute the number going to the next layer
     def activate(self):
         return self._activation(
             self.batch_norm_conv(conv2d(self._input_layer, self._weight),
                 self._filter_out,
-                self._training)
-            )
+                self._training))
