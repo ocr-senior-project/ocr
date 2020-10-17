@@ -1,84 +1,107 @@
+"""
+Auth: Nate Koike, Roger Danilek
+Date: 16 October 2020
+Desc: handle settings and utility for the ocr library
+"""
+
+# open a file and split it by newlines
+# returns a list of the lines in the file and total number of lines
+def load_list(fpath, enc="utf-8"):
+    '''
+    load the charset into a string, using whitespace as a delineator
+    return a list of characters and the length of the list
+    fpath: the path to the file containing the character set used by the ocr
+      enc: the encoding of the file. this is utf-8 by default
+    '''
+    # open the file as bytes
+    file = open(fpath, "rb")
+
+    # get the list by reading in the entire file, decoding it using the
+    # specified encoding, then splitting it on whitespace (default parameter)
+    lst = file.read().decode(enc).split()
+
+    # close the file to avoid file handlers floating around
+    file.close()
+
+    return [lst, len(lst)]
+
 class CFG():
-    def __init__(self):
-        # -------- Images and labels file type --------
+    def __init__(self, char_list, save, model, log, start):
+        # ----------------------------------------------------------------------
+        # --------------------- Images and Label File Types --------------------
+        # ----------------------------------------------------------------------
         # The file type of images
         self.img_type = '.png'
+
         # The extension of the file holding the ground-truth labels
         self.label_type = '.tru'
 
-        # -------- Training data configuration --------
-        # Number of training images to process
-        self.train_nb = 4
-
-        # List of training data without file extension.
-        self.train_list = './formalsamples/list'
-
-        # Location of training data. Could be included in the data list.
-        self.train_location = './formalsamples/Images/'
-
-        # Location of training data transcriptions
-        self.train_trans = './formalsamples/Labels/'
-
-        # -------- Validation data configuration --------
-        # Number of validation images to process
-        self.val_nb = 4
-
-        # List of validation data without file extension.
-        self.val_list = './formalsamples/list'
-
-        # Location of validation data. Could be included in the data list.
-        self.val_location = './formalsamples/Images/'
-
-        # Location of validation data transcriptions
-        self.val_trans = './formalsamples/Labels/'
-
-        # -------- Test data configuration --------
-        # Number of test images to process
-        self.test_nb = 6
-
-        # List of test data without file extension.
-        self.test_list = './formalsamples/list'
-
-        # Location of test data. Could be included in the data list.
-        self.test_location = './formalsamples/Images/'
-
-        # Write the decoded text to file or stdout
-        self.write_decoded = True
-
-        # -------- Classes information --------
+        # ----------------------------------------------------------------------
+        # ----------------------- Character information ------------------------
+        # ----------------------------------------------------------------------
         # Sorted list of classes/characters. First one must be <SPACE>
-        self.char_list = './samples/CHAR_LIST'
+        self.char_list, self.n_chars = load_list(char_list)
 
-        # -------- Model and logs files and directories --------
+        # ----------------------------------------------------------------------
+        # ------------------ Model and Log Files and Directories ---------------
+        # ----------------------------------------------------------------------
         # Directory where model checkpoints are saved
-        self.save_dir = './MATRICULAmodel'
+        self.save_dir = save
 
         # Name of the model checkpoints
-        self.model_name = 'MATRICULAmodel.ckpt'
+        self.model_name = model
 
         # Log file
-        self.log_file = './log'
+        self.log_file = log
 
-        # Directory to store Tensorflow summary information
-        self.log_dir = './summary'
+        # ----------------------------------------------------------------------
+        # ---------------------- Neural Net Parameters -------------------------
+        # ----------------------------------------------------------------------
+        # Extraction window height
+        self.height = 64
 
-        # Directory to store posteriors for WFST decoder
-        self.probs = './Probs'
+        # Extraction window width
+        self.width = 64
 
-        # -------- CNN parameters --------
+        # Window shift
+        self.shift = self.width - 2
+
+        # Number of all max pool layers
+        self.all_maxpool_layers = maxpool
+
+        # Number of max pool in horizontal dimension
+        self.h_maxpool_layers = h_maxpool
+
+        # Number of feature maps at the last conv layer
+        self.last_layer = last
+
+        # tbh idk what this is
+        self.fv = int(WND_HEIGHT / (2 ** maxpool))
+
+        # the number of features? idk
+        self.n_features = self._fv * self._last_filters
+
+        # ----------------------------------------------------------------------
+        # -------------------------- CNN Parameters ----------------------------
+        # ----------------------------------------------------------------------
         # Use Leaky ReLU or ReLU
         self.LeakyReLU = True
 
-        # -------- RNN parameters --------
+        # ----------------------------------------------------------------------
+        # -------------------------- RNN Parameters ----------------------------
+        # ----------------------------------------------------------------------
         # Number of LSTM units per forward/backward layer
         self.NUnits = 256
 
         # Number of BLSTM layers
         self.NLayers = 3
 
-        # -------- training parameters --------
+        # ----------------------------------------------------------------------
+        # ----------------------- training parameters --------------------------
+        # ----------------------------------------------------------------------
         # The epoch number to start training from
-        self.StartingEpoch = 0 # = 0 to train from scratch, != 0 to resume from the latest checkpoint
+        # = 0 to train from scratch, != 0 to resume from the latest checkpoint
+        self.StartingEpoch = start
 
         # Learning rate
         self.LearningRate = 0.0005
@@ -93,38 +116,10 @@ class CFG():
         self.MaxGradientNorm = 5
 
         # Save model each n epochs
-        self.SaveEachNEpochs = 1
+        self.SaveEachNEpochs = 2
 
         # Run the training for n epochs
-        self.NEpochs = 1000
+        self.NEpochs = 1024
 
         # Stop the training after n epochs with no improvement on validation
-        self.TrainThreshold = 20
-
-        # Extraction window height
-        self._wnd_height = 64
-
-        # Extraction window width
-        self._wnd_width = 64
-
-        # Window shift
-        self._wnd_shift = self._wnd_width - 2
-
-    def load_list(fpath, enc="utf-8"):
-        '''
-        load the charset into a string, using whitespace as a delineator
-        return a list of characters and the length of the list
-        fpath: the path to the file containing the character set used by the ocr
-          enc: the encoding of the file. this is utf-8 by default
-        '''
-        # open the file as bytes
-        file = open(fpath, "rb")
-
-        # get the charset by reading in the entire file, decoding it using the
-        # specified encoding, then splitting it on whitespace (default parameter)
-        charset = file.read().decode(enc).split()
-
-        # close the file to avoid file handlers floating around
-        file.close()
-
-        return [charset, len(charset)]
+        self.TrainThreshold = 8
