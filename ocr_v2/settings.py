@@ -106,7 +106,9 @@ class CFG():
 
     # process a single string
     def run(self, img):
-        vec_per_win = self.width / math.pow(2, MPoolLayers_H)
+        print('Initializing...')
+
+        vec_per_win = self.width / math.pow(2, self.h_maxpool_layers)
 
         # blank image placeholder
         x = tf.zeros([None, WND_HEIGHT, WND_WIDTH])
@@ -118,7 +120,7 @@ class CFG():
         x_expanded = tf.expand_dims(x, 3)
 
         # create the inputs for the rnn
-        ins = CNN(x_expanded, phase_train, 'CNN')
+        ins = cnn.CNN(self).build(x_expanded)
 
         # get the raw prediction for one character
         logits = RNN(ins, seq_lens, 'RNN')
@@ -127,70 +129,54 @@ class CFG():
         decoded, log_prob = tf.nn.ctc_beam_search_decoder(inputs=logits, sequence_length=SeqLens)
 
         #Reading test data...
-        InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
-
-        print('Initializing...')
+        # InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
 
         session = tf.compat.v1.Session()
-
         session.run(tf.compat.v1.global_variables_initializer())
 
-        LoadModel(session, cfg.SaveDir+'/')
+        LoadModel(session, cfg.SaveDir + '/')
 
         try:
         	session.run(tf.compat.v1.assign(phase_train, False))
 
-        	randIxs = range(0, len(InputListTest))
+        	randIxs = [0]
 
-        	start, end = (0, cfg.BatchSize)
+            # somewhere in here we get the image file
+    		batchInputs = []
+    		batchSeqLengths = []
+    		for batchI, origI in enumerate(randIxs[start:end]):
+    			batchInputs.extend(InputListTest[origI])
+    			batchSeqLengths.append(SeqLensTest[origI])
 
-        	batch = 0
-        	while end <= len(InputListTest):
-        		batchInputs = []
-        		batchSeqLengths = []
-        		for batchI, origI in enumerate(randIxs[start:end]):
-        			batchInputs.extend(InputListTest[origI])
-        			batchSeqLengths.append(SeqLensTest[origI])
+    		feed = {x: batchInputs, SeqLens: batchSeqLengths}
+    		del batchInputs, batchSeqLengths
 
-        		feed = {x: batchInputs, SeqLens: batchSeqLengths}
-        		del batchInputs, batchSeqLengths
+    		Decoded = session.run([decoded], feed_dict=feed)[0]
+    		del feed
 
-        		Decoded = session.run([decoded], feed_dict=feed)[0]
-        		del feed
+    		trans = session.run(tf.sparse.to_dense(Decoded[0]))
+            #up to here
 
-        		trans = session.run(tf.sparse.to_dense(Decoded[0]))
+			decodedStr = ""
 
-        		for i in range(0, cfg.BatchSize):
+			for i in range(0, len(trans[0])):
+				if trans[0][i] == 0:
+					if (i != (len(trans[0]) - 1)):
+						if trans[0][i + 1] == 0:
+                            break
+						else:
+                            decodedStr += Classes[trans[0][i]]
 
-        			fileIndex = cfg.BatchSize * batch + i
-        			filename = FilesList[fileIndex].strip()
-        			decodedStr = " "
+				else:
+					if trans[0][i] == (NClasses - 2):
+						if (i != 0):
+                            decodedStr += ' '
+					else:
+						decodedStr += Classes[trans[0][i]]
 
-        			for j in range(0, len(trans[i])):
-        				if trans[i][j] == 0:
-        					if (j != (len(trans[i]) - 1)):
-        						if trans[i][j+1] == 0: break
-        						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
-        					else:
-        						break
-        				else:
-        					if trans[i][j] == (NClasses - 2):
-        						if (j != 0): decodedStr = "%s " % (decodedStr)
-        						else: continue
-        					else:
-        						decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
+			decodedStr = decodedStr.replace("<SPACE>", " ")
 
-        			decodedStr = decodedStr.replace("<SPACE>", " ")
-
-        			decodedStr = filename + decodedStr[:] + "\n"
-        			if cfg.WriteDecodedToFile == True: DecodeLog.write(decodedStr)
-        			else: print(decodedStr, end=' ')
-
-        		start += cfg.BatchSize
-        		end += cfg.BatchSize
-        		batch += 1
-
-        	DecodeLog.close()
+			return decodedStr
 
         except (KeyboardInterrupt, SystemExit, Exception) as e:
         	print("[Error/Interruption] %s" % str(e))
@@ -199,108 +185,100 @@ class CFG():
         	print("Terminating Program...")
         	sys.exit(0)
 
-    def read_run(VEC_PER_WND):
-
-    	seqLens = []
-    	inputList = []
-
-    	with open(filesList) as listHandler:
-
-    		imgNbr = 0
-    		imageFiles = listHandler.readlines()[0:numberOfFiles]
-
-    		for imageFile in imageFiles:
-
-    			if filesLocation != '': tfile = imageFile.strip('\n')
-    			else: tfile = os.path.basename(imageFile.strip('\n'))
-
-    			################################################################
-    			# Gathering the length of each sequence
-
-    			if filesLocation != '': imageFilePath = filesLocation + "/" + tfile + cfg.ImageFileType
-    			else: imageFilePath = imageFile.strip('\n') + cfg.ImageFileType
-
-    			print ("Reading " + imageFilePath)
-
-    			image = cv2.imread(imageFilePath, cv2.IMREAD_GRAYSCALE)
-
-    			h, w = np.shape(image)
-
-    			if(h > WND_HEIGHT): factor = WND_HEIGHT/float(h)
-    			else: factor = 1.0
-
-    			image = cv2.resize(image, None, fx=factor, fy=factor, interpolation = cv2.INTER_CUBIC)
-
-    			h, w = np.shape(image)
-
-    			winId = 0
-    			wpd = 0
-    			while True:
-
-    				s = (winId * WND_SHIFT)
-    				e = s + WND_WIDTH
-
-    				if e > w:
-    					sl = (winId+1) * VEC_PER_WND
-
-    					if transDir != '':
-    					    #Fix for small sequences
-    					    if(len(targetList[imgNbr]) > sl):
-    						    diff = len(targetList[imgNbr]) - sl
-    						    wpd = int(math.ceil(float(diff) / VEC_PER_WND))
-    						    sl = sl + wpd * VEC_PER_WND
-
-    					seqLens.append(sl)
-
-    					break
-
-    				winId = winId + 1
-
-    			################################################################
-    			# Adding features
-
-    			featuresSet = []
-
-    			winId = 0
-    			while True:
-
-    				s = (winId * WND_SHIFT)
-    				e = s + WND_WIDTH
-
-    				if e > w:
-    					pad = np.ones((h, (e - w)), np.uint8)*255
-    					wnd = image[:h,s:w]
-    					wnd = np.append(wnd, pad, axis=1)
-
-    					if h < WND_HEIGHT:
-    						pad = np.ones(((WND_HEIGHT - h), WND_WIDTH), np.uint8)*255
-    						wnd = np.append(pad, wnd, axis=0)
-
-    					featuresSet.append(wnd)
-
-    					#Fix for small sequences
-    					pad = np.ones((WND_HEIGHT, WND_WIDTH), np.uint8)*255
-
-    					for i in range(wpd): featuresSet.append(pad)
-
-    					break
-
-    				wnd = image[:h,s:e]
-
-    				if h < WND_HEIGHT:
-    					pad = np.ones(((WND_HEIGHT - h), WND_WIDTH), np.uint8)*255
-    					wnd = np.append(pad, wnd, axis=0)
-
-    				featuresSet.append(wnd)
-    				winId = winId + 1
-
-    			################################################################
-    			inputList.append(featuresSet)
-
-    			imgNbr = imgNbr + 1
-    			################################################################
-
-    	if transDir != '':
-    	    assert len(inputList) == len(targetList)
-
-    	return inputList, seqLens
+    # def read_run(self, VEC_PER_WND):
+    # 	seqLens = []
+    # 	inputList = []
+    #
+    # 	with open(filesList) as listHandler:
+    # 		imageFiles = listHandler.readlines()[0:numberOfFiles]
+    #
+    # 		for imageFile in imageFiles:
+    #             # # Replace above line with
+    #             # image_file = our image
+    #
+    # 			if filesLocation != '': tfile = imageFile.strip('\n')
+    # 			else: tfile = os.path.basename(imageFile.strip('\n'))
+    #
+    # 			################################################################
+    # 			# Gathering the length of each sequence
+    #
+    # 			if filesLocation != '': imageFilePath = filesLocation + "/" + tfile + cfg.ImageFileType
+    # 			else: imageFilePath = imageFile.strip('\n') + cfg.ImageFileType
+    #
+    # 			print ("Reading " + imageFilePath)
+    #
+    # 			image = cv2.imread(imageFilePath, cv2.IMREAD_GRAYSCALE)
+    #
+    # 			h, w = np.shape(image)
+    #
+    # 			if(h > WND_HEIGHT): factor = WND_HEIGHT/float(h)
+    # 			else: factor = 1.0
+    #
+    # 			image = cv2.resize(image, None, fx=factor, fy=factor, interpolation = cv2.INTER_CUBIC)
+    #
+    # 			h, w = np.shape(image)
+    #
+    # 			winId = 0
+    # 			wpd = 0
+    # 			while True:
+    #
+    # 				s = (winId * WND_SHIFT)
+    # 				e = s + WND_WIDTH
+    #
+    # 				if e > w:
+    # 					sl = (winId+1) * VEC_PER_WND
+    #
+    # 					if transDir != '':
+    # 					    #Fix for small sequences
+    # 					    if(len(targetList[0]) > sl):
+    # 						    diff = len(targetList[0]) - sl
+    # 						    wpd = math.ceil(diff / VEC_PER_WND)
+    # 						    sl += wpd * VEC_PER_WND
+    #
+    # 					seqLens.append(sl)
+    #
+    # 					break
+    #
+    # 				winId = winId + 1
+    #
+    # 			################################################################
+    # 			# Adding features
+    #
+    # 			featuresSet = []
+    #
+    # 			winId = 0
+    # 			while True:
+    #
+    # 				s = (winId * WND_SHIFT)
+    # 				e = s + WND_WIDTH
+    #
+    # 				if e > w:
+    # 					pad = np.ones((h, (e - w)), np.uint8)*255
+    # 					wnd = image[:h,s:w]
+    # 					wnd = np.append(wnd, pad, axis=1)
+    #
+    # 					if h < WND_HEIGHT:
+    # 						pad = np.ones(((WND_HEIGHT - h), WND_WIDTH), np.uint8)*255
+    # 						wnd = np.append(pad, wnd, axis=0)
+    #
+    # 					featuresSet.append(wnd)
+    #
+    # 					#Fix for small sequences
+    # 					pad = np.ones((WND_HEIGHT, WND_WIDTH), np.uint8)*255
+    #
+    # 					for i in range(wpd): featuresSet.append(pad)
+    #
+    # 					break
+    #
+    # 				wnd = image[:h,s:e]
+    #
+    # 				if h < WND_HEIGHT:
+    # 					pad = np.ones(((WND_HEIGHT - h), WND_WIDTH), np.uint8)*255
+    # 					wnd = np.append(pad, wnd, axis=0)
+    #
+    # 				featuresSet.append(wnd)
+    # 				winId = winId + 1
+    #
+    # 			inputList.append(featuresSet)
+    #
+    # 	return inputList, seqLens

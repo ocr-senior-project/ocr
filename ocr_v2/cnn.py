@@ -26,27 +26,27 @@ class CNN:
         with self._cfg as cfg:
             # x is a numpy array
             # create the hidden layers that make up the "black box" of our NN
-            layer1 = Conv_Layer(x_in, 1, 64, cfg)
-            layer2 = Conv_Layer(layer1, 64, 64, cfg)
+            layer1 = Conv_Layer(x_in, 1, 64, cfg, 'ConvLayer1')
+            layer2 = Conv_Layer(layer1, 64, 64, cfg, 'ConvLayer2')
             mpool2 = self.max_pool(layer2, ksize=(2,2), stride=(2,2))
 
-            layer3 = Conv_Layer(mpool2, 64, 128, cfg)
-            layer4 = Conv_Layer(layer3, 128, 128, cfg)
+            layer3 = Conv_Layer(mpool2, 64, 128, cfg, 'ConvLayer3')
+            layer4 = Conv_Layer(layer3, 128, 128, cfg, 'ConvLayer4')
             mpool4 = self.max_pool(layer4, ksize=(2, 2), stride=(2, 2))
 
-            layer5 = Conv_Layer(mpool4, 128, 256, cfg)
-            layer6 = Conv_Layer(layer5, 256, 256, cfg)
-            layer7 = Conv_Layer(layer6, 256, 256, cfg)
+            layer5 = Conv_Layer(mpool4, 128, 256, cfg, 'ConvLayer5')
+            layer6 = Conv_Layer(layer5, 256, 256, cfg, 'ConvLayer6')
+            layer7 = Conv_Layer(layer6, 256, 256, cfg, 'ConvLayer7')
             mpool7 = self.max_pool(layer7, ksize=(2, 1), stride=(2, 1))
 
-            layer8 = Conv_Layer(mpool7, 256, 512, cfg)
-            layer9 = Conv_Layer(layer8, 512, 512, cfg)
-            layer10 = Conv_Layer(layer9, 512, 512, cfg)
+            layer8 = Conv_Layer(mpool7, 256, 512, cfg, 'ConvLayer8')
+            layer9 = Conv_Layer(layer8, 512, 512, cfg, 'ConvLayer9')
+            layer10 = Conv_Layer(layer9, 512, 512, cfg, 'ConvLayer10')
             mpool10 = self.max_pool(layer10, ksize=(2, 1), stride=(2, 1))
 
-            layer11 = Conv_Layer(mpool10, 512, 512, cfg)
-            layer12 = Conv_Layer(layer11, 512, 512, cfg)
-            layer13 = Conv_Layer(layer12, 512, cfg.last_layer, cfg)
+            layer11 = Conv_Layer(mpool10, 512, 512, cfg, 'ConvLayer11')
+            layer12 = Conv_Layer(layer11, 512, 512, cfg, 'ConvLayer12')
+            layer13 = Conv_Layer(layer12, 512, cfg.last_layer, cfg, 'ConvLayer13')
             mpool13 = self.max_pool(layer13, ksize=(2, 1), stride=(2, 1))
 
             mpool13_T = tf.transpose(a=mpool13, perm=[0,2,1,3])
@@ -64,13 +64,16 @@ class Activation_Function:
 
 # a single convolutional layer
 class Conv_Layer(tf.keras.layers.Layer):
-    def __init__(self, input_layer, filter_in, filter_out, cfg, train=True):
+    def __init__(self, in_layer, filt_in, filt_out, cfg, train=True, name=None):
         # inherit from the keras layer class
         super(conv_layer, self).__init__()
 
-        self._input_layer = input_layer
-        self._filter_in = filter_in
-        self._filter_out = filter_out
+        self._input_layer = in_layer
+        self._filter_in = filt_in
+        self._filter_out = filr_out
+
+        # give this layer a name so it can be loaded later
+        self.name = name
 
         # decide whether this layer is trainable or not
         self.trainable = train
