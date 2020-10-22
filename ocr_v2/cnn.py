@@ -59,7 +59,7 @@ class Activation_Function:
     def __init__(self, fn):
         self._fn = fn
 
-    def call(self, features, alpha, name):
+    def call(self, features, alpha, name=None):
         return self._fn(features, alpha, name)
 
 # a single convolutional layer
@@ -79,7 +79,7 @@ class Conv_Layer(tf.keras.layers.Layer):
 		self._weight = weight_variable([3, 3, filter_in, filter_out])
 
         # if we don't want a sigmoid activation function
-		if cfg.LeakyReLU:
+		if cfg.leaky:
 			self._activation = Activation_Function(tf.nn.leaky_relu)
         # if we do
         else:

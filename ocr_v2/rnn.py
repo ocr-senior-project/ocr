@@ -97,27 +97,44 @@ class RNN:
 		###############################################################
 		#Construct LSTM layers
 
-		initializer = tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")
+        # initialize with variance scaling
+		initializer = tf.keras.initializers.VarianceScaling(
+            mode="fan_avg",
+            distribution="uniform")
 
 		stacked_rnn_forward = []
-		for i in range(cfg.NLayers):
-			stacked_rnn_forward.append(tf.compat.v1.nn.rnn_cell.LSTMCell(num_units=cfg.NUnits, initializer=initializer, use_peepholes=True, state_is_tuple=True))
-		forward = tf.compat.v1.nn.rnn_cell.MultiRNNCell(stacked_rnn_forward, state_is_tuple=True)
+		for i in range(cfg.n_layers):
+			stacked_rnn_forward.append(
+                tf.compat.v1.nn.rnn_cell.LSTMCell(
+                    num_units=cfg.NUnits,
+                    initializer=initializer,
+                    use_peepholes=True,
+                    state_is_tuple=True)
+                )
 
-		stacked_rnn_backward = []
-		for i in range(cfg.NLayers):
-			stacked_rnn_backward.append(tf.compat.v1.nn.rnn_cell.LSTMCell(num_units=cfg.NUnits, initializer=initializer, use_peepholes=True, state_is_tuple=True))
-		backward = tf.compat.v1.nn.rnn_cell.MultiRNNCell(stacked_rnn_backward, state_is_tuple=True)
+        forward = tf.compat.v1.nn.rnn_cell.MultiRNNCell(stacked_rnn_forward, state_is_tuple=True)
+
+		backwards_stack = []
+		for i in range(cfg.n_layers):
+			backwards_stack.append(
+                tf.compat.v1.nn.rnn_cell.LSTMCell(
+                    num_units=cfg.NUnits,
+                    initializer=initializer,
+                    use_peepholes=True,
+                    state_is_tuple=True)
+                )
+
+		backward = tf.compat.v1.nn.rnn_cell.MultiRNNCell(backwards_stack, state_is_tuple=True)
 
 		[fw_out, bw_out], _ = tf.compat.v1.nn.bidirectional_dynamic_rnn(cell_fw=forward, cell_bw=backward, inputs=inputs, time_major=True, dtype=tf.float32,sequence_length=tf.cast(seq_lens, tf.int64))
 
 		# Reshaping forward, and backward outputs for affine transformation
-		self._fw_out = tf.reshape(fw_out,[-1, cfg.NUnits])
-		self._bw_out = tf.reshape(bw_out,[-1, cfg.NUnits])
+		self._fw_out = tf.reshape(fw_out,[-1, cfg.n_units])
+		self._bw_out = tf.reshape(bw_out,[-1, cfg.n_units])
 
 		# Linear Layer params
-		self._w_fw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
-		self._w_bw = tf.Variable(tf.random.truncated_normal(shape=[cfg.NUnits, NClasses], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
+		self._w_fw = tf.Variable(tf.random.truncated_normal(shape=[cfg.n_units, cfg.n_chars], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
+		self._w_bw = tf.Variable(tf.random.truncated_normal(shape=[cfg.n_units, cfg.n_chars], stddev=np.sqrt(2.0 / cfg.NUnits), dtype=tf.float32), dtype=tf.float32)
 		self._b_out = tf.constant(0.1,shape=[NClasses], dtype=tf.float32)
 
     def call(self):
@@ -129,5 +146,5 @@ class RNN:
                     tf.matmul(self._bw_out, self._w_bw)),
                 b_out)
 
-            # reshape the tensor
-    		return tf.reshape(logits, [-1, cfg.batch_size, cfg.n_chars])
+            # reshape the tensor (we only have 1 image so the second place is 1)
+    		return tf.reshape(logits, [-1, 1, cfg.n_chars])
