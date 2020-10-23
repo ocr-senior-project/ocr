@@ -20,7 +20,7 @@ except AttributeError:
         return QtWidgets.QApplication.translate(context, text, disambig)
 
 
-mode = "polygon_selection"
+mode = "reading"
 
 def p_line_key(p_line):
     a = p_line._polygon
@@ -43,7 +43,7 @@ class Ui_test:
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        self.textBrowser.copyAvailable.connect(self.get_char)
+        # self.textBrowser.copyAvailable.connect(self.get_char)
         self.horizontalLayout.addWidget(self.textBrowser)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -62,7 +62,22 @@ class Ui_test:
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        #self.pushButton.clicked.connect(self.get_char)
+        self.pushButton.clicked.connect(self.get_char)
+
+        self.pushButton_7 = QtWidgets.QPushButton(test)
+        self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
+        self.pushButton_7.clicked.connect(self.get_polygon)
+        self.verticalLayout.addWidget(self.pushButton_7)
+
+        self.pushButton_8= QtWidgets.QPushButton(test)
+        self.pushButton_8.setObjectName(_fromUtf8("pushButton"))
+        self.pushButton_8.clicked.connect(self.select_polygons)
+        self.verticalLayout.addWidget(self.pushButton_8)
+
+        self.pushButton_6 = QtWidgets.QPushButton(test)
+        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
+        self.pushButton_6.clicked.connect(self.transcribe_polygons)
+        self.verticalLayout.addWidget(self.pushButton_6)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -74,19 +89,8 @@ class Ui_test:
         self.pushButton_5.clicked.connect(self.next_page)
         self.verticalLayout.addWidget(self.pushButton_5)
 
-        self.pushButton_6 = QtWidgets.QPushButton(test)
-        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
-        self.pushButton_6.clicked.connect(self.transcribe_polygons)
-        self.verticalLayout.addWidget(self.pushButton_6)
-
-        self.pushButton_7 = QtWidgets.QPushButton(test)
-        self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
-        self.pushButton_7.clicked.connect(self.get_polygon)
-        self.verticalLayout.addWidget(self.pushButton_7)
-
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
-
 
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
@@ -95,10 +99,11 @@ class Ui_test:
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton.setText(_translate("test", "Editing Mode", None))
+        self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
+        self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
+        self.pushButton_6.setText(_translate("test", "Transcribe Polygons", None))
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
-        self.pushButton_6.setText(_translate("test", "Transcribe Polygons", None))
-        self.pushButton_7.setText(_translate("test", "Line/Polygon Matching", None))
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
@@ -152,6 +157,12 @@ class Ui_test:
             self.textBrowser.setText(self.label._page._text)
             self.label.update()
 
+    def select_polygons(self):
+        global mode
+        mode = "polygon_selection"
+        self.label._page._polygon = QtGui.QPolygon()
+        self.label._page._polygon_points = []
+
     def transcribe_polygons(self):
         # sort polygons
         #poly_lines = self.pages[self.page]._page_lines[:]
@@ -161,10 +172,10 @@ class Ui_test:
         # Add dummy info to text boxes
         for p in poly_lines:
             image_name = p._image_name
-            transcript = self.label._page.transcribePolygon(image_name)
-            print(transcript)
+            transcript = "(" + str(p._polygon[0].x()) + ", " + str(p._polygon[0].y()) + ")"
+            # transcript = self.label._page.transcribePolygon(image_name)
+            # print(transcript)
             p.set_transcription(transcript)
-            #p.set_transcription("(" + str(p._polygon[0].x()) + ", " + str(p._polygon[0].y()) + ")")
             self.textBrowser.append(p._transcription)
         # Remove polygons from image
 
@@ -181,8 +192,12 @@ class Ui_test:
             for line in self.pages[self.page]._page_lines:
                 if line._transcription == selection:
                     self.selected_polygon = line._polygon
-        else:
-            pass
+                    self.label._page._polygon = line._polygon
+                    print(self.selected_polygon)
+                    self.label.update()
+                    ft = QtGui.QTextCharFormat()
+                    ft.setBackground(QtGui.QColor("yellow"))
+                    self.textCursor.setCharFormat(ft)
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self):
@@ -198,6 +213,8 @@ class ImageLabel(QtWidgets.QLabel):
     def paintEvent(self, event):
         """ Paints a polygon on the pixmap after selection
             during selection of a polygon points the current line """
+        global mode
+
         painter = QtGui.QPainter(self)
         if self._page:
             painter.drawPixmap(self.rect(), self._page._pixmap)
@@ -210,6 +227,10 @@ class ImageLabel(QtWidgets.QLabel):
                 poly = page_line._polygon
                 painter.drawConvexPolygon(poly)
 
+        if mode == "highlighting":
+            painter.setPen(QtCore.Qt.blue)
+            painter.drawConvexPolygon(self._page._polygon)
+
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         global mode
@@ -221,14 +242,24 @@ class ImageLabel(QtWidgets.QLabel):
             self._page._polygon << event.pos()
         if mode == "highlighting":
             point = QtCore.QPoint(event.x(), event.y())
-            self._page.highlight(point)
+            for line in self._page._page_lines:
+                poly = line._polygon
+                if poly.containsPoint(point, 0):
+                    self._page._polygon = poly
+                    self.update()
+
+
+
+            #self._page.highlight(point)
 
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
-        self._end_of_line = event.pos()
-        self.update()
+        global mode
+        if mode == "polygon_selection":
+            self._end_of_line = event.pos()
+            self.update()
 
 
 class MainWidget(QtWidgets.QWidget):
