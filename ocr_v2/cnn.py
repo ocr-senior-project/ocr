@@ -5,7 +5,6 @@ Desc: implement a class-based convolutional neural networks
 """
 
 import tensorflow as tf
-from settings import CFG
 
 # a custom class for a convolutional neural network
 class CNN:
@@ -79,11 +78,11 @@ class Conv_Layer(tf.keras.layers.Layer):
         self.trainable = train
 
         # generate a weight variable
-		self._weight = weight_variable([3, 3, filter_in, filter_out])
+        self._weight = weight_variable([3, 3, filter_in, filter_out])
 
         # if we don't want a sigmoid activation function
-		if cfg.leaky:
-			self._activation = Activation_Function(tf.nn.leaky_relu)
+        if cfg.leaky:
+            self._activation = Activation_Function(tf.nn.leaky_relu)
         # if we do
         else:
             self._activation = Activation_Function(tf.nn.relu)

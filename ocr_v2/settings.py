@@ -137,53 +137,53 @@ class CFG():
         LoadModel(session, cfg.SaveDir + '/')
 
         try:
-        	session.run(tf.compat.v1.assign(phase_train, False))
+            session.run(tf.compat.v1.assign(phase_train, False))
 
-        	randIxs = [0]
+            randIxs = [0]
 
             # somewhere in here we get the image file
-    		batchInputs = []
-    		batchSeqLengths = []
-    		for batchI, origI in enumerate(randIxs[start:end]):
-    			batchInputs.extend(InputListTest[origI])
-    			batchSeqLengths.append(SeqLensTest[origI])
+            batchInputs = []
+            batchSeqLengths = []
+            for batchI, origI in enumerate(randIxs[start:end]):
+                batchInputs.extend(InputListTest[origI])
+                batchSeqLengths.append(SeqLensTest[origI])
 
-    		feed = {x: batchInputs, SeqLens: batchSeqLengths}
-    		del batchInputs, batchSeqLengths
+            feed = {x: batchInputs, SeqLens: batchSeqLengths}
+            del batchInputs, batchSeqLengths
 
-    		Decoded = session.run([decoded], feed_dict=feed)[0]
-    		del feed
+            Decoded = session.run([decoded], feed_dict=feed)[0]
+            del feed
 
-    		trans = session.run(tf.sparse.to_dense(Decoded[0]))
+            trans = session.run(tf.sparse.to_dense(Decoded[0]))
             #up to here
 
-			decodedStr = ""
+            decodedStr = ""
 
-			for i in range(0, len(trans[0])):
-				if trans[0][i] == 0:
-					if (i != (len(trans[0]) - 1)):
-						if trans[0][i + 1] == 0:
+            for i in range(0, len(trans[0])):
+                if trans[0][i] == 0:
+                    if (i != (len(trans[0]) - 1)):
+                        if trans[0][i + 1] == 0:
                             break
-						else:
+                        else:
                             decodedStr += Classes[trans[0][i]]
 
-				else:
-					if trans[0][i] == (NClasses - 2):
-						if (i != 0):
+                else:
+                    if trans[0][i] == (NClasses - 2):
+                        if (i != 0):
                             decodedStr += ' '
-					else:
-						decodedStr += Classes[trans[0][i]]
+                    else:
+                        decodedStr += Classes[trans[0][i]]
 
-			decodedStr = decodedStr.replace("<SPACE>", " ")
+            decodedStr = decodedStr.replace("<SPACE>", " ")
 
-			return decodedStr
+            return decodedStr
 
         except (KeyboardInterrupt, SystemExit, Exception) as e:
-        	print("[Error/Interruption] %s" % str(e))
-        	print("Clossing TF Session...")
-        	session.close()
-        	print("Terminating Program...")
-        	sys.exit(0)
+            print("[Error/Interruption] %s" % str(e))
+            print("Clossing TF Session...")
+            session.close()
+            print("Terminating Program...")
+            sys.exit(0)
 
     # def read_run(self, VEC_PER_WND):
     # 	seqLens = []
