@@ -4,9 +4,6 @@ Date: 16 October 2020
 Desc: handle settings and utility for the ocr library
 """
 
-import cnn
-import rnn
-
 # open a file and split it by newlines
 # returns a list of the lines in the file and total number of lines
 def load_list(fpath, enc="utf-8"):
@@ -29,7 +26,7 @@ def load_list(fpath, enc="utf-8"):
     return [lst, len(lst)]
 
 class CFG():
-    def __init__(self, char_list, save, model, log, start):
+    def __init__(self, char_list, save, model, log, start, maxpool, h_maxpool, last):
         # ----------------------------------------------------------------------
         # --------------------- Images and Label File Types --------------------
         # ----------------------------------------------------------------------
@@ -79,7 +76,7 @@ class CFG():
         self.last_layer = last
 
         # tbh idk what this is
-        self.fv = int(WND_HEIGHT / (2 ** maxpool))
+        self.fv = int(self.height / (2 ** maxpool))
 
         # the number of features? idk
         self.n_features = self.fv * self.last_layer
@@ -104,86 +101,7 @@ class CFG():
         # ----------------------------------------------------------------------
         # add these later
 
-    # process a single string
-    def run(self, img):
-        print('Initializing...')
 
-        vec_per_win = self.width / math.pow(2, self.h_maxpool_layers)
-
-        # blank image placeholder
-        x = tf.zeros([None, WND_HEIGHT, WND_WIDTH])
-
-        # Create a blank array for 1 output?
-        seq_lens = tf.zeros([1])
-
-        # insert a fourth dimension at the end of the tensor
-        x_expanded = tf.expand_dims(x, 3)
-
-        # create the inputs for the rnn
-        ins = cnn.CNN(self).build(x_expanded)
-
-        # get the raw prediction for one character
-        logits = RNN(ins, seq_lens, 'RNN')
-
-        # decode prediction string from the probability map (logits)
-        decoded, log_prob = tf.nn.ctc_beam_search_decoder(inputs=logits, sequence_length=SeqLens)
-
-        #Reading test data...
-        # InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
-
-        session = tf.compat.v1.Session()
-        session.run(tf.compat.v1.global_variables_initializer())
-
-        LoadModel(session, cfg.SaveDir + '/')
-
-        try:
-            session.run(tf.compat.v1.assign(phase_train, False))
-
-            randIxs = [0]
-
-            # somewhere in here we get the image file
-            batchInputs = []
-            batchSeqLengths = []
-            for batchI, origI in enumerate(randIxs[start:end]):
-                batchInputs.extend(InputListTest[origI])
-                batchSeqLengths.append(SeqLensTest[origI])
-
-            feed = {x: batchInputs, SeqLens: batchSeqLengths}
-            del batchInputs, batchSeqLengths
-
-            Decoded = session.run([decoded], feed_dict=feed)[0]
-            del feed
-
-            trans = session.run(tf.sparse.to_dense(Decoded[0]))
-            #up to here
-
-            decodedStr = ""
-
-            for i in range(0, len(trans[0])):
-                if trans[0][i] == 0:
-                    if (i != (len(trans[0]) - 1)):
-                        if trans[0][i + 1] == 0:
-                            break
-                        else:
-                            decodedStr += Classes[trans[0][i]]
-
-                else:
-                    if trans[0][i] == (NClasses - 2):
-                        if (i != 0):
-                            decodedStr += ' '
-                    else:
-                        decodedStr += Classes[trans[0][i]]
-
-            decodedStr = decodedStr.replace("<SPACE>", " ")
-
-            return decodedStr
-
-        except (KeyboardInterrupt, SystemExit, Exception) as e:
-            print("[Error/Interruption] %s" % str(e))
-            print("Clossing TF Session...")
-            session.close()
-            print("Terminating Program...")
-            sys.exit(0)
 
     # def read_run(self, VEC_PER_WND):
     # 	seqLens = []

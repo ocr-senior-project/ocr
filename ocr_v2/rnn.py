@@ -7,6 +7,7 @@ Desc: implement a class-based convolutional neural networks
 import tensorflow as tf
 import numpy as np
 import math
+import settings
 
 # a custom class for a recurrent neural network
 class RNN:
