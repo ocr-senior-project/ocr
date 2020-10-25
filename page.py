@@ -3,6 +3,8 @@ import numpy
 from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
+# import HandwritingRecognitionSystem_v2.test as test
+from HandwritingRecognitionSystem_v2 import test
 
 class Page:
     def __init__(self, image_object):
@@ -70,9 +72,10 @@ class Page:
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        os.system('cd HandwritingRecognitionSystem_v2; python test.py; cd -')
-        f = open("HandwritingRecognitionSystem_v2/decoded.txt", "r")
-        print(f.read())
+        # os.system('cd HandwritingRecognitionSystem_v2; python test.py; cd -')
+        self._text += test.run()
+        # f = open("HandwritingRecognitionSystem_v2/decoded.txt", "r")
+        # print(f.read())
 
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
@@ -107,7 +110,7 @@ class Page:
         numcuts = len(self._polygons)
 
         # crop to the bounding rectangle
-        samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
-        image_name = f'000033/out{numcuts}'
-        newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
+        samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/"
+        image_name = f'000033/out0'
+        newIm.crop(end_crop).save(f'{samples_dir}{image_name}.png')
         return image_name

@@ -27,7 +27,7 @@ class Ui_test:
         test.resize(1092, 589)
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = ImageLabel()
+        self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label)
 
@@ -136,9 +136,10 @@ class Ui_test:
 
 
 class ImageLabel(QtWidgets.QLabel):
-    def __init__(self):
+    def __init__(self, ui):
         """ Provides event support for the image label """
         super(ImageLabel, self).__init__()
+        self._ui = ui
         self._page = None
         self._lines = []
         self._start_of_line = []
@@ -150,6 +151,7 @@ class ImageLabel(QtWidgets.QLabel):
             during selection of a polygon points the current line """
         painter = QtGui.QPainter(self)
         if self._page:
+            self._ui.textBrowser.setText(self._page._text)
             painter.drawPixmap(self.rect(), self._page._pixmap)
             painter.setPen(QtCore.Qt.red)
 
