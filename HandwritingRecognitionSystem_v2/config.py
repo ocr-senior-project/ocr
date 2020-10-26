@@ -18,15 +18,15 @@ flags.DEFINE_string('LabelFileType', '.tru', 'The extension of the file holding 
 
 ######################################
 #Training data configuration
-flags.DEFINE_integer('TRAIN_NB', 4, 'Number of training images to process')
-flags.DEFINE_string('TRAIN_LIST', 'HandwritingRecognitionSystem_v2/formalsamples/list', 'List of training data without file extension.')
+flags.DEFINE_integer('TRAIN_NB', 32, 'Number of training images to process')
+flags.DEFINE_string('TRAIN_LIST', 'HandwritingRecognitionSystem_v2/formalsamples/traininglist', 'List of training data without file extension.')
 flags.DEFINE_string('TRAIN_LOCATION', 'HandwritingRecognitionSystem_v2/formalsamples/Images/', 'Location of training data. Could be included in the data list.')
 flags.DEFINE_string('TRAIN_TRANS', 'HandwritingRecognitionSystem_v2/formalsamples/Labels/', 'Location of training data transcriptions')
 
 ######################################
 #Validation data configuration
 flags.DEFINE_integer('VAL_NB', 4, 'Number of validation images to process')
-flags.DEFINE_string('VAL_LIST', 'HandwritingRecognitionSystem_v2/formalsamples/list',	'List of validation data without file extension.')
+flags.DEFINE_string('VAL_LIST', 'HandwritingRecognitionSystem_v2/formalsamples/traininglist',	'List of validation data without file extension.')
 flags.DEFINE_string('VAL_LOCATION', 'HandwritingRecognitionSystem_v2/formalsamples/Images/', 'Location of validation data. Could be included in the data list.')
 flags.DEFINE_string('VAL_TRANS', 'HandwritingRecognitionSystem_v2/formalsamples/Labels/', 'Location of validation data transcriptions')
 
@@ -62,7 +62,7 @@ flags.DEFINE_integer('NLayers', 3, 'Number of BLSTM layers')
 #Training parameters
 flags.DEFINE_integer('StartingEpoch', 0, 'The epoch number to start training from') # = 0 to train from scratch, != 0 to resume from the latest checkpoint
 flags.DEFINE_float('LearningRate', 0.0005, 'Learning rate')
-flags.DEFINE_integer('BatchSize', 1, 'Batch size') #This is actually the number of images to process each iteration
+flags.DEFINE_integer('BatchSize', 4, 'Batch size') #This is actually the number of images to process each iteration
 flags.DEFINE_boolean('RandomBatches', True, 'Randomize the order of batches each epoch')
 flags.DEFINE_integer('MaxGradientNorm', 5, 'Maximum gradient norm')
 flags.DEFINE_integer('SaveEachNEpochs', 1, 'Save model each n epochs')

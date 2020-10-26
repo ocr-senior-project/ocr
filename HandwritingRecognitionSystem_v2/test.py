@@ -99,40 +99,26 @@ def run():
 
 			trans = session.run(tf.sparse.to_dense(Decoded[0]))
 
-			for i in range(0, cfg.BatchSize):
+			decodedStr = ""
+			
+			for j in range(0, len(trans[0])):
+				if trans[0][j] == 0:					
+					if (j != (len(trans[0]) - 1)):
+						if trans[0][j+1] == 0: break
+						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
+					else:
+						break
+				else:	
+					if trans[0][j] == (NClasses - 2):
+						if (j != 0): decodedStr = "%s " % (decodedStr)
+						else: continue
+					else:
+						decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
+				print(">" + decodedStr + "<")
 
-				fileIndex = cfg.BatchSize * batch + i
-				filename = FilesList[fileIndex].strip()
-				decodedStr = ""
-				
-				for j in range(0, len(trans[i])):
-					if trans[i][j] == 0:					
-						if (j != (len(trans[i]) - 1)):
-							if trans[i][j+1] == 0: break
-							else: decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
-						else:
-							break
-					else:	
-						if trans[i][j] == (NClasses - 2):
-							if (j != 0): decodedStr = "%s " % (decodedStr)
-							else: continue
-						else:
-							decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
-					print(">" + decodedStr + "<")
-
-				decodedStr = decodedStr.replace("<SPACE>", " ")
-				print("|" + decodedStr + "|")
-				return decodedStr + "\n"
-
-				decodedStr = filename + decodedStr[:] + "\n"
-				# if cfg.WriteDecodedToFile == True: DecodeLog.write(decodedStr)
-				# else: print(decodedStr, end=' ')
-
-			start += cfg.BatchSize
-			end += cfg.BatchSize
-			batch += 1
-
-		# DecodeLog.close()
+			decodedStr = decodedStr.replace("<SPACE>", " ")
+			print("|" + decodedStr + "|")
+			return decodedStr + "\n"
 
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
 		print("[Error/Interruption] %s" % str(e))
