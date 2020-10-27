@@ -62,7 +62,7 @@ flags.DEFINE_integer('NLayers', 3, 'Number of BLSTM layers')
 #Training parameters
 flags.DEFINE_integer('StartingEpoch', 0, 'The epoch number to start training from') # = 0 to train from scratch, != 0 to resume from the latest checkpoint
 flags.DEFINE_float('LearningRate', 0.0005, 'Learning rate')
-flags.DEFINE_integer('BatchSize', 4, 'Batch size') #This is actually the number of images to process each iteration
+flags.DEFINE_integer('BatchSize', 1, 'Batch size') #This is actually the number of images to process each iteration
 flags.DEFINE_boolean('RandomBatches', True, 'Randomize the order of batches each epoch')
 flags.DEFINE_integer('MaxGradientNorm', 5, 'Maximum gradient norm')
 flags.DEFINE_integer('SaveEachNEpochs', 1, 'Save model each n epochs')

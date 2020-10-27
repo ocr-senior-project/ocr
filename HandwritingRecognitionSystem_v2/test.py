@@ -114,11 +114,10 @@ def run():
 						else: continue
 					else:
 						decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
-				print(">" + decodedStr + "<")
 
 			decodedStr = decodedStr.replace("<SPACE>", " ")
 			print("|" + decodedStr + "|")
-			return decodedStr + "\n"
+			return decodedStr
 
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
 		print("[Error/Interruption] %s" % str(e))
