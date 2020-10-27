@@ -8,3 +8,4 @@ HandwritingRecognitionSystem_v2/log
 file_manipulation/img/__pycache__
 file_manipulation/pdf/__pycache__
 file_manipulation/matricula.pdf
+*/__pycache__
