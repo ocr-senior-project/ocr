@@ -25,16 +25,19 @@ class Ui_test:
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
+        self.mainWindow = test
+        
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+
         self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
-        self.horizontalLayout.addWidget(self.label)
+        self.horizontalLayout.addWidget(self.label, stretch=5)
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.copyAvailable.connect(self.get_char)
-        self.horizontalLayout.addWidget(self.textBrowser)
+        self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -65,7 +68,7 @@ class Ui_test:
         self.pushButton = QtWidgets.QPushButton(test)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout.addLayout(self.verticalLayout, stretch=2)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
