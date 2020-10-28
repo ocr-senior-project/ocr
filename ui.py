@@ -131,6 +131,20 @@ class Ui_test:
         # Initialize page number layout
         self.initializePageNum()
 
+    def initializePageNum(self):
+        self.updatePageNum()
+        self.inputPageNumber.setReadOnly(False)
+        self.pageNumberLabel.setText(f"Page out of {len(self.imgs)}:")
+
+    def updatePage(self):
+        self.label._page = self.pages[self.page]
+        self.textBrowser.setText(self.label._page._text)
+        self.label.update()
+        self.updatePageNum()
+
+    def updatePageNum(self):
+        self.inputPageNumber.setText(str(self.page + 1))
+
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
@@ -139,28 +153,14 @@ class Ui_test:
 
             # change the page index and object
             self.page += 1
-            self.label._page = self.pages[self.page]
-            self.textBrowser.setText(self.label._page._text)
-            self.updatePageNum()
-            self.label.update()
+            self.updatePage()
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
-            self.label._page = self.pages[self.page]
-            self.textBrowser.setText(self.label._page._text)
-            self.updatePageNum()
-            self.label.update()
-    
-    def initializePageNum(self):
-        self.updatePageNum()
-        self.inputPageNumber.setReadOnly(False)
-        self.pageNumberLabel.setText(f"Page out of {len(self.imgs)}:")
-
-    def updatePageNum(self):
-        self.inputPageNumber.setText(str(self.page + 1))
+            self.updatePage()
 
     def jumpToPage(self):
         pageNumber = int(self.inputPageNumber.text()) - 1
@@ -174,10 +174,7 @@ class Ui_test:
 
         # change the page index and object
         self.page = pageNumber
-        self.label._page = self.pages[self.page]
-        self.textBrowser.setText(self.label._page._text)
-        self.label.update()
-        self.updatePageNum()
+        self.updatePage()
 
 
 class ImageLabel(QtWidgets.QLabel):
