@@ -194,7 +194,11 @@ class ImageLabel(QtWidgets.QLabel):
         painter = QtGui.QPainter(self)
         if self._page:
             self._ui.textBrowser.setText(self._page._text)
-            painter.drawPixmap(self.rect(), self._page._pixmap)
+
+            scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            drawRect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+            painter.drawPixmap(drawRect, scaledPixmap)
+
             painter.setPen(QtCore.Qt.red)
 
             if self._start_of_line and self._end_of_line:
