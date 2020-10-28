@@ -41,17 +41,15 @@ class Ui_test:
 
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
         self.pageNumberLabel = QtWidgets.QLabel("Page:")
-
         self.inputPageNumber = QtWidgets.QLineEdit()
+        self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
         self.inputPageNumber.setValidator(QtGui.QIntValidator())
         self.inputPageNumber.editingFinished.connect(self.jumpToPage)
         self.inputPageNumber.setReadOnly(True)
 
-        self.pageNumberHLayout.addSpacing(20)
         self.pageNumberHLayout.addWidget(self.pageNumberLabel)
-        self.pageNumberHLayout.addSpacing(20)
+        self.pageNumberHLayout.addSpacing(10)
         self.pageNumberHLayout.addWidget(self.inputPageNumber)
-        self.pageNumberHLayout.addSpacing(20)
 
         self.verticalLayout.addLayout(self.pageNumberHLayout)
 
@@ -119,10 +117,6 @@ class Ui_test:
         self.page = 0
         self.pages = []
 
-        # Set the inputted page number to 1
-        self.updatePageNum()
-        self.inputPageNumber.setReadOnly(False)
-
         # Returns a list of all of the pixmaps of the pdf
         self.imgs = pp.get_pdf_contents(fname[self.page])
 
@@ -133,6 +127,9 @@ class Ui_test:
 
         self.label._page = self.pages[self.page]
         self.label.update()
+        
+        # Initialize page number layout
+        self.initializePageNum()
 
     def next_page(self):
         """ Next page button """
@@ -157,6 +154,11 @@ class Ui_test:
             self.updatePageNum()
             self.label.update()
     
+    def initializePageNum(self):
+        self.updatePageNum()
+        self.inputPageNumber.setReadOnly(False)
+        self.pageNumberLabel.setText(f"Page out of {len(self.imgs)}:")
+
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
 
@@ -175,6 +177,7 @@ class Ui_test:
         self.label._page = self.pages[self.page]
         self.textBrowser.setText(self.label._page._text)
         self.label.update()
+        self.updatePageNum()
 
 
 class ImageLabel(QtWidgets.QLabel):
