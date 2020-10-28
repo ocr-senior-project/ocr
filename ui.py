@@ -39,6 +39,22 @@ class Ui_test:
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
 
+        self.pageNumberHLayout = QtWidgets.QHBoxLayout()
+        self.pageNumberLabel = QtWidgets.QLabel("Page:")
+
+        self.inputPageNumber = QtWidgets.QLineEdit()
+        self.inputPageNumber.setValidator(QtGui.QIntValidator())
+        self.inputPageNumber.editingFinished.connect(self.jumpToPage)
+        self.inputPageNumber.setReadOnly(True)
+
+        self.pageNumberHLayout.addSpacing(20)
+        self.pageNumberHLayout.addWidget(self.pageNumberLabel)
+        self.pageNumberHLayout.addSpacing(20)
+        self.pageNumberHLayout.addWidget(self.inputPageNumber)
+        self.pageNumberHLayout.addSpacing(20)
+
+        self.verticalLayout.addLayout(self.pageNumberHLayout)
+
         self.pushButton_2 = QtWidgets.QPushButton(test)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.pushButton_2.clicked.connect(self.get_file)
@@ -92,6 +108,7 @@ class Ui_test:
 
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
+
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
         # Return if no file name is given
@@ -101,6 +118,10 @@ class Ui_test:
         # Initialize a page index and a list of page objects
         self.page = 0
         self.pages = []
+
+        # Set the inputted page number to 1
+        self.updatePageNum()
+        self.inputPageNumber.setReadOnly(False)
 
         # Returns a list of all of the pixmaps of the pdf
         self.imgs = pp.get_pdf_contents(fname[self.page])
@@ -123,6 +144,7 @@ class Ui_test:
             self.page += 1
             self.label._page = self.pages[self.page]
             self.textBrowser.setText(self.label._page._text)
+            self.updatePageNum()
             self.label.update()
 
     def previous_page(self):
@@ -131,8 +153,28 @@ class Ui_test:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.label._page = self.pages[self.page]
-            self.textBrowser.setText(self.label._page._text)            
+            self.textBrowser.setText(self.label._page._text)
+            self.updatePageNum()
             self.label.update()
+    
+    def updatePageNum(self):
+        self.inputPageNumber.setText(str(self.page + 1))
+
+    def jumpToPage(self):
+        pageNumber = int(self.inputPageNumber.text()) - 1
+        if pageNumber < 0:
+            pageNumber  = 0
+        elif pageNumber >= len(self.imgs):
+            pageNumber = len(self.imgs) - 1
+
+        # save the text on text browser to the page object
+        self.label._page._text = self.textBrowser.toPlainText()
+
+        # change the page index and object
+        self.page = pageNumber
+        self.label._page = self.pages[self.page]
+        self.textBrowser.setText(self.label._page._text)
+        self.label.update()
 
 
 class ImageLabel(QtWidgets.QLabel):
