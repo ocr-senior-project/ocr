@@ -2,6 +2,7 @@
 
 import sys
 import page
+import math
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 
@@ -209,11 +210,14 @@ class ImageLabel(QtWidgets.QLabel):
             for page_line in self._page._page_lines:
                 poly = page_line._polygon
                 painter.drawConvexPolygon(poly)
+            if self._page._selected_polygon:
+                for vertex in self._page._selected_polygon._vertices:
+                    painter.drawEllipse(vertex[0]-5,vertex[1]-5,10,10)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         point = QtCore.QPoint(event.x(), event.y())
-        if self._start_of_line or self._page.pointInPolygon(point) == False:
+        if self._start_of_line or self._page.pointSelectsItem(point) == False:
             # removes bug where user can select a polygon draw a new one
             # and then delete the previous selection in one click
             self._page.selected_polygon = None
@@ -222,6 +226,9 @@ class ImageLabel(QtWidgets.QLabel):
             self._start_of_line = event.pos()
             self._page._polygon_points.append((event.x(),event.y()))
             self._page._polygon << event.pos()
+        elif self._page.pointInVertexHandle(point):
+            self._page._dragging_vertex = True
+            self._page.selectClickedVertexHandle(point)
         else:
             self._page.selectClickedPolygon(point)
         self.update()
@@ -230,8 +237,20 @@ class ImageLabel(QtWidgets.QLabel):
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
-        self._end_of_line = event.pos()
+        point = event.pos()
+        if self._page and self._page._dragging_vertex == True:
+            self._page._selected_polygon._vertices[self._page._selected_vertex_index] = (point.x(),point.y())
+            self._page._selected_polygon.updatePolygon()
+        else:
+            self._end_of_line = event.pos()
+
         self.update()
+
+    def mouseReleaseEvent(self, event):
+
+        if self._page._dragging_vertex:
+            self._page._dragging_vertex = False
+            self._page.updatePolygonCrop()
 
 
 class MainWidget(QtWidgets.QWidget):

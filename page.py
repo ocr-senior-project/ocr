@@ -5,12 +5,20 @@ import os
 
 
 class Line():
-    def __init__(self, polygon, image_name):
+    def __init__(self, polygon, points, image_name):
         self._polygon = polygon
         self._image_name = image_name
+        self._vertices = points
+        self._vertex_handles = None
 
     def set_transcription(self, transcription):
         self._transcription = transcription
+
+    def updatePolygon(self):
+        self._polygon = QtGui.QPolygon()
+        for vertex in self._vertices:
+            point = QtCore.QPoint(vertex[0],vertex[1])
+            self._polygon << point
 
 class Page:
     def __init__(self, image_object):
@@ -20,6 +28,8 @@ class Page:
         self._polygon_points = []
         self._polygon = QtGui.QPolygon()
         self._selected_polygon = None
+        self._selected_vertex_index = None
+        self._dragging_vertex = False
 
     def selectPolygon(self):
         """ Called when a polygon is done being selected
@@ -29,13 +39,16 @@ class Page:
         self._image_object._lines = []
         self._image_object._start_of_line = []
 
+        # saving these points so they are not corrupted by the scalePolygonPoints function
+        polygon_points_unscaled = self._polygon_points.copy()
+
         # Crop the image, add the polygon to the image
         file_name = self.polygonCrop()
-        self.addPolygon(self._polygon, file_name)
+        self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
 
-    def addPolygon(self, poly, image_name):
+    def addPolygon(self, poly, points, image_name):
         """ adds self._polygon to the page"""
-        line_object = Line(poly, image_name)
+        line_object = Line(poly, points, image_name)
         self._page_lines.append(line_object)
 
         self._polygon = QtGui.QPolygon()
@@ -53,7 +66,16 @@ class Page:
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
         self._popup.hide()
+        self._selected_polygon = None
         self._image_object.update()
+
+
+    def updatePolygonCrop(self):
+        """ recrops polygon when vertices positions are changed by the user"""
+        self._polygon_points = self._selected_polygon._vertices.copy()
+        self.polygonCrop(self._selected_polygon._image_name)
+        self._polygon_points = []
+
 
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
@@ -96,7 +118,7 @@ class Page:
         return f.read()
 
 
-    def polygonCrop(self):
+    def polygonCrop(self, fname=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
 
@@ -126,12 +148,18 @@ class Page:
 
         # back to Image from numpy
         newIm = Image.fromarray(newImArray, "RGBA")
-        numcuts = len(self._page_lines)
 
-        # crop to the bounding rectangle
-        samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
+        numcuts = len(self._page_lines)
         image_name = f'000033/out{numcuts}'
-        newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
+
+        if fname:
+            # if filename is given
+            samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/"
+            newIm.crop(end_crop).save(f'{samples_dir}{fname}.png')
+        else:
+            # saving to a new file
+            samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
+            newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
         return image_name
 
 
@@ -144,8 +172,25 @@ class Page:
                     self._popup.show()
                     #self.deleteSelectedPolygon(line)
                 else:
-                    print(poly)
                     self._selected_polygon = line
+
+
+    def selectClickedVertexHandle(self, point):
+        """ determines clicked vertex handle and sets it to self._selected_vertex"""
+        if self._selected_polygon:
+            for vertex in self._selected_polygon._vertices:
+                if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
+                    self._selected_vertex_index = self._selected_polygon._vertices.index(vertex)
+                    #self._selected_vertex = vertex
+        return False
+
+
+    def pointSelectsItem(self, point):
+        """ checks if the clicked point interacts with any lines on the page """
+        if self.pointInPolygon(point) or self.pointInVertexHandle(point):
+            return True
+        return False
+
 
     def pointInPolygon(self, point):
         """ checks if a point is contained by any polygon on the current page"""
@@ -153,6 +198,14 @@ class Page:
             poly = line._polygon
             if poly.containsPoint(point, 0):
                 return True
+        return False
+
+
+    def pointInVertexHandle(self, point):
+        if self._selected_polygon:
+            for vertex in self._selected_polygon._vertices:
+                if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
+                    return True
         return False
 
 
