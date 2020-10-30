@@ -26,7 +26,7 @@ class Ui_test:
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
         self.mainWindow = test
-        
+
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
 
@@ -130,7 +130,7 @@ class Ui_test:
 
         self.label._page = self.pages[self.page]
         self.label.update()
-        
+
         # Initialize page number layout
         self.initializePageNum()
 
@@ -209,10 +209,10 @@ class ImageLabel(QtWidgets.QLabel):
 
             for start, end in self._lines:
                 painter.drawLine(start, end)
-    
+
             for poly in self._page._polygons:
                 painter.drawConvexPolygon(poly)
-                
+
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         if self._start_of_line:
