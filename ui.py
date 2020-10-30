@@ -39,11 +39,13 @@ class Ui_test:
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label = ImageLabel()
         self.label.setObjectName(_fromUtf8("label_2"))
+        self.label.ui = self
         self.horizontalLayout.addWidget(self.label)
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        # self.textBrowser.copyAvailable.connect(self.get_char)
+        self.textBrowser.cursorPositionChanged.connect(self.highlight_text)
+        self.highlighted_cursor = None
         self.horizontalLayout.addWidget(self.textBrowser)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -165,9 +167,10 @@ class Ui_test:
 
     def transcribe_polygons(self):
         # sort polygons
-        #poly_lines = self.pages[self.page]._page_lines[:]
         poly_lines = self.label._page._page_lines[:]
         poly_lines.sort(key=p_line_key)
+        for i in range(len(poly_lines)):
+            poly_lines[i].set_block_number(i)
 
         # Add dummy info to text boxes
         for p in poly_lines:
@@ -179,25 +182,36 @@ class Ui_test:
             self.textBrowser.append(p._transcription)
         # Remove polygons from image
 
+    def highlight_text(self):
+        global mode
+        if mode == "highlighting":
+            new_cursor_position = self.textBrowser.textCursor()
+            fmt = QtGui.QTextBlockFormat()
+
+            # clear prevosly highlighted block, if any
+            if self.highlighted_cursor:
+                self.textCursor = self.highlighted_cursor
+                fmt.setBackground(QtGui.QColor("white"))
+                self.textCursor.setBlockFormat(fmt)
+
+            # highlight block cursor is currently on
+            self.textCursor = new_cursor_position
+            self.highlighted_cursor = self.textCursor
+            fmt.setBackground(QtGui.QColor("yellow"))
+            self.textCursor.setBlockFormat(fmt)
+
+            # highlight polygon
+            index = self.textCursor.blockNumber()
+            for item in self.label._page._page_lines:
+                if item._block_number == index:
+                    self.label._page._polygon = item._polygon
+                    self.label.update()
+
+
     def get_polygon(self):
         global mode
         mode = "highlighting"
-        self.label.update()
-        self.textCursor = self.textBrowser.textCursor()
-        if self.textCursor.hasSelection() == True:
-            start = self.textCursor.selectionStart()
-            end = self.textCursor.selectionEnd()
-            text = self.textBrowser.toPlainText()
-            selection = text[start:end]
-            for line in self.pages[self.page]._page_lines:
-                if line._transcription == selection:
-                    self.selected_polygon = line._polygon
-                    self.label._page._polygon = line._polygon
-                    print(self.selected_polygon)
-                    self.label.update()
-                    ft = QtGui.QTextCharFormat()
-                    ft.setBackground(QtGui.QColor("yellow"))
-                    self.textCursor.setCharFormat(ft)
+
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self):
@@ -228,8 +242,18 @@ class ImageLabel(QtWidgets.QLabel):
                 painter.drawConvexPolygon(poly)
 
         if mode == "highlighting":
-            painter.setPen(QtCore.Qt.blue)
-            painter.drawConvexPolygon(self._page._polygon)
+            path = QtGui.QPainterPath()
+            polyf = QtGui.QPolygonF()
+            for point in self._page._polygon:
+                x = float(point.x())
+                y = float(point.y())
+                pointf = QtCore.QPointF(x, y)
+                polyf << pointf
+
+            painter.setPen(QtCore.Qt.NoPen)
+            color = QtGui.QColor(255, 255, 0, 80)
+            path.addPolygon(polyf)
+            painter.fillPath(path, color)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
@@ -245,13 +269,13 @@ class ImageLabel(QtWidgets.QLabel):
             for line in self._page._page_lines:
                 poly = line._polygon
                 if poly.containsPoint(point, 0):
-                    self._page._polygon = poly
-                    self.update()
-
-
-
-            #self._page.highlight(point)
-
+                    block = line._block_number
+                    textCursor = self.ui.textBrowser.textCursor()
+                    textCursor.movePosition(1)
+                    for _ in range(block):
+                        textCursor.movePosition(12)
+                    self.ui.textBrowser.setTextCursor(textCursor)
+                    self.ui.highlight_text()
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
