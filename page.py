@@ -101,6 +101,7 @@ class Page:
                 lower = point[1]
         return (left, upper, right, lower)
 
+
     def writePixmaptoFile(self):
         file_to_crop = QtCore.QFile("jpg.jpg")
         file_to_crop.open(QtCore.QIODevice.WriteOnly)
