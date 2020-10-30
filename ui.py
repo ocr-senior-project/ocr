@@ -2,6 +2,7 @@
 
 import sys
 import page
+import math
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 
@@ -19,6 +20,16 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
+
+mode = "polygon_selection"
+
+def p_line_key(p_line):
+    a = p_line._polygon
+    min_a = 999999999
+    for point in a:
+        if point.y() < min_a:
+            min_a = point.y()
+    return min_a
 
 class Ui_test:
     def setupUi(self, test):
@@ -80,8 +91,19 @@ class Ui_test:
         self.pushButton_5.clicked.connect(self.next_page)
         self.verticalLayout.addWidget(self.pushButton_5)
 
+        self.pushButton_6 = QtWidgets.QPushButton(test)
+        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
+        self.pushButton_6.clicked.connect(self.transcribe_polygons)
+        self.verticalLayout.addWidget(self.pushButton_6)
+
+        self.pushButton_7 = QtWidgets.QPushButton(test)
+        self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
+        self.pushButton_7.clicked.connect(self.get_polygon)
+        self.verticalLayout.addWidget(self.pushButton_7)
+
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
+
 
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
@@ -92,6 +114,8 @@ class Ui_test:
         self.pushButton.setText(_translate("test", "Editing Mode", None))
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
+        self.pushButton_6.setText(_translate("test", "Transcribe Polygons", None))
+        self.pushButton_7.setText(_translate("test", "Line/Polygon Matching", None))
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
@@ -163,6 +187,7 @@ class Ui_test:
         if self.page > 0:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
+
             self.updatePage()
 
     def jumpToPage(self):
@@ -179,6 +204,35 @@ class Ui_test:
         self.page = pageNumber
         self.updatePage()
 
+    def transcribe_polygons(self):
+        # sort polygons
+        #poly_lines = self.pages[self.page]._page_lines[:]
+        poly_lines = self.label._page._page_lines[:]
+        poly_lines.sort(key=p_line_key)
+
+        # Add dummy info to text boxes
+        for p in poly_lines:
+            image_name = p._image_name
+            transcript = self.label._page.transcribePolygon(image_name)
+            print(transcript)
+            p.set_transcription(transcript)
+            #p.set_transcription("(" + str(p._polygon[0].x()) + ", " + str(p._polygon[0].y()) + ")")
+            self.textBrowser.append(p._transcription)
+        # Remove polygons from image
+
+    def get_polygon(self):
+        global mode
+        mode = "highlighting"
+        self.label.update()
+        self.textCursor = self.textBrowser.textCursor()
+        if self.textCursor.hasSelection() == True:
+            start = self.textCursor.selectionStart()
+            end = self.textCursor.selectionEnd()
+            text = self.textBrowser.toPlainText()
+            selection = text[start:end]
+            for line in self.pages[self.page]._page_lines:
+                if line._transcription == selection:
+                    self.selected_polygon = line._polygon
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
@@ -210,22 +264,49 @@ class ImageLabel(QtWidgets.QLabel):
             for start, end in self._lines:
                 painter.drawLine(start, end)
 
-            for poly in self._page._polygons:
-                painter.drawConvexPolygon(poly)
+            for page_line in self._page._page_lines:
+                painter.drawConvexPolygon(page_line._polygon)
+
+            if self._page._selected_polygon:
+                for vertex in self._page._selected_polygon._vertices:
+                    painter.drawEllipse(vertex[0]-5,vertex[1]-5,10,10)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
-        if self._start_of_line:
-            self._lines.append((self._start_of_line, event.pos()))
-        self._start_of_line = event.pos()
-        self._page._polygon_points.append((event.x(),event.y()))
-        self._page._polygon << event.pos()
+        point = QtCore.QPoint(event.x(), event.y())
+        if self._start_of_line or self._page.pointSelectsItem(point) == False:
+            # removes bug where user can select a polygon draw a new one
+            # and then delete the previous selection in one click
+            self._page.selected_polygon = None
+            if self._start_of_line:
+                self._lines.append((self._start_of_line, event.pos()))
+            self._start_of_line = event.pos()
+            self._page._polygon_points.append((event.x(),event.y()))
+            self._page._polygon << event.pos()
+        elif self._page.pointInVertexHandle(point):
+            self._page._dragging_vertex = True
+            self._page.selectClickedVertexHandle(point)
+        else:
+            self._page.selectClickedPolygon(point)
+        self.update()
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
-        self._end_of_line = event.pos()
+        point = event.pos()
+        if self._page and self._page._dragging_vertex == True:
+            self._page._selected_polygon._vertices[self._page._selected_vertex_index] = (point.x(),point.y())
+            self._page._selected_polygon.updatePolygon()
+        else:
+            self._end_of_line = event.pos()
+
         self.update()
+
+    def mouseReleaseEvent(self, event):
+
+        if self._page._dragging_vertex:
+            self._page._dragging_vertex = False
+            self._page.updatePolygonCrop()
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -245,5 +326,4 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     test = MainWidget()
     test.show()
-
     sys.exit(app.exec_())
