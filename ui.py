@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import numpy
-from PIL import Image, ImageDraw
+import page
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 
@@ -20,33 +19,42 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-def resize_image(image):
-    """ Resizes a jpg image to fit on screen """
-    baseheight = 640
-    img = Image.open(image)
-    hpercent = (baseheight / float(img.size[1]))
-    wsize = int((float(img.size[0]) * float(hpercent)))
-    img = img.resize((wsize, baseheight), Image.ANTIALIAS)
-    img.save(image)
 
 class Ui_test:
     def setupUi(self, test):
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
+        self.mainWindow = test
+        
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+
         self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
-        self.horizontalLayout.addWidget(self.label)
+        self.horizontalLayout.addWidget(self.label, stretch=5)
 
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.copyAvailable.connect(self.get_char)
-        self.horizontalLayout.addWidget(self.textBrowser)
+        self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+
+        self.pageNumberHLayout = QtWidgets.QHBoxLayout()
+        self.pageNumberLabel = QtWidgets.QLabel("Page:")
+        self.inputPageNumber = QtWidgets.QLineEdit()
+        self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
+        self.inputPageNumber.setValidator(QtGui.QIntValidator())
+        self.inputPageNumber.editingFinished.connect(self.jumpToPage)
+        self.inputPageNumber.setReadOnly(True)
+
+        self.pageNumberHLayout.addWidget(self.pageNumberLabel)
+        self.pageNumberHLayout.addSpacing(10)
+        self.pageNumberHLayout.addWidget(self.inputPageNumber)
+
+        self.verticalLayout.addLayout(self.pageNumberHLayout)
 
         self.pushButton_2 = QtWidgets.QPushButton(test)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
@@ -60,7 +68,7 @@ class Ui_test:
         self.pushButton = QtWidgets.QPushButton(test)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.verticalLayout.addWidget(self.pushButton)
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout.addLayout(self.verticalLayout, stretch=2)
 
         self.pushButton_4 = QtWidgets.QPushButton(test)
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
@@ -101,139 +109,124 @@ class Ui_test:
 
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
+
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        # Initialize a page index and a list of page objects
         self.page = 0
         self.pages = []
-        self.pages.append(Page())
-        self.imgs = pp.get_jpgs(fname[self.page])
-        resized = resize_image(self.imgs[self.page])
-        self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
+
+        # Returns a list of all of the pixmaps of the pdf
+        self.imgs = pp.get_pdf_contents(fname[self.page])
+
+        # Make the appropriate number of pages and assign them pixmaps
+        for pixmap in self.imgs:
+            self.pages.append(page.Page(self.label))
+            self.pages[-1]._pixmap = pixmap
+
+        self.label._page = self.pages[self.page]
         self.label.update()
-        # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+        
+        # Initialize page number layout
+        self.initializePageNum()
+
+    def initializePageNum(self):
+        self.updatePageNum()
+        self.inputPageNumber.setReadOnly(False)
+        self.pageNumberLabel.setText(f"Page out of {len(self.imgs)}:")
+
+    def updatePage(self):
+        self.label._page = self.pages[self.page]
+        self.textBrowser.setText(self.label._page._text)
+        self.label.update()
+        self.updatePageNum()
+
+    def updatePageNum(self):
+        self.inputPageNumber.setText(str(self.page + 1))
 
     def next_page(self):
         """ Next page button """
         if self.page < len(self.imgs) - 1:
-            self.pages[self.page].text = self.textBrowser.toPlainText()
-            self.pages[self.page].polygons = self.label.polygons
+            # save the text on text browser to the page object
+            self.label._page._text = self.textBrowser.toPlainText()
+
+            # change the page index and object
             self.page += 1
-            if len(self.pages)-1 < self.page:
-                self.pages.append(Page())
-            self.textBrowser.setText(self.pages[self.page].text)
-            self.label.polygons = self.pages[self.page].polygons
-            resized = resize_image(self.imgs[self.page])
-            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
-            self.label.update()
-            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.updatePage()
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
-            self.pages[self.page].text = self.textBrowser.toPlainText()
-            self.pages[self.page].polygons = self.label.polygons
+            self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
-            self.textBrowser.setText(self.pages[self.page].text)
-            self.label.polygons = self.pages[self.page].polygons
-            resized = resize_image(self.imgs[self.page])
-            self.label.pixmap = QtGui.QPixmap(self.imgs[self.page])
-            self.label.update()
-            # self.label.setPixmap(QtGui.QPixmap(self.imgs[self.page]))
+            self.updatePage()
 
+    def jumpToPage(self):
+        pageNumber = int(self.inputPageNumber.text()) - 1
+        if pageNumber < 0:
+            pageNumber  = 0
+        elif pageNumber >= len(self.imgs):
+            pageNumber = len(self.imgs) - 1
 
-class Page():
-    def __init__(self):
-        super(Page, self).__init__()
-        self.text = ""
-        self.polygons = []
+        # save the text on text browser to the page object
+        self.label._page._text = self.textBrowser.toPlainText()
+
+        # change the page index and object
+        self.page = pageNumber
+        self.updatePage()
 
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
         """ Provides event support for the image label """
-        # CITE: # https://doc.qt.io/qtforpython/PySide2/QtWidgets/QRubberBand.html
         super(ImageLabel, self).__init__()
-        self.ui = ui
-        self.rubberBand = 0
-        self.line = 0
-        self.lines = []
-        self.polygonPoints = []
-        self.polygon = QtGui.QPolygon()
-        self.polygons = []
-        self.released = False
-        self.pixmap = []
-        self.origin = []
-        self.end = []
+        self._ui = ui
+        self._page = None
+        self._lines = []
+        self._start_of_line = []
+        self._end_of_line = []
         self.setMouseTracking(True)
 
     def paintEvent(self, event):
         """ Paints a polygon on the pixmap after selection
             during selection of a polygon points the current line """
         painter = QtGui.QPainter(self)
-        if self.pixmap:
-            painter.drawPixmap(self.rect(), self.pixmap)
-            painter.setPen(QtCore.Qt.red)
-            if self.origin and self.end:
-                painter.drawLine(self.origin, self.end)
-            for start, end in self.lines:
-                painter.drawLine(start, end)
-            for poly in self.polygons:
-                painter.drawConvexPolygon(poly)
+        if self._page:
+            self._ui.textBrowser.setText(self._page._text)
 
+            scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            drawRect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+            painter.drawPixmap(drawRect, scaledPixmap)
+
+            painter.setPen(QtCore.Qt.red)
+
+            if self._start_of_line and self._end_of_line:
+                painter.drawLine(self._start_of_line, self._end_of_line)
+
+            for start, end in self._lines:
+                painter.drawLine(start, end)
+    
+            for poly in self._page._polygons:
+                painter.drawConvexPolygon(poly)
+                
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
-        if self.origin:
-            self.lines.append((self.origin, event.pos()))
-        self.origin = event.pos()
-        self.polygonPoints.append((event.x(),event.y()))
-        self.polygon << event.pos()
+        if self._start_of_line:
+            self._lines.append((self._start_of_line, event.pos()))
+        self._start_of_line = event.pos()
+        self._page._polygon_points.append((event.x(),event.y()))
+        self._page._polygon << event.pos()
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
-        self.end = event.pos()
+        self._end_of_line = event.pos()
         self.update()
 
-    def mouseReleaseEvent(self, event):
-        self.update()
-
-    def selectPolygon(self):
-        """ Called when a polygon is done being selected
-            Crops polygon and stops drawing lines following mouse """
-        self.released = True
-        self.lines = []
-        self.origin = []
-        self.update()
-        self.polygonCrop()
-        self.polygonPoints = []
-        self.polygons.append(self.polygon)
-        self.polygon = QtGui.QPolygon()
-
-    def polygonCrop(self):
-        # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
-        # read image as RGB and add alpha (transparency)
-        im = Image.open(self.ui.imgs[self.ui.page]).convert("RGBA")
-
-        # convert to numpy (for convenience)
-        imArray = numpy.asarray(im)
-
-        # create mask
-        maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
-        ImageDraw.Draw(maskIm).polygon(self.polygonPoints, outline=1, fill=1)
-        mask = numpy.array(maskIm)
-
-        # assemble new image (uint8: 0-255)
-        newImArray = numpy.empty(imArray.shape, dtype='uint8')
-
-        # colors (three first columns, RGB)
-        newImArray[:,:,:3] = imArray[:,:,:3]
-
-        # transparency (4th column)
-        newImArray[:,:,3] = mask*255
-
-        # back to Image from numpy
-        newIm = Image.fromarray(newImArray, "RGBA")
-        numcuts = len(self.polygons)
-        newIm.save(f'out{numcuts}.png')
 
 class MainWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -244,13 +237,13 @@ class MainWidget(QtWidgets.QWidget):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
-        if event.key() == QtCore.Qt.Key_Escape and self.ui.label.polygonPoints != []:
-            self.ui.label.selectPolygon()
-
+        if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 2:
+            self.ui.label._page.selectPolygon()
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     test = MainWidget()
     test.show()
+
     sys.exit(app.exec_())

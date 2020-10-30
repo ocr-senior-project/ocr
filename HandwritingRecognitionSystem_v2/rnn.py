@@ -10,10 +10,10 @@ import tensorflow as tf
 import numpy as np
 import math
 
-from config import cfg
-from util import LoadClasses
-from cnn import FV
-from cnn import NFeatures
+from .config import cfg
+from .util import LoadClasses
+from .cnn import FV
+from .cnn import NFeatures
 
 Classes = LoadClasses(cfg.CHAR_LIST)
 

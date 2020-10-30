@@ -15,123 +15,117 @@ import numpy as np
 import codecs
 import math
 
-try:
-	reload(sys)  # Python 2
-	sys.setdefaultencoding('utf8')
-except NameError:
-	pass         # Python 3
+# try:
+# 	reload(sys)  # Python 2
+# 	sys.setdefaultencoding('utf8')
+# except NameError:
+# 	pass         # Python 3
 
-from config import cfg
-from util import LoadClasses
-from util import LoadModel
-from util import ReadData
-from util import LoadList
-from cnn import CNN
-from cnn import WND_HEIGHT
-from cnn import WND_WIDTH
-from cnn import MPoolLayers_H
-from rnn import RNN
+from .config import cfg
+from .util import LoadClasses
+from .util import LoadModel
+from .util import ReadData
+from .util import LoadList
+from .cnn import CNN
+from .cnn import WND_HEIGHT
+from .cnn import WND_WIDTH
+from .cnn import MPoolLayers_H
+from .rnn import RNN
 
 
-if cfg.WriteDecodedToFile == True:
-	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")
+# if cfg.WriteDecodedToFile == True:
+# 	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")
 
-Classes = LoadClasses(cfg.CHAR_LIST)
 
-NClasses = len(Classes)
+def run():
+	tf.compat.v1.reset_default_graph()
 
-FilesList = LoadList(cfg.TEST_LIST)
+	Classes = LoadClasses(cfg.CHAR_LIST)
 
-WND_SHIFT = WND_WIDTH - 2
+	NClasses = len(Classes)
 
-VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
+	FilesList = LoadList(cfg.TEST_LIST)
 
-phase_train = tf.Variable(True, name='phase_train')
+	WND_SHIFT = WND_WIDTH - 2
 
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, WND_HEIGHT, WND_WIDTH])
+	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
 
-SeqLens = tf.compat.v1.placeholder(shape=[cfg.BatchSize], dtype=tf.int32)
+	phase_train = tf.Variable(True, name='phase_train')
 
-x_expanded = tf.expand_dims(x, 3)
+	x = tf.compat.v1.placeholder(tf.float32, shape=[None, WND_HEIGHT, WND_WIDTH])
 
-Inputs = CNN(x_expanded, phase_train, 'CNN_1')
+	SeqLens = tf.compat.v1.placeholder(shape=[cfg.BatchSize], dtype=tf.int32)
 
-logits = RNN(Inputs, SeqLens, 'RNN_1')
+	x_expanded = tf.expand_dims(x, 3)
 
-# CTC Beam Search Decoder to decode pred string from the prob map
-decoded, log_prob = tf.nn.ctc_beam_search_decoder(inputs=logits, sequence_length=SeqLens)
+	Inputs = CNN(x_expanded, phase_train, 'CNN_1')
 
-#Reading test data...
-InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
+	logits = RNN(Inputs, SeqLens, 'RNN_1')
 
-print('Initializing...')
+	# CTC Beam Search Decoder to decode pred string from the prob map
+	decoded, log_prob = tf.nn.ctc_beam_search_decoder(inputs=logits, sequence_length=SeqLens)
 
-session = tf.compat.v1.Session()
+	#Reading test data...
+	InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
 
-session.run(tf.compat.v1.global_variables_initializer())
+	print('Initializing...')
 
-LoadModel(session, cfg.SaveDir+'/')
+	session = tf.compat.v1.Session()
 
-try:
-	session.run(tf.compat.v1.assign(phase_train, False))
+	session.run(tf.compat.v1.global_variables_initializer())
 
-	randIxs = range(0, len(InputListTest))
+	LoadModel(session, cfg.SaveDir+'/')
 
-	start, end = (0, cfg.BatchSize)
+	try:
+		session.run(tf.compat.v1.assign(phase_train, False))
 
-	batch = 0
-	while end <= len(InputListTest):
-		batchInputs = []
-		batchSeqLengths = []
-		for batchI, origI in enumerate(randIxs[start:end]):
-			batchInputs.extend(InputListTest[origI])
-			batchSeqLengths.append(SeqLensTest[origI])
+		randIxs = range(0, len(InputListTest))
 
-		feed = {x: batchInputs, SeqLens: batchSeqLengths}
-		del batchInputs, batchSeqLengths
+		start, end = (0, cfg.BatchSize)
 
-		Decoded = session.run([decoded], feed_dict=feed)[0]
-		del feed
+		batch = 0
+		while end <= len(InputListTest):
+			batchInputs = []
+			batchSeqLengths = []
+			for batchI, origI in enumerate(randIxs[start:end]):
+				batchInputs.extend(InputListTest[origI])
+				batchSeqLengths.append(SeqLensTest[origI])
 
-		trans = session.run(tf.sparse.to_dense(Decoded[0]))
+			feed = {x: batchInputs, SeqLens: batchSeqLengths}
+			del batchInputs, batchSeqLengths
 
-		for i in range(0, cfg.BatchSize):
+			Decoded = session.run([decoded], feed_dict=feed)[0]
+			del feed
 
-			fileIndex = cfg.BatchSize * batch + i
-			filename = FilesList[fileIndex].strip()
-			decodedStr = " "
+			trans = session.run(tf.sparse.to_dense(Decoded[0]))
+
+			decodedStr = ""
 			
-			for j in range(0, len(trans[i])):
-				if trans[i][j] == 0:					
-					if (j != (len(trans[i]) - 1)):
-						if trans[i][j+1] == 0: break
-						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
+			for j in range(0, len(trans[0])):
+				if trans[0][j] == 0:					
+					if (j != (len(trans[0]) - 1)):
+						if trans[0][j+1] == 0: break
+						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
 					else:
 						break
 				else:	
-					if trans[i][j] == (NClasses - 2):
+					if trans[0][j] == (NClasses - 2):
 						if (j != 0): decodedStr = "%s " % (decodedStr)
 						else: continue
 					else:
-						decodedStr = "%s%s" % (decodedStr, Classes[trans[i][j]])
+						decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
 
 			decodedStr = decodedStr.replace("<SPACE>", " ")
+			print("|" + decodedStr + "|")
+			return decodedStr
 
-			decodedStr = filename + decodedStr[:] + "\n"
-			if cfg.WriteDecodedToFile == True: DecodeLog.write(decodedStr)
-			else: print(decodedStr, end=' ')
-
-		start += cfg.BatchSize
-		end += cfg.BatchSize
-		batch += 1
-
-	DecodeLog.close()
-
-except (KeyboardInterrupt, SystemExit, Exception) as e:
-	print("[Error/Interruption] %s" % str(e))
-	print("Clossing TF Session...")
-	session.close()
-	print("Terminating Program...")
-	sys.exit(0)
+	except (KeyboardInterrupt, SystemExit, Exception) as e:
+		print("[Error/Interruption] %s" % str(e))
+		print("Clossing TF Session...")
+		session.close()
+		print("Terminating Program...")
+		sys.exit(0)
 
 
+if __name__ == "__main__":
+	run()

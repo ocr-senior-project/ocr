@@ -12,7 +12,7 @@ import cv2
 import math
 import os
 import codecs
-from config import cfg
+from .config import cfg
 
 
 tf.compat.v1.disable_eager_execution()

@@ -1,4 +1,5 @@
 import argparse
+import os
 
 with open('samples/CHAR_LIST') as f:
     chars = f.read()
@@ -40,6 +41,11 @@ if __name__ == "__main__":
     parser.add_argument('textorlabel', type=str,
                         help='"text" if the input is a .txt file, any other input will assume a label file.')
     args = parser.parse_args()
+
+    directory = r'formalsamples/Text/000033'
+    for entry in os.scandir(directory):
+        print(text_to_label(entry.path))
+
     if args.textorlabel == 'text':
         result = text_to_label(args.relativepath)
     else:

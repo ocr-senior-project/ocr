@@ -9,11 +9,11 @@
 import tensorflow as tf
 import math
 
-from config import cfg
-from util import batch_norm_conv
-from util import weight_variable
-from util import conv2d
-from util import max_pool
+from .config import cfg
+from .util import batch_norm_conv
+from .util import weight_variable
+from .util import conv2d
+from .util import max_pool
 
 ####################################################################
 #CNN-specific architecture configuration
