@@ -103,7 +103,7 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        self._popup.hide()
+        #self._popup.hide()
         self._selected_polygon = None
         self._image_object.update()
 
@@ -137,7 +137,7 @@ class Page:
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        return test.run() 
+        return test.run()
 
     def polygonCrop(self, fname=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
