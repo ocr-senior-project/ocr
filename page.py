@@ -183,13 +183,11 @@ class Page:
             newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
         return image_name
 
-
     def selectClickedPolygon(self, position):
         for line in self._page_lines:
             poly = line._polygon
             if poly.containsPoint(position, 0):
                 self._selected_polygon = line
-
 
     def selectClickedVertexHandle(self, point):
         """ determines clicked vertex handle and sets it to self._selected_vertex"""
@@ -200,13 +198,11 @@ class Page:
                     #self._selected_vertex = vertex
         return False
 
-
     def pointSelectsItem(self, point):
         """ checks if the clicked point interacts with any lines on the page """
         if self.pointInPolygon(point) or self.pointInVertexHandle(point):
             return True
         return False
-
 
     def pointInPolygon(self, point):
         """ checks if a point is contained by any polygon on the current page"""
@@ -215,7 +211,6 @@ class Page:
             if poly.containsPoint(point, 0):
                 return True
         return False
-
 
     def pointInVertexHandle(self, point):
         if self._selected_polygon:

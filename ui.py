@@ -20,7 +20,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-mode = "reading"
+mode = "polygon_selection"
 
 class Ui_test:
     def setupUi(self, test):
@@ -29,33 +29,21 @@ class Ui_test:
         test.resize(1092, 589)
         self.mainWindow = test
 
-        # Horizontal Layout
+        # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
 
-        # Hamburger Menu Button
+        # Hamburger menu layout
         self.menuVLayout = QtWidgets.QVBoxLayout()
-        self.menuLabel = MenuLabel(self)
-        self.space = QtWidgets.QLabel("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n")
-        self.menuVLayout.addWidget(self.menuLabel)
-        self.menuVLayout.addWidget(self.space)
-        self.menuVLayout.setSpacing(0)
-        self.horizontalLayout.addLayout(self.menuVLayout)
+        self.horizontalLayout.addLayout(self.menuVLayout, 2)
+        self.popupMenu = PopupMenu(self, test, self.menuVLayout)
 
-        # Pop Up Menu
-        self.popupMenu = PopupMenu(self)
-        self.horizontalLayout.addLayout(self.popupMenu.verticalLayout)
-        self.popupMenu.hide()
-
-        # Pass Menu to Menu Button
-        self.menuLabel.menu = self.popupMenu
-
-        # Image Label
+        # Image label
         self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label, stretch=5)
 
-        # Text Box
+        # Text box
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.cursorPositionChanged.connect(self.highlight_line)
@@ -69,16 +57,6 @@ class Ui_test:
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
-        """
-        self.pushButton_2.setText(_translate("test", "Import PDF", None))
-        self.pushButton_3.setText(_translate("test", "Export PDF", None))
-        self.pushButton.setText(_translate("test", "Editing Mode", None))
-        self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
-        self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
-        self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
-        self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
-        self.pushButton_5.setText(_translate("test", "Next Page ->", None))
-        """
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
@@ -231,79 +209,97 @@ class Ui_test:
 
 
 class MenuLabel(QtWidgets.QLabel):
-    def __init__(self, ui):
+    def __init__(self, menu):
         """ Provides event support for the menu label """
         super(MenuLabel, self).__init__()
-        self._ui = ui
+        self._menu = menu
         self.setText("≡")
         self.setFont(QtGui.QFont("Times", 30, QtGui.QFont.Bold))
+        self.setFixedSize(30, 30)
 
     def mousePressEvent(self, event):
-        self.menu.frame.show()
-
+        if self._menu._menu_open:
+            self._menu.hide()
+        else:
+            self._menu.show()
 
 class PopupMenu(QtWidgets.QWidget):
-    def __init__(self, ui):
+    def __init__(self, ui, test, layout):
         super(PopupMenu, self).__init__()
         self._ui = ui
+        self._test = test
+        self._verticalLayout = layout
+        self._menu_open = False
 
-        self.frame = QtWidgets.QFrame()
+        # Menu label
+        self._menuLabel = MenuLabel(self)
+        self._verticalLayout.addWidget(self._menuLabel)
 
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-
+        # Page number layout
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
+        self._verticalLayout.addLayout(self.pageNumberHLayout)
+
+        # FOR NOW: add label to move menu label to top of layout
+        self._space = QtWidgets.QLabel()
+        self._space.setFixedSize(10, 456)
+        self._verticalLayout.addWidget(self._space)
+
+        # List of menu widgets
+        self._widgets_list = []
+
+        # Page number widgets
+        self._h_layout = []
         self.pageNumberLabel = QtWidgets.QLabel("Page:")
         self.inputPageNumber = QtWidgets.QLineEdit()
         self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
         self.inputPageNumber.setValidator(QtGui.QIntValidator())
         self.inputPageNumber.editingFinished.connect(self._ui.jumpToPage)
         self.inputPageNumber.setReadOnly(True)
-        self.pageNumberHLayout.addWidget(self.pageNumberLabel)
-        self.pageNumberHLayout.addSpacing(10)
-        self.pageNumberHLayout.addWidget(self.inputPageNumber)
-        self.verticalLayout.addLayout(self.pageNumberHLayout)
+        self._h_layout.append(self.pageNumberLabel)
+        self._h_layout.append(self.inputPageNumber)
+        self._widgets_list.append(self._h_layout)
 
+        # Buttons
         self.pushButton_2 = QtWidgets.QPushButton()
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.pushButton_2.clicked.connect(self._ui.get_file)
-        self.verticalLayout.addWidget(self.pushButton_2)
+        self._widgets_list.append(self.pushButton_2)
 
         self.pushButton_3 = QtWidgets.QPushButton()
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.verticalLayout.addWidget(self.pushButton_3)
+        self._widgets_list.append(self.pushButton_3)
 
         self.pushButton = QtWidgets.QPushButton()
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.verticalLayout.addWidget(self.pushButton)
-        #self.horizontalLayout.addLayout(self.verticalLayout, stretch=2)
         self.pushButton.clicked.connect(self._ui.get_char)
+        self._widgets_list.append(self.pushButton)
 
         self.pushButton_7 = QtWidgets.QPushButton()
         self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
         self.pushButton_7.clicked.connect(self._ui.turn_highlighting_on)
-        self.verticalLayout.addWidget(self.pushButton_7)
+        self._widgets_list.append(self.pushButton_7)
 
         self.pushButton_8= QtWidgets.QPushButton()
         self.pushButton_8.setObjectName(_fromUtf8("pushButton"))
         self.pushButton_8.clicked.connect(self._ui.turn_polygon_selection_on)
-        self.verticalLayout.addWidget(self.pushButton_8)
+        self._widgets_list.append(self.pushButton_8)
 
         self.pushButton_6 = QtWidgets.QPushButton()
         self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
         self.pushButton_6.clicked.connect(self._ui.transcribe_all_polygons)
-        self.verticalLayout.addWidget(self.pushButton_6)
+        self._widgets_list.append(self.pushButton_6)
 
         self.pushButton_4 = QtWidgets.QPushButton()
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_4.clicked.connect(self._ui.previous_page)
-        self.verticalLayout.addWidget(self.pushButton_4)
+        self._widgets_list.append(self.pushButton_4)
 
         self.pushButton_5 = QtWidgets.QPushButton()
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.pushButton_5.clicked.connect(self._ui.next_page)
-        self.verticalLayout.addWidget(self.pushButton_5)
+        self._widgets_list.append(self.pushButton_5)
 
+        # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton.setText(_translate("test", "Editing Mode", None))
@@ -313,10 +309,34 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
 
-        self.frame.setLayout(self.verticalLayout)
+    def show(self):
+        """ Open hamburger menu """
+        self._menu_open = True
+        # delte space-filling label
+        self._verticalLayout.itemAt(2).widget().setParent(None)
 
-        self.frame.hide()
-        #self.hide()
+        for i in range(len(self._widgets_list)):
+            if isinstance(self._widgets_list[i], list): # page number layout
+                for widget in self._widgets_list[i]:
+                    self.pageNumberHLayout.addWidget(widget)
+            else: # button
+                self._verticalLayout.addWidget(self._widgets_list[i])
+
+    def hide(self):
+        """ Close hamburger menu """
+        self._menu_open = False
+        # delete widgets from page number layout
+        for i in reversed(range(self.pageNumberHLayout.count())):
+            self.pageNumberHLayout.itemAt(i).widget().setParent(None)
+        # delete buttons
+        for i in reversed(range(self._verticalLayout.count())):
+            if i > 1:
+                self._verticalLayout.itemAt(i).widget().setParent(None)
+        # FOR NOW: add label to move menu label to top of layout
+        self._space = QtWidgets.QLabel()
+        self._space.setFixedSize(10, 456)
+
+        self._verticalLayout.addWidget(self._space)
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
@@ -349,10 +369,9 @@ class ImageLabel(QtWidgets.QLabel):
         """ Paints a polygon on the pixmap after selection
             during selection of a polygon points the current line """
         global mode
-
         painter = QtGui.QPainter(self)
-        if self._page:
 
+        if self._page:
             scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
             drawRect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
             painter.drawPixmap(drawRect, scaledPixmap)
@@ -408,6 +427,7 @@ class ImageLabel(QtWidgets.QLabel):
             else:
                 self._page.selectClickedPolygon(point)
             self.update()
+
         if mode == "highlighting":
             for line in self._page._page_lines:
                 poly = line._polygon
@@ -433,7 +453,6 @@ class ImageLabel(QtWidgets.QLabel):
         self.update()
 
     def mouseReleaseEvent(self, event):
-
         if self._page._dragging_vertex:
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()
