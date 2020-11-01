@@ -1,4 +1,3 @@
-from __future__ import print_function
 ###
 # Copyright 2018 Edgard Chammas. All Rights Reserved.
 # Licensed under the Creative Commons Attribution-NonCommercial International Public License, Version 4.0.
@@ -15,12 +14,6 @@ import numpy as np
 import codecs
 import math
 
-# try:
-# 	reload(sys)  # Python 2
-# 	sys.setdefaultencoding('utf8')
-# except NameError:
-# 	pass         # Python 3
-
 from .config import cfg
 from .util import LoadClasses
 from .util import LoadModel
@@ -32,12 +25,8 @@ from .cnn import WND_WIDTH
 from .cnn import MPoolLayers_H
 from .rnn import RNN
 
-
-# if cfg.WriteDecodedToFile == True:
-# 	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")
-
-
 def run():
+	print("\n\n\n\n\n\n\n\n\n\n\n\n")
 	tf.compat.v1.reset_default_graph()
 
 	Classes = LoadClasses(cfg.CHAR_LIST)
@@ -67,8 +56,6 @@ def run():
 
 	#Reading test data...
 	InputListTest, SeqLensTest, _ = ReadData(cfg.TEST_LOCATION, cfg.TEST_LIST, cfg.TEST_NB, WND_HEIGHT, WND_WIDTH, WND_SHIFT, VEC_PER_WND, '')
-
-	print('Initializing...')
 
 	session = tf.compat.v1.Session()
 
@@ -100,15 +87,15 @@ def run():
 			trans = session.run(tf.sparse.to_dense(Decoded[0]))
 
 			decodedStr = ""
-			
+
 			for j in range(0, len(trans[0])):
-				if trans[0][j] == 0:					
+				if trans[0][j] == 0:
 					if (j != (len(trans[0]) - 1)):
 						if trans[0][j+1] == 0: break
 						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
 					else:
 						break
-				else:	
+				else:
 					if trans[0][j] == (NClasses - 2):
 						if (j != 0): decodedStr = "%s " % (decodedStr)
 						else: continue
@@ -116,14 +103,10 @@ def run():
 						decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
 
 			decodedStr = decodedStr.replace("<SPACE>", " ")
-			print("|" + decodedStr + "|")
 			return decodedStr
 
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
-		print("[Error/Interruption] %s" % str(e))
-		print("Clossing TF Session...")
 		session.close()
-		print("Terminating Program...")
 		sys.exit(0)
 
 

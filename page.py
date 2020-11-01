@@ -17,7 +17,7 @@ class Page:
     def selectPolygon(self):
         """ Called when a polygon is done being selected
             Crops polygon and stops drawing lines following mouse """
-        
+
         # Stop drawing lines
         self._image_object._lines = []
         self._image_object._start_of_line = []
@@ -40,7 +40,7 @@ class Page:
         self._image_object.update()
 
     def scalePolygonPoints(self, im):
-        """ Scale each point of polygon_points by the ratio of the original image to the 
+        """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
         xscale = im.size[0] / self._image_object.rect().width()
         yscale = im.size[1] / self._image_object.rect().height()
@@ -67,15 +67,12 @@ class Page:
         file_to_crop = QtCore.QFile("jpg.jpg")
         file_to_crop.open(QtCore.QIODevice.WriteOnly)
         self._pixmap.save(file_to_crop, "JPG")
-    
+
     def transcribePolygon(self, image_name):
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        # os.system('cd HandwritingRecognitionSystem_v2; python test.py; cd -')
         self._text += test.run()
-        # f = open("HandwritingRecognitionSystem_v2/decoded.txt", "r")
-        # print(f.read())
 
     def polygonCrop(self):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
