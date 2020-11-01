@@ -20,7 +20,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-mode = "reading"
+mode = "polygon_selection"
 
 class Ui_test:
     def setupUi(self, test):
@@ -99,6 +99,10 @@ class Ui_test:
         self.pushButton_5.clicked.connect(self.next_page)
         self.verticalLayout.addWidget(self.pushButton_5)
 
+        self.trainLinesButton = QtWidgets.QPushButton(test)
+        self.trainLinesButton.clicked.connect(self.trainLines)
+        self.verticalLayout.addWidget(self.trainLinesButton)
+
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
@@ -114,6 +118,7 @@ class Ui_test:
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
         self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
         self.pushButton_5.setText(_translate("test", "Next Page ->", None))
+        self.trainLinesButton.setText("Train")
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
@@ -186,6 +191,10 @@ class Ui_test:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
+
+    def trainLines(self):
+        if self.label._page:
+            self.label._page.trainLines()
 
 
     def jumpToPage(self):

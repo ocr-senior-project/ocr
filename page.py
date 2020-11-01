@@ -2,6 +2,7 @@ import numpy
 from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
+import glob
 # import HandwritingRecognitionSystem_v2.test as test
 from HandwritingRecognitionSystem_v2 import test
 
@@ -62,6 +63,35 @@ class Page:
                 min_a = point.y()
         return min_a
 
+    def trainLines(self):
+
+        self.saveLines()
+        os.chdir("HandwritingRecognitionSystem_v2/Train/")
+        for line in self._page_lines:
+            os.chdir("Text/")
+            #number of files in the directory
+            file_number = len(glob.glob('*'))
+            print(file_number)
+            text_file = open("%d.txt" % file_number, "w")
+            text_file.write(line._transcription)
+            os.chdir("..")
+            os.chdir("Images/")
+            self._polygon_points = line._vertices.copy()
+            self.polygonCrop("%d" % file_number)
+            os.chdir("..")
+
+        os.chdir("..")
+        os.chdir("..")
+
+    def saveLines(self):
+
+        text = self._image_object._ui.textBrowser.toPlainText()
+        text_lines = text.split("\n")
+        line_number = 0
+        for line in self._page_lines:
+            line._transcription = text_lines[line_number]
+            line_number = line_number+1
+
     def sortLines(self):
         """ Sorts polygons by position, updating index """
         self._page_lines.sort(key=self.p_line_key)
@@ -110,7 +140,8 @@ class Page:
     def updatePolygonCrop(self):
         """ recrops polygon when vertices positions are changed by the user"""
         self._polygon_points = self._selected_polygon._vertices.copy()
-        self.polygonCrop(self._selected_polygon._image_name)
+        file_path = "HandwritingRecognitionSystem_v2/formalsamples/Images/"+self._selected_polygon._image_name
+        self.polygonCrop(file_path)
         self._polygon_points = []
 
     def boundingRectangle(self, polygon):
@@ -137,9 +168,9 @@ class Page:
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        return test.run() 
+        return test.run()
 
-    def polygonCrop(self, fname=None):
+    def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
 
@@ -175,8 +206,9 @@ class Page:
 
         if fname:
             # if filename is given
-            samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/"
-            newIm.crop(end_crop).save(f'{samples_dir}{fname}.png')
+            #samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/"
+            newIm.crop(end_crop).save(f'{fname}.png')
+            os.remove("jpg.jpg")
         else:
             # saving to a new file
             samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
