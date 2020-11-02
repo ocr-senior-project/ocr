@@ -123,4 +123,3 @@ def ConvLayer(Input, FilterIn, FilterOut, Training, Scope):
 			return tf.nn.leaky_relu(batch_norm_conv(conv2d(Input, Weight), FilterOut, Training))
 		else:
 			return tf.nn.relu(batch_norm_conv(conv2d(Input, Weight), FilterOut, Training))
-

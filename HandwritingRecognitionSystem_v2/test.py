@@ -100,15 +100,15 @@ def run():
 			trans = session.run(tf.sparse.to_dense(Decoded[0]))
 
 			decodedStr = ""
-			
+
 			for j in range(0, len(trans[0])):
-				if trans[0][j] == 0:					
+				if trans[0][j] == 0:
 					if (j != (len(trans[0]) - 1)):
 						if trans[0][j+1] == 0: break
 						else: decodedStr = "%s%s" % (decodedStr, Classes[trans[0][j]])
 					else:
 						break
-				else:	
+				else:
 					if trans[0][j] == (NClasses - 2):
 						if (j != 0): decodedStr = "%s " % (decodedStr)
 						else: continue

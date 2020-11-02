@@ -1,10 +1,10 @@
 *__pycache__
 *.jpg
-*.png
 *.pdf
 *decoded.txt
 report.txt
 *MATRICULAmodel
+*ocr_v2
 
 HandwritingRecognitionSystem_v2/model
 HandwritingRecognitionSystem_v2/summary
