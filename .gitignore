@@ -1,3 +1,11 @@
+*__pycache__
+*.jpg
+*.png
+*.pdf
+*decoded.txt
+report.txt
+*MATRICULAmodel
+
 HandwritingRecognitionSystem_v2/model
 HandwritingRecognitionSystem_v2/summary
 HandwritingRecognitionSystem_v2/MATRICULAmodel
