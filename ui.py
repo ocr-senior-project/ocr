@@ -223,6 +223,7 @@ class MenuLabel(QtWidgets.QLabel):
         else:
             self._menu.show()
 
+
 class PopupMenu(QtWidgets.QWidget):
     def __init__(self, ui, test, layout):
         super(PopupMenu, self).__init__()
@@ -235,14 +236,13 @@ class PopupMenu(QtWidgets.QWidget):
         self._menuLabel = MenuLabel(self)
         self._verticalLayout.addWidget(self._menuLabel)
 
+        # Spacer item
+        self._space = QtWidgets.QSpacerItem(10, 490)
+        self._verticalLayout.addSpacerItem(self._space)
+
         # Page number layout
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
         self._verticalLayout.addLayout(self.pageNumberHLayout)
-
-        # FOR NOW: add label to move menu label to top of layout
-        self._space = QtWidgets.QLabel()
-        self._space.setFixedSize(10, 456)
-        self._verticalLayout.addWidget(self._space)
 
         # List of menu widgets
         self._widgets_list = []
@@ -312,8 +312,9 @@ class PopupMenu(QtWidgets.QWidget):
     def show(self):
         """ Open hamburger menu """
         self._menu_open = True
-        # delte space-filling label
-        self._verticalLayout.itemAt(2).widget().setParent(None)
+
+        # Change spacer size
+        self._space.changeSize(10, 5)
 
         for i in range(len(self._widgets_list)):
             if isinstance(self._widgets_list[i], list): # page number layout
@@ -330,13 +331,12 @@ class PopupMenu(QtWidgets.QWidget):
             self.pageNumberHLayout.itemAt(i).widget().setParent(None)
         # delete buttons
         for i in reversed(range(self._verticalLayout.count())):
-            if i > 1:
+            if i > 2:
                 self._verticalLayout.itemAt(i).widget().setParent(None)
-        # FOR NOW: add label to move menu label to top of layout
-        self._space = QtWidgets.QLabel()
-        self._space.setFixedSize(10, 456)
+        # Spacer
+        self._space.changeSize(10, 490)
 
-        self._verticalLayout.addWidget(self._space)
+
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
