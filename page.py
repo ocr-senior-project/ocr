@@ -5,7 +5,6 @@ import os
 # import HandwritingRecognitionSystem_v2.test as test
 from HandwritingRecognitionSystem_v2 import test
 
-
 class Line():
     def __init__(self, polygon, points, image_name):
         self._polygon = polygon

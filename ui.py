@@ -471,6 +471,7 @@ class MainWidget(QtWidgets.QWidget):
             self.ui.label._page.selectPolygon()
 
 
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     test = MainWidget()
