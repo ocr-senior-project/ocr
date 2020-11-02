@@ -6,7 +6,6 @@ import glob
 # import HandwritingRecognitionSystem_v2.test as test
 from HandwritingRecognitionSystem_v2 import test
 
-
 class Line():
     def __init__(self, polygon, points, image_name):
         self._polygon = polygon
@@ -64,14 +63,12 @@ class Page:
         return min_a
 
     def trainLines(self):
-
         self.saveLines()
         os.chdir("HandwritingRecognitionSystem_v2/Train/")
         for line in self._page_lines:
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
-            print(file_number)
             text_file = open("%d.txt" % file_number, "w")
             text_file.write(line._transcription)
             os.chdir("..")
@@ -84,7 +81,6 @@ class Page:
         os.chdir("..")
 
     def saveLines(self):
-
         text = self._image_object._ui.textBrowser.toPlainText()
         text_lines = text.split("\n")
         line_number = 0
@@ -133,7 +129,7 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        self._popup.hide()
+        #self._popup.hide()
         self._selected_polygon = None
         self._image_object.update()
 
@@ -215,13 +211,11 @@ class Page:
             newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
         return image_name
 
-
     def selectClickedPolygon(self, position):
         for line in self._page_lines:
             poly = line._polygon
             if poly.containsPoint(position, 0):
                 self._selected_polygon = line
-
 
     def selectClickedVertexHandle(self, point):
         """ determines clicked vertex handle and sets it to self._selected_vertex"""
@@ -232,13 +226,11 @@ class Page:
                     #self._selected_vertex = vertex
         return False
 
-
     def pointSelectsItem(self, point):
         """ checks if the clicked point interacts with any lines on the page """
         if self.pointInPolygon(point) or self.pointInVertexHandle(point):
             return True
         return False
-
 
     def pointInPolygon(self, point):
         """ checks if a point is contained by any polygon on the current page"""
@@ -247,7 +239,6 @@ class Page:
             if poly.containsPoint(point, 0):
                 return True
         return False
-
 
     def pointInVertexHandle(self, point):
         if self._selected_polygon:
