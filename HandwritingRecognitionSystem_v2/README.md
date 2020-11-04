@@ -56,4 +56,3 @@ We gratefully acknowledge the support of NVIDIA Corporation with the donation of
 
 ## Contributions
 Feel free to send your pull request or open issues.
-
