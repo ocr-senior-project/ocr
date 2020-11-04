@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
 # import HandwritingRecognitionSystem_v2.test as test
-from HandwritingRecognitionSystem_v2 import test
+from HandwritingRecognitionSystem_v2 import test, train
 
 
 class Line():
@@ -63,6 +63,31 @@ class Page:
                 min_a = point.y()
         return min_a
 
+    def writeListFile(self, file_number):
+        list_contents = ""
+        for i in range(file_number):
+            list_contents += str(i)
+            if i != file_number - 1:
+                list_contents += "\n"
+
+        list_file = open("list", "w")
+        list_file.write(list_contents)
+        list_file.close()
+
+    def text_to_label(self, text):
+        with open('../CHAR_LIST') as f:
+            chars = f.read()
+
+        chars = chars.split('\n')
+        label = ''
+        for letter in text:
+            if letter == ' ':
+                letter = '<SPACE>'
+            for ind, char in enumerate(chars):
+                if letter == char:
+                    label += str(ind) + ' '
+        return label
+
     def trainLines(self):
 
         self.saveLines()
@@ -71,17 +96,29 @@ class Page:
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
-            print(file_number)
             text_file = open("%d.txt" % file_number, "w")
             text_file.write(line._transcription)
+            text_file.close()
+
+            os.chdir("..")
+            os.chdir("Labels/")
+            label_file = open("%d.tru" % file_number, "w")
+            label_file.write(self.text_to_label(line._transcription))
+            label_file.close()
+
             os.chdir("..")
             os.chdir("Images/")
             self._polygon_points = line._vertices.copy()
             self.polygonCrop("%d" % file_number)
             os.chdir("..")
 
-        os.chdir("..")
-        os.chdir("..")
+        self.writeListFile(file_number)
+
+        os.chdir("../..")
+        train.run(file_number,
+                  "HandwritingRecognitionSystem_v2/Train/list",
+                  "HandwritingRecognitionSystem_v2/Train/Images/",
+                  "HandwritingRecognitionSystem_v2/Train/Labels/")
 
     def saveLines(self):
 

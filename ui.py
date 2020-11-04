@@ -257,7 +257,7 @@ class Ui_test:
             # clear prevosly highlighted block, if any
             if self.highlighted_cursor:
                 self.textCursor = self.highlighted_cursor
-                fmt.setBackground(QtGui.QColor("white"))
+                fmt.setBackground(QtGui.QColor(0, 0, 0, 255))
                 self.textCursor.setBlockFormat(fmt)
 
             # highlight block cursor is currently on

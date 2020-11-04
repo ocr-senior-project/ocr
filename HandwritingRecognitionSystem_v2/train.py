@@ -26,7 +26,17 @@ from .cnn import WND_SHIFT
 from .cnn import MPoolLayers_H
 from .rnn import RNN
 
-def run():
+def run(num_training_imgs, list_file, imgs_path, labels_path):
+	cfg.TRAIN_NB = num_training_imgs
+	cfg.TRAIN_LIST = list_file
+	cfg.SaveDir = 'HandwritingRecognitionSystem_v2/UImodel'
+	cfg.ModelName = 'UImodel.ckpt'
+
+	# images
+	cfg.TRAIN_LOCATION = imgs_path
+	# labels
+	cfg.TRAIN_TRANS = labels_path
+
 	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
 
 	nTimesNoProgress = 0
@@ -70,7 +80,7 @@ def run():
 
 	predicted = tf.cast(decoded[0], dtype=tf.int32)
 
-	error_rate = tf.reduce_sum(input_tensor=tf.edit_distance(predicted, targets, normalize=False)) / tf.cast(tf.size(input=targets.values), dtype=tf.float32)    
+	error_rate = tf.reduce_sum(input_tensor=tf.edit_distance(predicted, targets, normalize=False)) / tf.cast(tf.size(input=targets.values), dtype=tf.float32)
 
 	TrainError_s = tf.compat.v1.summary.scalar('TrainError', error_rate)
 
@@ -115,7 +125,7 @@ def run():
 
 	try:
 		for epoch in range(cfg.StartingEpoch, cfg.NEpochs):
-			
+
 			LogFile.write("######################################################\n")
 			LogFile.write("Training Data\n")
 
@@ -151,14 +161,14 @@ def run():
 				del feed
 
 				SummaryWriter.add_summary(summary, epoch*totalIter + batch)
-				
+
 				numberOfInfElements = np.count_nonzero(np.isinf(Losses))
 				if numberOfInfElements > 0:
 					LogFile.write("WARNING: INF VALUE(S) FOUND!\n")
 					LogFile.write("%s\n" % (batchTargetList[np.where(np.isinf(Losses)==True)[0][0]]))
 					LogFile.write("Losses\n")
 					Losses = filter(lambda v: ~np.isinf(v), Losses)
-					Loss = np.mean(Losses)		
+					Loss = np.mean(Losses)
 
 				TrainingLoss.append(Loss)
 				TrainingError.append(Error)
@@ -169,7 +179,7 @@ def run():
 					LogFile.write("Bad\n")
 				else:
 					LogFile.write("Good\n")
-					
+
 				start += cfg.BatchSize
 				end += cfg.BatchSize
 				batch += 1
@@ -194,7 +204,7 @@ def run():
 
 				session.run(tf.compat.v1.assign(phase_train, False))
 
-				ValidationError = []	
+				ValidationError = []
 				ValidationLoss = []
 
 				randIxs = range(0, len(inputListVal))
@@ -214,7 +224,7 @@ def run():
 
 					batchTargetSparse = target_list_to_sparse_tensor(batchTargetList)
 					batchTargetIxs, batchTargetVals, batchTargetShape = batchTargetSparse
-				
+
 					feed = {x: batchInputs, SeqLens: batchSeqLengths, indices: batchTargetIxs, values: batchTargetVals, shape: batchTargetShape}
 					del batchInputs, batchTargetIxs, batchTargetVals, batchTargetShape, batchSeqLengths
 
@@ -236,7 +246,7 @@ def run():
 				LogFile.write("Validation loss: %.6f, Validation error: %.6f\n" % (ValidationLoss, ValidationError))
 
 				feed = {OverallTrainingLoss: TrainingLoss, OverallTrainingError: TrainingError, OverallValidationLoss: ValidationLoss, OverallValidationError: ValidationError}
-				
+
 				SummaryWriter.add_summary(session.run([OverallSummary], feed_dict = feed)[0], epoch)
 				del feed
 
@@ -262,4 +272,3 @@ def run():
 		LogFile.write("Terminating Program...\n")
 		LogFile.close()
 		sys.exit(0)
-
