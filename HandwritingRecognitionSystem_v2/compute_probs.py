@@ -118,5 +118,3 @@ except (KeyboardInterrupt, SystemExit, Exception) as e:
 	session.close()
 	print("Terminating Program...")
 	sys.exit(0)
-
-
