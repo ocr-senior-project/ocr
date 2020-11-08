@@ -14,6 +14,7 @@ class Line():
         self._vertex_handles = None
         self._block_number = None
         self._transcription = None
+        self._transcription_changed = False 
 
     def set_transcription(self, transcription):
         self._transcription = transcription
@@ -104,19 +105,6 @@ class Page:
         self._polygon_points = []
         self._image_object.update()
 
-    def deletePolygon(self):
-        """ deletes self._polygon from the image """
-        for line_object in self._page_lines:
-            if line_object._polygon == self._polygon:
-                self._page_lines.remove(line_object)
-        self.sortLines()
-        self._image_object.update()
-
-    # def deleteSelectedPolygon(self):
-    #     """ deletes selected polygon upon a double click """
-    #     self._page_lines.remove(self._selected_polygon)
-    #     self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
@@ -129,9 +117,10 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        #self._popup.hide()
+        self.sortLines()
         self._selected_polygon = None
         self._image_object.update()
+
 
     def updatePolygonCrop(self):
         """ recrops polygon when vertices positions are changed by the user"""
