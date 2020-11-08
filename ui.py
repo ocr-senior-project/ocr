@@ -307,7 +307,7 @@ class PopupMenu(QtWidgets.QWidget):
         self._menu_open = True
 
         # Change spacer size
-        self._space.changeSize(10, 5)
+        self._space.changeSize(10, 50)
 
         for i in range(len(self._widgets_list)):
             if isinstance(self._widgets_list[i], list): # page number layout
