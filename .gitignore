@@ -4,7 +4,6 @@
 *decoded.txt
 report.txt
 *MATRICULAmodel
-*ocr_v2
 
 HandwritingRecognitionSystem_v2/model
 HandwritingRecognitionSystem_v2/summary
@@ -12,3 +11,4 @@ HandwritingRecognitionSystem_v2/MATRICULAmodel
 HandwritingRecognitionSystem_v2/ocr-env
 HandwritingRecognitionSystem_v2/log
 file_manipulation/matricula.pdf
+src
