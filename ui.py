@@ -150,6 +150,12 @@ class Ui_test:
                 self.textBrowser.append(p._transcription)
         self.highlighter_on = True
 
+        # rehighlight previously highlighted line
+        if self.label._page._highlighted_polygon:
+            index = self.label._page._highlighted_polygon._block_number
+            self.move_cursor(index)
+            self.highlight_line()
+
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
@@ -179,17 +185,18 @@ class Ui_test:
 
     def highlight_line(self):
         """ Highlights line where cursor currently is """
-        fmt = QtGui.QTextBlockFormat()
+        if self.label._page._selected_polygon._transcription:
+            fmt = QtGui.QTextBlockFormat()
 
-        # clear prevosly highlighted block, if any
-        if self.highlighted_cursor:
-            fmt.setBackground(QtGui.QColor("white"))
+            # clear prevosly highlighted block, if any
+            if self.highlighted_cursor:
+                fmt.setBackground(QtGui.QColor("white"))
+                self.highlighted_cursor.setBlockFormat(fmt)
+
+            # highlight block cursor is currently on
+            self.highlighted_cursor = self.textBrowser.textCursor()
+            fmt.setBackground(QtGui.QColor("yellow"))
             self.highlighted_cursor.setBlockFormat(fmt)
-
-        # highlight block cursor is currently on
-        self.highlighted_cursor = self.textBrowser.textCursor()
-        fmt.setBackground(QtGui.QColor("yellow"))
-        self.highlighted_cursor.setBlockFormat(fmt)
 
     def highlight(self):
         """ Highlights line where cursor is and the corresponding polygon.
@@ -204,8 +211,10 @@ class Ui_test:
             # select and highlight corresponding polygon
             for item in self.label._page._page_lines:
                 if item._block_number == index:
-                    self.label._page._selected_polygon = item
+                    self.label._page._highlighted_polygon = item
                     self.label.update()
+
+
 
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
@@ -214,7 +223,7 @@ class MenuLabel(QtWidgets.QLabel):
         self._menu = menu
         self.setText("≡")
         self.setFont(QtGui.QFont("Times", 30, QtGui.QFont.Bold))
-        self.setFixedSize(30, 30)
+        self.setFixedSize(40, 40)
 
     def mousePressEvent(self, event):
         if self._menu._menu_open:
@@ -231,13 +240,13 @@ class PopupMenu(QtWidgets.QWidget):
         self._verticalLayout = layout
         self._menu_open = False
 
+        self._verticalLayout.setAlignment(QtCore.Qt.AlignTop)
+        self._spacing = 35
+        self._verticalLayout.setSpacing(self._spacing)
+
         # Menu label
         self._menuLabel = MenuLabel(self)
         self._verticalLayout.addWidget(self._menuLabel)
-
-        # Spacer item
-        self._space = QtWidgets.QSpacerItem(10, 477)
-        self._verticalLayout.addSpacerItem(self._space)
 
         # Page number layout
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
@@ -306,28 +315,26 @@ class PopupMenu(QtWidgets.QWidget):
         """ Open hamburger menu """
         self._menu_open = True
 
-        # Change spacer size
-        self._space.changeSize(10, 5)
-
         for i in range(len(self._widgets_list)):
-            if isinstance(self._widgets_list[i], list): # page number layout
+            # add widgets to page number layout
+            if isinstance(self._widgets_list[i], list):
                 for widget in self._widgets_list[i]:
                     self.pageNumberHLayout.addWidget(widget)
-            else: # button
+            # add buttons
+            else:
                 self._verticalLayout.addWidget(self._widgets_list[i])
 
     def hide(self):
         """ Close hamburger menu """
         self._menu_open = False
+
         # delete widgets from page number layout
         for i in reversed(range(self.pageNumberHLayout.count())):
             self.pageNumberHLayout.itemAt(i).widget().setParent(None)
         # delete buttons
         for i in reversed(range(self._verticalLayout.count())):
-            if i > 2:
+            if i > 1:
                 self._verticalLayout.itemAt(i).widget().setParent(None)
-        # Spacer
-        self._space.changeSize(10, 477)
 
 
 class ImageLabel(QtWidgets.QLabel):
@@ -390,10 +397,11 @@ class ImageLabel(QtWidgets.QLabel):
                     for vertex in self._page._selected_polygon._vertices:
                         painter.drawEllipse(vertex[0]-5,vertex[1]-5,10,10)
 
-                # highlight polygon
+            # highlight polygon
+            if self._page._highlighted_polygon:
                 path = QtGui.QPainterPath()
                 polyf = QtGui.QPolygonF()
-                for point in self._page._selected_polygon._polygon:
+                for point in self._page._highlighted_polygon._polygon:
                     x = float(point.x())
                     y = float(point.y())
                     pointf = QtCore.QPointF(x, y)
@@ -409,31 +417,34 @@ class ImageLabel(QtWidgets.QLabel):
         point = QtCore.QPoint(event.x(), event.y())
 
         # make sure not already in polygons
-        if self._start_of_line or self._page.pointSelectsItem(point) == False:
-            # removes bug where user can select a polygon draw a new one
-            # and then delete the previous selection in one click
-            self._page._selected_polygon = None
-            if self._start_of_line:
-                self._lines.append((self._start_of_line, event.pos()))
-            self._start_of_line = event.pos()
-            self._page._polygon_points.append((event.x(),event.y()))
-            self._page._polygon << event.pos()
-        elif self._page.pointInVertexHandle(point):
+        if self._polygon_layer and (self._start_of_line or self._page.pointSelectsItem(point) == False):
+            if self._polygon_layer:
+                # removes bug where user can select a polygon draw a new one
+                # and then delete the previous selection in one click
+                self._page._selected_polygon = None
+                if self._start_of_line:
+                    self._lines.append((self._start_of_line, event.pos()))
+                self._start_of_line = event.pos()
+                self._page._polygon_points.append((event.x(),event.y()))
+                self._page._polygon << event.pos()
+        elif self._polygon_layer and self._page.pointInVertexHandle(point):
             self._page._dragging_vertex = True
             self._page.selectClickedVertexHandle(point)
         else:
             # select clicked polygon
             self._page.selectClickedPolygon(point)
+            if self._page._selected_polygon._transcription:
+                self._page._highlighted_polygon = self._page._selected_polygon
 
-            if self._ui.highlighted_cursor and self._ui.highlighted_cursor.blockNumber == self._page._selected_polygon._block_number:
-                # unhighlight
-                pass
-            else:
-                # move cursor to corresponding line
-                self._ui.move_cursor(self._page._selected_polygon._block_number)
+                if self._ui.highlighted_cursor and self._ui.highlighted_cursor.blockNumber == self._page._selected_polygon._block_number:
+                    # unhighlight when clicking a highlighted polygon
+                    pass
+                else:
+                    # move cursor to corresponding line
+                    self._ui.move_cursor(self._page._selected_polygon._block_number)
 
-                # highlight line
-                self._ui.highlight_line()
+                    # highlight line
+                    self._ui.highlight_line()
 
         self.update()
 
