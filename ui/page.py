@@ -1,10 +1,17 @@
 import numpy
-from PIL import Image, ImageDraw
-from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
-# import HandwritingRecognitionSystem_v2.test as test
+import sys
+import math
+from PIL import Image, ImageDraw
+from PyQt5 import QtCore, QtGui, QtWidgets
+from ui.page import *
+from ui.popup_menu import *
+from ui.menu_label import *
+from ui.image_label import *
 from HandwritingRecognitionSystem_v2 import test, train
+
+mode = ""
 
 class Line():
     def __init__(self, polygon, points, image_name):
