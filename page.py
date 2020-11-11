@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
 # import HandwritingRecognitionSystem_v2.test as test
-from HandwritingRecognitionSystem_v2 import test, train
+from HandwritingRecognitionSystem_v2 import test
 
 class Line():
     def __init__(self, polygon, points, image_name):
@@ -113,10 +113,7 @@ class Page:
         self.writeListFile(file_number)
 
         os.chdir("../..")
-        train.run(file_number,
-                  "HandwritingRecognitionSystem_v2/Train/list",
-                  "HandwritingRecognitionSystem_v2/Train/Images/",
-                  "HandwritingRecognitionSystem_v2/Train/Labels/")
+        return file_number
 
     def saveLines(self):
         text = self._image_object._ui.textBrowser.toPlainText()

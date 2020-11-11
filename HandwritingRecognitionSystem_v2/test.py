@@ -37,7 +37,8 @@ from .rnn import RNN
 # 	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")
 
 
-def run():
+def run(model_location="HandwritingRecognitionSystem_v2/MATRICULAmodel"):
+	cfg.SaveDir = model_location
 	tf.compat.v1.reset_default_graph()
 
 	Classes = LoadClasses(cfg.CHAR_LIST)

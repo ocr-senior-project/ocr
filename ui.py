@@ -3,8 +3,12 @@
 import sys
 import page
 import math
+import psutil
+import time
+from multiprocessing import Process
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
+from HandwritingRecognitionSystem_v2 import train
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -28,6 +32,9 @@ class Ui_test:
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
         self.mainWindow = test
+
+        self.process = QtCore.QProcess(test)
+        self._pid = -1
 
         # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
@@ -106,7 +113,7 @@ class Ui_test:
 
     def next_page(self):
         """ Next page button """
-        if self.page < len(self.imgs) - 1:
+        if hasattr(self, "page") and self.page < len(self.imgs) - 1:
             # save the text on text browser to the page object
             self.label._page._text = self.textBrowser.toPlainText()
 
@@ -116,14 +123,42 @@ class Ui_test:
 
     def previous_page(self):
         """ Previous page button """
-        if self.page > 0:
+        if hasattr(self, "page") and self.page > 0:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
 
     def trainLines(self):
+        """ train on selected polygons """
+        # only train if the page is loaded
         if self.label._page:
-            self.label._page.trainLines()
+            # change button text and disconnect from trainLines
+            self.popupMenu.pushButton_9.setText(_translate("test", "Stop Training", None))
+            self.popupMenu.pushButton_9.clicked.disconnect()
+            self.popupMenu.pushButton_9.clicked.connect(self.stopTraining)
+
+            # start training process
+            file_number = self.label._page.trainLines()
+            self.process = Process(
+                target=train.run,
+                args=(
+                    file_number,
+                    "HandwritingRecognitionSystem_v2/Train/list",
+                    "HandwritingRecognitionSystem_v2/Train/Images/",
+                    "HandwritingRecognitionSystem_v2/Train/Labels/",
+                    )
+                )
+            self.process.start()
+
+    def stopTraining(self):
+        # change button text and disconnect from stopTraining function
+        self.popupMenu.pushButton_9.setText(_translate("test", "Create Training Data", None))
+        self.popupMenu.pushButton_9.clicked.disconnect()
+        self.popupMenu.pushButton_9.clicked.connect(self.trainLines)
+
+        # kill the training process
+        self.process.terminate()
+        self.process.join()
 
     def jumpToPage(self):
         pageNumber = int(self.popupMenu.inputPageNumber.text()) - 1
@@ -235,7 +270,10 @@ class PopupMenu(QtWidgets.QWidget):
 
         # Page number layout
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
+        self.arrowsHLayout = QtWidgets.QHBoxLayout()
+        self.smallHLayouts = [self.pageNumberHLayout, self.arrowsHLayout]
         self._verticalLayout.addLayout(self.pageNumberHLayout)
+        self._verticalLayout.addLayout(self.arrowsHLayout)
 
         # List of menu widgets
         self._widgets_list = []
@@ -285,12 +323,12 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_4 = QtWidgets.QPushButton()
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_4.clicked.connect(self._ui.previous_page)
-        self._widgets_list.append(self.pushButton_4)
 
         self.pushButton_5 = QtWidgets.QPushButton()
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.pushButton_5.clicked.connect(self._ui.next_page)
-        self._widgets_list.append(self.pushButton_5)
+        self._prev_next_h_layout = [self.pushButton_4, self.pushButton_5]
+        self._widgets_list.append(self._prev_next_h_layout)
 
         # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
@@ -298,8 +336,8 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
         self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
-        self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
-        self.pushButton_5.setText(_translate("test", "Next Page ->", None))
+        self.pushButton_4.setText(_translate("test", "←", None))
+        self.pushButton_5.setText(_translate("test", "→", None))
         self.pushButton_9.setText(_translate("test", "Create Training Data", None))
 
     def show(self):
@@ -309,10 +347,12 @@ class PopupMenu(QtWidgets.QWidget):
         # Change spacer size
         self._space.changeSize(10, 5)
 
+        hlayout_counter = 0
         for i in range(len(self._widgets_list)):
             if isinstance(self._widgets_list[i], list): # page number layout
                 for widget in self._widgets_list[i]:
-                    self.pageNumberHLayout.addWidget(widget)
+                    self.smallHLayouts[hlayout_counter].addWidget(widget)
+                hlayout_counter += 1
             else: # button
                 self._verticalLayout.addWidget(self._widgets_list[i])
 
@@ -397,6 +437,21 @@ class ImageLabel(QtWidgets.QLabel):
             color = QtGui.QColor(255, 255, 0, 80)
             path.addPolygon(polyf)
             painter.fillPath(path, color)
+
+    def resizeEvent(self, event):
+        if not self._page:
+            return
+
+        scale_x = event.size().width() / event.oldSize().width()
+        scale_y = event.size().height() / event.oldSize().height()
+
+        for page_line in self._page._page_lines:
+            for i, point in enumerate(page_line._vertices):
+                page_line._vertices[i] = (point[0] * scale_x, point[1] * scale_y)
+            page_line.updatePolygon()
+
+        self.update()
+
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """

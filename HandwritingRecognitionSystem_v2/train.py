@@ -265,8 +265,8 @@ def run(num_training_imgs, list_file, imgs_path, labels_path):
 				LogFile.write("######################################################\n\n")
 
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
-		print("[Error/Interruption] %s\n" % str(e))
-		LogFile.write("[Error/Interruption] %s\n" % str(e))
+		print("[Error/Interruption]\n")
+		LogFile.write("[Error/Interruption]\n")
 		LogFile.write("Clossing TF Session...\n")
 		session.close()
 		LogFile.write("Terminating Program...\n")
