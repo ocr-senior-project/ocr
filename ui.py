@@ -105,7 +105,7 @@ class Ui_test:
     def updatePage(self):
         self.label._page = self.pages[self.page]
         self.textBrowser.setText(self.label._page._text)
-        self.label.update()
+        self.label.resizePolygonsToPixmap()
         self.updatePageNum()
 
     def updatePageNum(self):
@@ -360,12 +360,13 @@ class PopupMenu(QtWidgets.QWidget):
         """ Close hamburger menu """
         self._menu_open = False
         # delete widgets from page number layout
-        for i in reversed(range(self.pageNumberHLayout.count())):
-            self.pageNumberHLayout.itemAt(i).widget().setParent(None)
+        for hlayout in self.smallHLayouts:
+            for i in reversed(range(hlayout.count())):
+                hlayout.itemAt(i).widget().setParent(None)
         # delete buttons
         for i in reversed(range(self._verticalLayout.count())):
-            if i > 2:
-                self._verticalLayout.itemAt(i).widget().setParent(None)
+            if i > 2 and self._verticalLayout.itemAt(i):
+                    self._verticalLayout.itemAt(i).widget().setParent(None)
         # Spacer
         self._space.changeSize(10, 490)
 
@@ -406,8 +407,8 @@ class ImageLabel(QtWidgets.QLabel):
 
         if self._page:
             scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            drawRect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
-            painter.drawPixmap(drawRect, scaledPixmap)
+            self._page._pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+            painter.drawPixmap(self._page._pixmap_rect, scaledPixmap)
 
             painter.setPen(QtCore.Qt.red)
 
@@ -439,22 +440,33 @@ class ImageLabel(QtWidgets.QLabel):
             painter.fillPath(path, color)
 
     def resizeEvent(self, event):
+        """ scale polygons based on the image size during window resizing """
         if not self._page:
             return
 
-        scale_x = event.size().width() / event.oldSize().width()
-        scale_y = event.size().height() / event.oldSize().height()
+        self.resizePolygonsToPixmap()
+
+    def resizePolygonsToPixmap(self):
+        scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        new_pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+
+        scale_x = new_pixmap_rect.size().width() / self._page._pixmap_rect.size().width()
+        scale_y = new_pixmap_rect.size().height() / self._page._pixmap_rect.size().height()
 
         for page_line in self._page._page_lines:
             for i, point in enumerate(page_line._vertices):
                 page_line._vertices[i] = (point[0] * scale_x, point[1] * scale_y)
             page_line.updatePolygon()
 
+        self._page._pixmap_rect = new_pixmap_rect
         self.update()
 
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
+        if not self._page:
+            return
+
         global mode
         point = QtCore.QPoint(event.x(), event.y())
 
@@ -491,6 +503,8 @@ class ImageLabel(QtWidgets.QLabel):
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
+        if not self._page:
+            return
         point = event.pos()
         if self._page and self._page._dragging_vertex == True:
             self._page._selected_polygon._vertices[self._page._selected_vertex_index] = (point.x(),point.y())
@@ -501,6 +515,9 @@ class ImageLabel(QtWidgets.QLabel):
         self.update()
 
     def mouseReleaseEvent(self, event):
+        if not self._page:
+            return
+
         if self._page._dragging_vertex:
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()

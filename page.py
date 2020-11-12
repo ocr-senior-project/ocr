@@ -3,7 +3,6 @@ from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
-# import HandwritingRecognitionSystem_v2.test as test
 from HandwritingRecognitionSystem_v2 import test
 
 class Line():
@@ -38,6 +37,7 @@ class Page:
         self._selected_polygon = None
         self._selected_vertex_index = None
         self._dragging_vertex = False
+        self._pixmap_rect = self._image_object.rect()
 
     def selectPolygon(self):
         """ Called when a polygon is done being selected
@@ -147,16 +147,11 @@ class Page:
         self.sortLines()
         self._image_object.update()
 
-    # def deleteSelectedPolygon(self):
-    #     """ deletes selected polygon upon a double click """
-    #     self._page_lines.remove(self._selected_polygon)
-    #     self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
-        xscale = im.size[0] / self._image_object.rect().width()
-        yscale = im.size[1] / self._image_object.rect().height()
+        xscale = im.size[0] / self._pixmap_rect.width()
+        yscale = im.size[1] / self._pixmap_rect.height()
 
         for k, v in enumerate(self._polygon_points):
             self._polygon_points[k] = (v[0] * xscale, v[1] * yscale)
