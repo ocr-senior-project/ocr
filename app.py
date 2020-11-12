@@ -32,15 +32,18 @@ class MainWidget(QtWidgets.QWidget):
 
     # save the main widget
     def save(self):
-        pickle.dump(self, open(self.ui.fname + ".sav", "wb"))
+        try:
+            pickle.dump(self, open(self.ui.fname + ".sav", "wb"))
+        except:
+            pass
 
     # overload the closeEvent function
     def closeEvent(self, event):
-        try:
-            self.save()
-            print("SJSJSDJLSJDLSJD:")
-        except:
-            pass
+        # save the current project
+        self.save()
+        print("SJSJSDJLSJDLSJD")
+
+        event.accept()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

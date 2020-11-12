@@ -6,6 +6,7 @@ from ui.page import *
 from ui.popup_menu import *
 from ui.menu_label import *
 from ui.image_label import *
+from file_manipulation.pdf import pdf_processing as pp
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 try:
@@ -71,7 +72,7 @@ class Ui_test:
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
 
-        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self.mainWindow, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
         # Return if no file name is given
         if not fname[0]:
@@ -86,7 +87,7 @@ class Ui_test:
 
         # Make the appropriate number of pages and assign them pixmaps
         for pixmap in self.imgs:
-            self.pages.append(page.Page(self.label))
+            self.pages.append(Page(self.label))
             self.pages[-1]._pixmap = pixmap
 
         self.label._page = self.pages[self.page]
