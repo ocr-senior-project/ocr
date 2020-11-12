@@ -88,6 +88,7 @@ project.
 For our part. We are citing the following paper for its researchers improvements
 to OCR and their implementation in Python 2.7.
 
+```
 @inproceedings{chammas2018handwriting,
   title={Handwriting Recognition of Historical Documents with few labeled data},
   author={Chammas, Edgard and Mokbel, Chafic and Likforman-Sulem, Laurence},
@@ -96,3 +97,4 @@ to OCR and their implementation in Python 2.7.
   year={2018},
   organization={IEEE}
 }
+```
