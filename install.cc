@@ -7,7 +7,7 @@ int main(){
   try{
     system("pip install -r requirements.txt");
   }
-  catch{
+  catch(int e){
     system("pip3 install -r requirements.txt");
   }
 }

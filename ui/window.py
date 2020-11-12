@@ -2,7 +2,7 @@
 
 import sys
 import math
-from ui.page import *
+import ui.page as page
 from ui.popup_menu import *
 from ui.menu_label import *
 from ui.image_label import *
@@ -87,7 +87,7 @@ class Ui_test:
 
         # Make the appropriate number of pages and assign them pixmaps
         for pixmap in self.imgs:
-            self.pages.append(Page(self.label))
+            self.pages.append(page.Page(self.label))
             self.pages[-1]._pixmap = pixmap
 
         self.label._page = self.pages[self.page]
