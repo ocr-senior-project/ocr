@@ -85,7 +85,7 @@ have to start over every time you open the application.
 If you would like to use this project in your own work, please fork from this
 project.
 
-For our part. We are citing the following paper for its researchers improvements
+For our part, we are citing the following paper for its researchers improvements
 to OCR and their implementation in Python 2.7.
 
 ```
