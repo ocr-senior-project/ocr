@@ -10,7 +10,7 @@ def main():
     try:
         os.system("pip install -r requirements.txt")
     except:
-        os.system("pip3 install -r requirements.txt")        
+        os.system("pip3 install -r requirements.txt")
 
 if __name__ == "__main__":
     main()
