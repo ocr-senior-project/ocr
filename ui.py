@@ -51,6 +51,9 @@ class Ui_test:
         self.highlighted_cursor = None
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
+        # save the filename
+        self.fname = None
+
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
@@ -72,6 +75,9 @@ class Ui_test:
         # Return if no file name is given
         if not fname[0]:
             return
+
+        # save the filename
+        self.fname = fname[0]
 
         # Initialize a page index and a list of page objects
         self.page = 0
@@ -201,7 +207,6 @@ class Ui_test:
                     self.label._page._polygon = item._polygon
                     self.label.update()
 
-
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
         """ Provides event support for the menu label """
@@ -216,7 +221,6 @@ class MenuLabel(QtWidgets.QLabel):
             self._menu.hide()
         else:
             self._menu.show()
-
 
 class PopupMenu(QtWidgets.QWidget):
     def __init__(self, ui, test, layout):
@@ -329,8 +333,6 @@ class PopupMenu(QtWidgets.QWidget):
                 self._verticalLayout.itemAt(i).widget().setParent(None)
         # Spacer
         self._space.changeSize(10, 490)
-
-
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
@@ -451,7 +453,6 @@ class ImageLabel(QtWidgets.QLabel):
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()
 
-
 class MainWidget(QtWidgets.QWidget):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
@@ -467,9 +468,10 @@ class MainWidget(QtWidgets.QWidget):
     # save the main widget
     def save(self):
         try:
-            pickle.dump(self, open(self.ui.fname + ".sav", "wb"))
-        except:
+            pickle.dump(self.ui, open(self.ui.fname + ".sav", "w"))
+        except Exception as err:
             print("there was an error")
+            print(err)
 
     # overload the closeEvent function
     def closeEvent(self, event):
