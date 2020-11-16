@@ -13,7 +13,7 @@ class Line():
         self._vertices = points
         self._vertex_handles = None
         self._block_number = None
-        self._transcription = None
+        self._transcription = ""
 
     def set_transcription(self, transcription):
         self._transcription = transcription
@@ -53,6 +53,7 @@ class Page:
         file_name = self.polygonCrop()
         # self.transcribePolygon(file_name)
         self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
+        self._image_object._ui.updateTextBox()
 
     def p_line_key(self, poly_line):
         a = poly_line._polygon
@@ -83,10 +84,19 @@ class Page:
     def saveLines(self):
         text = self._image_object._ui.textBrowser.toPlainText()
         text_lines = text.split("\n")
-        line_number = 0
-        for line in self._page_lines:
-            line._transcription = text_lines[line_number]
-            line_number = line_number+1
+        if len(self._page_lines) == 0:
+            return
+        elif len(text_lines) > len(self._page_lines):
+            self._image_object._ui.textBrowser.undo()
+            print('\a')
+        else:
+            line_number = 0
+            for line in self._page_lines:
+                if line_number <= len(self._page_lines)-1:
+                    line._transcription = text_lines[line_number]
+                    line_number = line_number+1
+                else:
+                    line._transcription = ""
 
     def sortLines(self):
         """ Sorts polygons by position, updating index """
@@ -112,11 +122,6 @@ class Page:
         self.sortLines()
         self._image_object.update()
 
-    # def deleteSelectedPolygon(self):
-    #     """ deletes selected polygon upon a double click """
-    #     self._page_lines.remove(self._selected_polygon)
-    #     self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
@@ -132,6 +137,7 @@ class Page:
         #self._popup.hide()
         self._selected_polygon = None
         self._image_object.update()
+        self._image_object._ui.updateTextBox()
 
     def updatePolygonCrop(self):
         """ recrops polygon when vertices positions are changed by the user"""

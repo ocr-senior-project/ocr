@@ -47,6 +47,7 @@ class Ui_test:
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.cursorPositionChanged.connect(self.highlight_line)
+        self.textBrowser.textChanged.connect(self.saveText)
         self.highlighted_cursor = None
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
@@ -66,10 +67,10 @@ class Ui_test:
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
 
-        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+        self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
         # Return if no file name is given
-        if not fname[0]:
+        if not self.fname[0]:
             return
 
         # Initialize a page index and a list of page objects
@@ -77,7 +78,7 @@ class Ui_test:
         self.pages = []
 
         # Returns a list of all of the pixmaps of the pdf
-        self.imgs = pp.get_pdf_contents(fname[self.page])
+        self.imgs = pp.get_pdf_contents(self.fname[self.page])
 
         # Make the appropriate number of pages and assign them pixmaps
         for pixmap in self.imgs:
@@ -100,9 +101,18 @@ class Ui_test:
         self.textBrowser.setText(self.label._page._text)
         self.label.update()
         self.updatePageNum()
+        self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.popupMenu.inputPageNumber.setText(str(self.page + 1))
+
+    def updatePolygonFiles(self):
+        """ updates the polygon crop files in the HandwritingRecognitionSystem to the current page's page lines"""
+        for line in self.label._page._page_lines:
+            file_path = "HandwritingRecognitionSystem_v2/formalsamples/Images/"+line._image_name
+            self.label._page._polygon_points = line._vertices.copy()
+            self.label._page.polygonCrop(file_path)
+            self.label._page._polygon_points = []
 
     def next_page(self):
         """ Next page button """
@@ -113,6 +123,8 @@ class Ui_test:
             # change the page index and object
             self.page += 1
             self.updatePage()
+        else:
+            print('\a')
 
     def previous_page(self):
         """ Previous page button """
@@ -120,6 +132,8 @@ class Ui_test:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
+        else:
+            print('\a')
 
     def trainLines(self):
         if self.label._page:
@@ -156,6 +170,7 @@ class Ui_test:
         for p in poly_lines:
             if p._transcription:
                 self.textBrowser.append(p._transcription)
+        self.saveText()
 
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
@@ -199,6 +214,24 @@ class Ui_test:
                 if item._block_number == index:
                     self.label._page._polygon = item._polygon
                     self.label.update()
+
+
+    def updateTextBox(self):
+        if self.label._page:
+            text = ""
+            for line in self.label._page._page_lines:
+                text = text + line._transcription + "\n"
+            # chops of final newline
+            text = text[:-1]
+            self.textBrowser.setText(text)
+
+    def saveText(self):
+        if self.label._page:
+            self.label._page.saveLines()
+        else:
+            self.textBrowser.undo()
+            print('\a')
+
 
 
 class MenuLabel(QtWidgets.QLabel):
