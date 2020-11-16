@@ -40,7 +40,7 @@ class Ui_test:
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label, stretch=5)
 
-        # Add menu to layout
+        # Add menu features to hamburger menu layout
         self.popupMenu = PopupMenu(self, test, self.menuVLayout)
 
         # Text box
@@ -167,9 +167,8 @@ class Ui_test:
 
     def transcribe_all_polygons(self):
         """ Transcribes all polygons """
-        # Add dummy info to text boxes
         for p in self.label._page._page_lines:
-            transcript = str(p._polygon[0].y())
+            transcript = str(p._polygon[0].y()) # dummy info
             #transcript = self.label._page.transcribePolygon(p._image_name)
             p.set_transcription(transcript)
 
@@ -213,7 +212,6 @@ class Ui_test:
                 if item._block_number == index:
                     self.label._page._highlighted_polygon = item
                     self.label.update()
-
 
 
 class MenuLabel(QtWidgets.QLabel):
@@ -433,6 +431,8 @@ class ImageLabel(QtWidgets.QLabel):
         else:
             # select clicked polygon
             self._page.selectClickedPolygon(point)
+
+            # highlight if selected polygon has been transcribed
             if self._page._selected_polygon._transcription:
                 self._page._highlighted_polygon = self._page._selected_polygon
 
