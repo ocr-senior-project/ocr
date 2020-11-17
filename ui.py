@@ -4,6 +4,7 @@ import sys
 import page
 import math
 import pickle
+import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 
@@ -24,7 +25,7 @@ except AttributeError:
 mode = "polygon_selection"
 
 class Ui_test:
-    def setupUi(self, test):
+    def setupUi(self, test, fname=None):
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
@@ -52,7 +53,13 @@ class Ui_test:
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
         # save the filename
-        self.fname = None
+        self.fname = fname
+
+        # initialize attributes for later use
+        self.page = None
+        self.pages = None
+        self.imgs = None
+        self.textCursor = None
 
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
@@ -68,7 +75,7 @@ class Ui_test:
         file.write(text)
 
     def get_file(self):
-        """ Gets the embedded jpg from a pdf """
+        """ Gets the embedded jpgs from a pdf """
 
         fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
@@ -159,8 +166,7 @@ class Ui_test:
     def add_transcriptions(self):
         """ Prints transcriptions onto the text box """
         self.textBrowser.clear()
-        poly_lines = self.label._page._page_lines
-        for p in poly_lines:
+        for p in self.label._page._page_lines:
             if p._transcription:
                 self.textBrowser.append(p._transcription)
 
@@ -169,7 +175,7 @@ class Ui_test:
         p = self.label._page._selected_polygon
 
         transcript = self.label._page.transcribePolygon(p._image_name)
-        self.label._page._selected_polygon.set_transcription(transcript)
+        p.set_transcription(transcript)
 
         self.add_transcriptions()
 
@@ -468,17 +474,57 @@ class MainWidget(QtWidgets.QWidget):
     # save the main widget
     def save(self):
         try:
-            pickle.dump(self.ui, open(self.ui.fname + ".sav", "w"))
+            # this is broken
+            # pickle.dump(self.ui, open(self.ui.fname + ".sav", "wb"))
+
+            # get the name of the save file
+            save_name = ''.join(self.ui.fname.split('.')[:-1]).split('/')[-1]
+
+            # open a file to save
+            save_file = open(save_name + ".json", "w")
+
+            # create a dictionary to hold all of the binaries
+            project = {}
+
+            # for every page in the document
+            for i in range(len(self.ui.pages)):
+                # create a dictionary for the information in each page
+                page = {}
+
+                # create a dictionary to hold all the lines
+                lines = {}
+
+                # for every line on the page
+                for j in range(len(self.ui.pages[i]._page_lines)):
+                    # save the current line
+                    current = self.ui.pages[i]._page_lines[j]
+
+                    # create a dictionary for the information in the line
+                    line = {}
+
+                    line['points'] = current._vertices
+                    line['block'] = current._block_number
+                    line['transcription'] = current._transcription
+
+                    lines[f"line_{j}"] = line
+
+                page['lines'] = lines
+                # page['points'] = self._polygon_points = []
+
+                project[f"page_{i}"] = page
+
+            # save the project
+            save_file.write(json.dumps(project))
+
+            print("SJSJSDJLSJDLSJD")
         except Exception as err:
-            print("there was an error")
+            print("there was an error\n")
             print(err)
 
     # overload the closeEvent function
     def closeEvent(self, event):
         # save the current project
         self.save()
-        print("SJSJSDJLSJDLSJD")
-
         event.accept()
 
 if __name__ == "__main__":

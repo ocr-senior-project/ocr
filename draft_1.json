@@ -1,0 +1,22 @@
+{
+  "page_0": {
+    "lines": {
+      "line_0": {
+        "points": [[45, 53], [68, 134], [159, 84]],
+        "block": 0,
+        "transcription": "i cicix"},
+      "line_1": {
+        "points": [[66, 197], [88, 244], [164, 174]],
+        "block": 1,
+        "transcription": "icicix"},
+      "line_2": {
+        "points": [[66, 299], [78, 342], [169, 292]],
+        "block": 2,
+        "transcription": "icicix"},
+      "line_3": {
+        "points": [[38, 433], [68, 472], [228, 370]],
+        "block": 3,
+        "transcription": "il cinen itepr"}
+      }
+    }
+}

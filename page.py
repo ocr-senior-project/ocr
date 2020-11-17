@@ -37,6 +37,7 @@ class Page:
         self._polygon = QtGui.QPolygon()
         self._selected_polygon = None
         self._selected_vertex_index = None
+        self._pixmap = None
         self._dragging_vertex = False
 
     def selectPolygon(self):
