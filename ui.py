@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 import page
 import math
@@ -24,7 +23,7 @@ class Ui_test:
     def setupUi(self, test):
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
-        test.resize(800, 589)
+        test.resize(1000, 589)
         self.mainWindow = test
 
         # Vertical layout
@@ -70,17 +69,41 @@ class Ui_test:
         self.highlighter_on = True
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
+        # Page change stuff
+        self.page_layout = QtWidgets.QVBoxLayout()
+        self._h_layout = QtWidgets.QHBoxLayout()
+        self.pageNumberLabel = QtWidgets.QLabel("Page:")
+        self.inputPageNumber = QtWidgets.QLineEdit()
+        self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
+        self.inputPageNumber.setValidator(QtGui.QIntValidator())
+        self.inputPageNumber.editingFinished.connect(self.jumpToPage)
+        self.inputPageNumber.setReadOnly(True)
+        self._h_layout.addWidget(self.pageNumberLabel)
+        self._h_layout.addWidget(self.inputPageNumber)
+        self.page_layout.addLayout(self._h_layout)
+
+        self.previous_page_button = QtWidgets.QPushButton()
+        self.previous_page_button.setObjectName(_fromUtf8("previous_page_button"))
+        self.previous_page_button.clicked.connect(self.previous_page)
+        self.page_layout.addWidget(self.previous_page_button)
+        self.next_page_button = QtWidgets.QPushButton()
+        self.next_page_button.setObjectName(_fromUtf8("next_page_button"))
+        self.next_page_button.clicked.connect(self.next_page)
+        self.page_layout.addWidget(self.next_page_button)
+        self.horizontalLayout.addLayout(self.page_layout)
+
         # Add horizontal layer to vertical layout
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
-
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
+        self.previous_page_button.setText(_translate("test", "<- Previous Page", None))
+        self.next_page_button.setText(_translate("test", "Next Page ->", None))
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
@@ -112,7 +135,7 @@ class Ui_test:
         self.label.update()
 
         # Initialize page number layout
-        #self.initializePageNum()
+        self.initializePageNum()
 
     def initializePageNum(self):
         self.updatePageNum()
@@ -226,7 +249,7 @@ class Ui_test:
 
     def highlight_line(self):
         """ Highlights line where cursor currently is """
-        if self.highlighter_on and self.label._page._selected_polygon._transcription:
+        if self.highlighter_on and self.label._page._selected_polygon and self.label._page._selected_polygon._transcription:
             fmt = QtGui.QTextBlockFormat()
 
             # clear prevosly highlighted block, if any
@@ -256,44 +279,6 @@ class Ui_test:
             # highlight line
             self.highlight_line()
 
-"""
-class PopupMenu(QtWidgets.QWidget):
-    def __init__(self, ui, test, layout):
-
-        # Page number layout
-        self.pageNumberHLayout = QtWidgets.QHBoxLayout()
-        self._verticalLayout.addLayout(self.pageNumberHLayout)
-
-        # List of menu widgets
-        self._widgets_list = []
-
-        # Page number widgets
-        self._h_layout = []
-        self.pageNumberLabel = QtWidgets.QLabel("Page:")
-        self.inputPageNumber = QtWidgets.QLineEdit()
-        self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
-        self.inputPageNumber.setValidator(QtGui.QIntValidator())
-        self.inputPageNumber.editingFinished.connect(self._ui.jumpToPage)
-        self.inputPageNumber.setReadOnly(True)
-        self._h_layout.append(self.pageNumberLabel)
-        self._h_layout.append(self.inputPageNumber)
-        self._widgets_list.append(self._h_layout)
-
-        # Buttons
-        self.pushButton_6 = QtWidgets.QPushButton()
-        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
-        self.pushButton_6.clicked.connect(self._ui.previous_page)
-        self._widgets_list.append(self.pushButton_6)
-
-        self.pushButton_7 = QtWidgets.QPushButton()
-        self.pushButton_7.setObjectName(_fromUtf8("pushButton_7"))
-        self.pushButton_7.clicked.connect(self._ui.next_page)
-        self._widgets_list.append(self.pushButton_7)
-
-        # retranslate
-        self.pushButton_6.setText(_translate("test", "<- Previous Page", None))
-        self.pushButton_7.setText(_translate("test", "Next Page ->", None))
-"""
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
