@@ -55,9 +55,9 @@ class Ui_test:
         self.fname = fname
 
         # initialize attributes for later use
-        self.page = None
-        self.pages = None
-        self.imgs = None
+        self.page = 0
+        self.pages = []
+        self.imgs = []
         self.textCursor = None
 
         self.retranslateUi(test)
@@ -84,10 +84,6 @@ class Ui_test:
 
         # save the filename
         self.fname = fname[0]
-
-        # Initialize a page index and a list of page objects
-        self.page = 0
-        self.pages = []
 
         # Returns a list of all of the pixmaps of the pdf
         self.imgs = pp.get_pdf_contents(fname[self.page])
@@ -230,6 +226,27 @@ class Ui_test:
 
         # restore the window size
         self.mainWindow.resize(saved["window"][0], saved["window"][1])
+
+        # loop through all the pages
+        for i in range(len(saved["pages"])):
+            # make a new page
+            new_page = page.Page(self.label)
+
+            # save the pixmap to the disk
+            with open("jpg.jpg", "wb") as file:
+                file.write(saved["pages"][i]["pixmap"].encode("Latin-1"))
+
+            # restore the old pixmap
+            new_page._pixmap = QtGui.QPixmap("jpg.jpg")
+
+            # add the page to the current project
+            self.pages.append(new_page)
+
+        self.label._page = self.pages[self.page]
+        self.label.update()
+
+        # Initialize page number layout
+        self.initializePageNum()
 
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
@@ -513,12 +530,12 @@ class MainWidget(QtWidgets.QWidget):
         # create a dictionary for the information in each page
         current_page = {}
 
-        # create a dictionary to hold all the lines
-        lines = {}
+        # create a list to hold all the lines
+        lines = []
 
         # for every line on the page
         for i in range(len(page._page_lines)):
-            line = self._save_line(page._page_lines[i])
+            line.append(self._save_line(page._page_lines[i]))
 
             # add the line to the dictionary of lines
             lines[f"line_{i}"] = line
@@ -549,13 +566,13 @@ class MainWidget(QtWidgets.QWidget):
             # get the window size for the project to load polygons properly
             project['window'] = [self.size().width(), self.size().height()]
 
-            # store all the pages in a dictionary
-            pages = {}
+            # store all the pages in a list
+            pages = []
 
             # for every page in the document
             for i in range(len(self.ui.pages)):
                 # add the page to the dictionary of pages
-                pages[f"page_{i}"] = self._save_page(self.ui.pages[i])
+                pages.append(self._save_page(self.ui.pages[i]))
 
             # save the pages to the project
             project['pages'] = pages
