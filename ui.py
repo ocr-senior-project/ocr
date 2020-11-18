@@ -207,28 +207,15 @@ class Ui_test:
                     self.label._page._polygon = item._polygon
                     self.label.update()
 
-    # # load all the lines from the json file
-    # def _load_lines(self, new_page, lines):
-    #     # loop through all the lines in the page
-    #     for i in range(len(lines)):
-    #         # make a new line object
-    #         new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
-    #
-    #         # set the block number for proper rendering order
-    #         new_line._block_number = lines[i]["block"]
-    #
-    #         # set the transcription
-    #         new_line._transcription = lines[i]["transcription"]
-    #
-    #         # append the line object
-    #         new_page._page_lines.append(new_line)
-
     # load all the lines from the json file
-    def _load_lines(self, saved):
+    def _load_lines(self, new_page, lines):
         # loop through all the lines in the page
         for i in range(len(lines)):
             # make a new line object
             new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
+
+            # make the polygon for the line
+            new_line.updatePolygon()
 
             # set the block number for proper rendering order
             new_line._block_number = lines[i]["block"]
@@ -253,8 +240,8 @@ class Ui_test:
             # restore the old pixmap
             new_page._pixmap = QtGui.QPixmap("jpg.jpg")
 
-            # # restore the lines from of the page
-            # self._load_lines(new_page, pages[i]["lines"])
+            # restore the lines from of the page
+            self._load_lines(new_page, pages[i]["lines"])
 
             # add the page to the current project
             self.pages.append(new_page)
@@ -290,8 +277,8 @@ class Ui_test:
         # Initialize page number layout
         self.initializePageNum()
 
-        # load the lines on each page
-        self._load_lines(saved["pages"])
+        # add the transcriptions
+        self.add_transcriptions()
 
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
