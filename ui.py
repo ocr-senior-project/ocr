@@ -473,13 +473,13 @@ class MainWidget(QtWidgets.QWidget):
 
     # create a dictionary containing all the information needed to reconstruct
     # a single line on a page
-    def _save_line(self, page):
+    def _save_line(self, line):
         # create a dictionary for the information in the line
-        line = {}
+        current_line = {}
 
-        line['points'] = page._vertices
-        line['block'] = page._block_number
-        line['transcription'] = page._transcription
+        current_line['points'] = line._vertices
+        current_line['block'] = line._block_number
+        current_line['transcription'] = line._transcription
 
         return line
 
@@ -493,20 +493,22 @@ class MainWidget(QtWidgets.QWidget):
         lines = {}
 
         # for every line on the page
-        for j in range(len(page._page_lines)):
-            line = self._save_line()
+        for i in range(len(page._page_lines)):
+            line = self._save_line(page._page_lines[i])
 
             # add the line to the dictionary of lines
-            lines[f"line_{j}"] = line
+            lines[f"line_{i}"] = line
 
         # write the pixmap to a file
-        current_page[i].writePixmaptoFile()
+        page.writePixmaptoFile()
 
         # save the pixmap image data of the page into the dictionary
         current_page['pixmap'] = pp.read_binary("jpg.jpg")
 
         # save the lines of the document
         current_page['lines'] = lines
+
+        return current_page
 
     # save the project
     def save(self):
