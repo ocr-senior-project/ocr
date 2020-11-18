@@ -39,11 +39,11 @@ class Page:
         self._highlighted_polygon = None
         self._selected_vertex_index = None
         self._dragging_vertex = False
+        self._polygon_start = None
 
     def selectPolygon(self):
         """ Called when a polygon is done being selected
             Crops polygon and stops drawing lines following mouse """
-
         # Stop drawing lines
         self._image_object._lines = []
         self._image_object._start_of_line = []

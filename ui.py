@@ -327,6 +327,10 @@ class ImageLabel(QtWidgets.QLabel):
             painter.setPen(QtCore.Qt.red)
 
             if self._polygon_layer:
+                if self._page._polygon_start:
+                    # draw ellipse for first point in polygon
+                    painter.drawEllipse(self._page._polygon_start[0]-5,self._page._polygon_start[1]-5,10,10)
+
                 if  self._start_of_line and self._end_of_line:
                     painter.drawLine(self._start_of_line, self._end_of_line)
 
@@ -363,18 +367,32 @@ class ImageLabel(QtWidgets.QLabel):
 
         # make sure not already in polygons
         if self._polygon_layer and (self._start_of_line or self._page.pointSelectsItem(point) == False):
-            if self._polygon_layer:
-                # removes bug where user can select a polygon draw a new one
-                # and then delete the previous selection in one click
+            # removes bug where user can select a polygon draw a new one
+            # and then delete the previous selection in one click
+            if (self._page._polygon_start and
+                self._page._polygon_start[0]-5 < point.x() < self._page._polygon_start[0]+5 and
+                self._page._polygon_start[1]-5 < point.y() < self._page._polygon_start[1]+5):
+                # close the polygon
+                self._page.selectPolygon()
                 self._page._selected_polygon = None
+                self._page._polygon_start = None
+
+            else:
+                self._page._selected_polygon = None
+
                 if self._start_of_line:
                     self._lines.append((self._start_of_line, event.pos()))
+                else:
+                    # first point in polygon
+                    self._page._polygon_start = event.x(),event.y()
                 self._start_of_line = event.pos()
                 self._page._polygon_points.append((event.x(),event.y()))
                 self._page._polygon << event.pos()
+
         elif self._polygon_layer and self._page.pointInVertexHandle(point):
             self._page._dragging_vertex = True
             self._page.selectClickedVertexHandle(point)
+
         else:
             # select clicked polygon
             self._page.selectClickedPolygon(point)
@@ -422,9 +440,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
-        if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 2:
-            self.ui.label._page.selectPolygon()
+        if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 0: #> 2:
+            # Delete polygon user is currently making
             self.ui.label._page._selected_polygon = None
+            self.ui.label._page._polygon_start = None
+            self.ui.label._lines = []
+            self.ui.label._start_of_line = []
+            self.ui.label._page._polygon = QtGui.QPolygon()
+            self.ui.label._page._polygon_points = []
+            self.ui.label.update()
 
 
 if __name__ == "__main__":
