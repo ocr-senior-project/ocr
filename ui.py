@@ -108,6 +108,7 @@ class Ui_test:
         self.textBrowser.setText(self.label._page._text)
         self.label.update()
         self.updatePageNum()
+        self.add_transcriptions()
 
     def updatePageNum(self):
         self.popupMenu.inputPageNumber.setText(str(self.page + 1))
@@ -159,9 +160,15 @@ class Ui_test:
 
     def add_transcriptions(self):
         """ writes transcriptions into the text box """
+        # clear the text window
         self.textBrowser.clear()
+
+        # for every line on the page
         for p in self.label._page._page_lines:
+
+            # if there is a transcription
             if p._transcription:
+                # add the transcription to the page
                 self.textBrowser.append(p._transcription)
 
     def transcribe_selected_polygon(self):
