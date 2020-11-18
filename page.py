@@ -31,7 +31,6 @@ class Line():
 class Page:
     def __init__(self, image_object):
         self._image_object = image_object
-        self._text = ""
         self._page_lines = []
         self._polygon_points = []
         self._polygon = QtGui.QPolygon()

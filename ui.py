@@ -84,6 +84,10 @@ class Ui_test:
         # save the filename
         self.fname = fname[0]
 
+        # clear the list of pages and the current page
+        self.page = 0
+        self.pages = []
+
         # Returns a list of all of the pixmaps of the pdf
         imgs = pp.get_pdf_contents(fname[self.page])
 
@@ -105,7 +109,6 @@ class Ui_test:
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
-        self.textBrowser.setText(self.label._page._text)
         self.label.update()
         self.updatePageNum()
         self.add_transcriptions()
@@ -116,17 +119,13 @@ class Ui_test:
     def next_page(self):
         """ Next page button """
         if self.page < len(self.pages) - 1:
-            # save the text on text browser to the page object
-            self.label._page._text = self.textBrowser.toPlainText()
-
-            # change the page index and object
+            # change the page index and update the page
             self.page += 1
             self.updatePage()
 
     def previous_page(self):
         """ Previous page button """
         if self.page > 0:
-            self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
 
@@ -140,9 +139,6 @@ class Ui_test:
             pageNumber  = 0
         elif pageNumber >= len(self.pages):
             pageNumber = len(self.pages) - 1
-
-        # save the text on text browser to the page object
-        self.label._page._text = self.textBrowser.toPlainText()
 
         # change the page index and object
         self.page = pageNumber
@@ -261,6 +257,10 @@ class Ui_test:
         # Return if no file name is given
         if not fname[0]:
             return
+
+        # clear the list of pages and the current page
+        self.page = 0
+        self.pages = []
 
         # create a convenient way to access the saved information
         saved = None
