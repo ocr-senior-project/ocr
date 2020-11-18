@@ -52,6 +52,7 @@ class Page:
 
         # Crop the image, add the polygon to the image
         file_name = self.polygonCrop()
+
         # self.transcribePolygon(file_name)
         self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
 

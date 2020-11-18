@@ -207,25 +207,37 @@ class Ui_test:
                     self.label._page._polygon = item._polygon
                     self.label.update()
 
+    # # load all the lines from the json file
+    # def _load_lines(self, new_page, lines):
+    #     # loop through all the lines in the page
+    #     for i in range(len(lines)):
+    #         # make a new line object
+    #         new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
+    #
+    #         # set the block number for proper rendering order
+    #         new_line._block_number = lines[i]["block"]
+    #
+    #         # set the transcription
+    #         new_line._transcription = lines[i]["transcription"]
+    #
+    #         # append the line object
+    #         new_page._page_lines.append(new_line)
+
     # load all the lines from the json file
-    def _load_lines(self, page):
-        for # loop through all the pages
-        for i in range(len(pages)):
-            # make a new page
-            new_page = page.Page(self.label)
+    def _load_lines(self, saved):
+        # loop through all the lines in the page
+        for i in range(len(lines)):
+            # make a new line object
+            new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
 
-            # save the pixmap to the disk
-            with open("jpg.jpg", "wb") as file:
-                file.write(pages[i]["pixmap"].encode("Latin-1"))
+            # set the block number for proper rendering order
+            new_line._block_number = lines[i]["block"]
 
-            # restore the old pixmap
-            new_page._pixmap = QtGui.QPixmap("jpg.jpg")
+            # set the transcription
+            new_line._transcription = lines[i]["transcription"]
 
-            # restore the lines from of the page
-            self._load_lines(new_page)
-
-            # add the page to the current project
-            self.pages.append(new_page)
+            # append the line object
+            new_page._page_lines.append(new_line)
 
     # load all the pages from the json file
     def _load_pages(self, pages):
@@ -241,8 +253,8 @@ class Ui_test:
             # restore the old pixmap
             new_page._pixmap = QtGui.QPixmap("jpg.jpg")
 
-            # restore the lines from of the page
-            self._load_lines(new_page)
+            # # restore the lines from of the page
+            # self._load_lines(new_page, pages[i]["lines"])
 
             # add the page to the current project
             self.pages.append(new_page)
@@ -277,6 +289,9 @@ class Ui_test:
 
         # Initialize page number layout
         self.initializePageNum()
+
+        # load the lines on each page
+        self._load_lines(saved["pages"])
 
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
@@ -552,7 +567,7 @@ class MainWidget(QtWidgets.QWidget):
         current_line['block'] = line._block_number
         current_line['transcription'] = line._transcription
 
-        return line
+        return current_line
 
     # create a dictionary containing all the information needed to reconstruct
     # a single page of a document
@@ -565,10 +580,8 @@ class MainWidget(QtWidgets.QWidget):
 
         # for every line on the page
         for i in range(len(page._page_lines)):
-            line.append(self._save_line(page._page_lines[i]))
-
             # add the line to the dictionary of lines
-            lines[f"line_{i}"] = line
+            lines.append(self._save_line(page._page_lines[i]))
 
         # write the pixmap to a file
         page.writePixmaptoFile()
