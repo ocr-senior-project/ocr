@@ -3,7 +3,6 @@
 import sys
 import page
 import math
-import pickle
 import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
@@ -213,6 +212,21 @@ class Ui_test:
                     self.label._page._polygon = item._polygon
                     self.label.update()
 
+    # load the project from a json file
+    def load_from_json(self):
+        # get the file to load from
+        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.json *.prj)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        # open the file into a dictionary
+        with open(fname[0], "r") as file:
+            load_file = json.loads(file.read())
+
+            print(load_file)
+
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
         """ Provides event support for the menu label """
@@ -269,6 +283,11 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_2.clicked.connect(self._ui.get_file)
         self._widgets_list.append(self.pushButton_2)
 
+        self.pushButton_10 = QtWidgets.QPushButton()
+        self.pushButton_10.setObjectName(_fromUtf8("pushButton_10"))
+        self.pushButton_10.clicked.connect(self._ui.load_from_json)
+        self._widgets_list.append(self.pushButton_10)
+
         self.pushButton_3 = QtWidgets.QPushButton()
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self._widgets_list.append(self.pushButton_3)
@@ -306,6 +325,7 @@ class PopupMenu(QtWidgets.QWidget):
         # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
+        self.pushButton_10.setText(_translate("test", "Load Saved Project", None))
         self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
         self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
