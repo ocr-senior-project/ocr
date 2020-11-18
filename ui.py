@@ -221,11 +221,15 @@ class Ui_test:
         if not fname[0]:
             return
 
-        # open the file into a dictionary
-        with open(fname[0], "r") as file:
-            load_file = json.loads(file.read())
+        # create a convenient way to access the saved information
+        saved = None
 
-            print(load_file)
+        # load the json file as dictionary
+        with open(fname[0], "r") as file:
+            saved = json.loads(file.read())
+
+        # restore the window size
+        self.mainWindow.resize(saved["window"][0], saved["window"][1])
 
 class MenuLabel(QtWidgets.QLabel):
     def __init__(self, menu):
