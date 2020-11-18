@@ -20,17 +20,22 @@ except AttributeError:
         return QtWidgets.QApplication.translate(context, text, disambig)
 
 class Ui_test:
-    def setupUi(self, test):
+    def setupUi(self, MainWindow):
         """ Creates layout of UI """
-        test.setObjectName(_fromUtf8("test"))
-        test.resize(1000, 589)
-        self.mainWindow = test
+        MainWindow.setObjectName(_fromUtf8("test"))
+        MainWindow.resize(1000, 589)
 
-        # Vertical layout
-        self.verticalLayout = QtWidgets.QVBoxLayout(test)
+        # Main Widget
+        test = QtWidgets.QWidget(MainWindow)
+        MainWindow.setCentralWidget(test)
+
+        # Horizontal layout
+        self.horizontalLayout = QtWidgets.QHBoxLayout(test)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
 
         # Menu bar
-        self.menuBar = QtWidgets.QMenuBar()
+        self.menuBar = QtWidgets.QMenuBar(test)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
 
         self.fileMenu = self.menuBar.addMenu('&File') # Alt + F to open
         self.import_f = self.fileMenu.addAction('Import File')
@@ -49,11 +54,7 @@ class Ui_test:
         self.train = self.polygonMenu.addAction('Train Lines')
         self.train.triggered.connect(self.trainLines)
 
-        self.verticalLayout.addWidget(self.menuBar)
-
-        # Horizontal layout
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        MainWindow.setMenuBar(self.menuBar)
 
         # Image label
         self.label = ImageLabel(self)
@@ -62,7 +63,7 @@ class Ui_test:
         self.polygon_layer.triggered.connect(self.label.toggle_polygon_layer)
 
         # Text box
-        self.textBrowser = QtWidgets.QTextEdit(test)
+        self.textBrowser = QtWidgets.QTextEdit()
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.cursorPositionChanged.connect(self.highlight)
         self.highlighted_cursor = None
@@ -92,9 +93,7 @@ class Ui_test:
         self.page_layout.addWidget(self.next_page_button)
         self.horizontalLayout.addLayout(self.page_layout)
 
-        # Add horizontal layer to vertical layout
-        self.verticalLayout.addLayout(self.horizontalLayout)
-
+        # Put text on widgets
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
@@ -414,10 +413,10 @@ class ImageLabel(QtWidgets.QLabel):
             self._page.updatePolygonCrop()
 
 
-class MainWidget(QtWidgets.QWidget):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
-        super(MainWidget, self).__init__()
+        super(MainWindow, self).__init__()
         self.ui = Ui_test()
         self.ui.setupUi(self)
 
@@ -430,6 +429,6 @@ class MainWidget(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    test = MainWidget()
+    test = MainWindow()
     test.show()
     sys.exit(app.exec_())

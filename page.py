@@ -105,19 +105,6 @@ class Page:
         self._polygon_points = []
         self._image_object.update()
 
-    def deletePolygon(self):
-        """ deletes self._polygon from the image """
-        for line_object in self._page_lines:
-            if line_object._polygon == self._polygon:
-                self._page_lines.remove(line_object)
-        self.sortLines()
-        self._image_object.update()
-
-    # def deleteSelectedPolygon(self):
-    #     """ deletes selected polygon upon a double click """
-    #     self._page_lines.remove(self._selected_polygon)
-    #     self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
@@ -130,8 +117,10 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        #self._popup.hide()
         self._selected_polygon = None
+        self._highlighted_polygon = None
+        self.sortLines()
+
         self._image_object.update()
 
     def updatePolygonCrop(self):
@@ -247,33 +236,3 @@ class Page:
                 if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
                     return True
         return False
-
-
-class Polygon_Deletion_Popup(QtWidgets.QWidget):
-    def __init__(self, Page):
-        super(Polygon_Deletion_Popup, self).__init__()
-        #size the popup and move to the ideal position (next to the image viewer)
-        self.resize(150,300)
-        #self.move(400,150)
-
-        # store access to the ImageLabel
-        self._page = Page
-
-        #Create the question label and buttons
-        self._QuestionLabel = QtWidgets.QLabel(self)
-        self._QuestionLabel.setText("Are you sure you want to delete this selection?")
-        self._deleteButton = QtWidgets.QPushButton(self)
-        self._deleteButton.setText("Yes")
-        self._stopDeletionButton = QtWidgets.QPushButton(self)
-        self._stopDeletionButton.setText("No")
-
-        #add a layout to the widget
-        self._layout = QtWidgets.QVBoxLayout(self)
-
-        #put the question text and the buttons in the layout
-        self._layout.addWidget(self._QuestionLabel)
-        self._layout.addWidget(self._deleteButton)
-        self._layout.addWidget(self._stopDeletionButton)
-
-        self._deleteButton.clicked.connect(self._page.deleteSelectedPolygon)
-        self._stopDeletionButton.clicked.connect(self.hide)
