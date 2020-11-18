@@ -471,12 +471,46 @@ class MainWidget(QtWidgets.QWidget):
         if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 2:
             self.ui.label._page.selectPolygon()
 
-    # save the main widget
+    # create a dictionary containing all the information needed to reconstruct
+    # a single line on a page
+    def _save_line(self, page):
+        # create a dictionary for the information in the line
+        line = {}
+
+        line['points'] = page._vertices
+        line['block'] = page._block_number
+        line['transcription'] = page._transcription
+
+        return line
+
+    # create a dictionary containing all the information needed to reconstruct
+    # a single page of a document
+    def _save_page(self, page):
+        # create a dictionary for the information in each page
+        current_page = {}
+
+        # create a dictionary to hold all the lines
+        lines = {}
+
+        # for every line on the page
+        for j in range(len(page._page_lines)):
+            line = self._save_line()
+
+            # add the line to the dictionary of lines
+            lines[f"line_{j}"] = line
+
+        # write the pixmap to a file
+        current_page[i].writePixmaptoFile()
+
+        # save the pixmap image data of the page into the dictionary
+        current_page['pixmap'] = pp.read_binary("jpg.jpg")
+
+        # save the lines of the document
+        current_page['lines'] = lines
+
+    # save the project
     def save(self):
         try:
-            # this is broken
-            # pickle.dump(self.ui, open(self.ui.fname + ".sav", "wb"))
-
             # get the name of the save file
             save_name = ''.join(self.ui.fname.split('.')[:-1]).split('/')[-1]
 
@@ -486,37 +520,23 @@ class MainWidget(QtWidgets.QWidget):
             # create a dictionary to hold all of the binaries
             project = {}
 
+            # get the window size for the project to load polygons properly
+            project['window'] = [self.size().width(), self.size().height()]
+
+            # store all the pages in a dictionary
+            pages = {}
+
             # for every page in the document
             for i in range(len(self.ui.pages)):
-                # create a dictionary for the information in each page
-                page = {}
+                # add the page to the dictionary of pages
+                pages[f"page_{i}"] = self._save_page(self.ui.pages[i])
 
-                # create a dictionary to hold all the lines
-                lines = {}
-
-                # for every line on the page
-                for j in range(len(self.ui.pages[i]._page_lines)):
-                    # save the current line
-                    current = self.ui.pages[i]._page_lines[j]
-
-                    # create a dictionary for the information in the line
-                    line = {}
-
-                    line['points'] = current._vertices
-                    line['block'] = current._block_number
-                    line['transcription'] = current._transcription
-
-                    lines[f"line_{j}"] = line
-
-                page['lines'] = lines
-                # page['points'] = self._polygon_points = []
-
-                project[f"page_{i}"] = page
+            # save the pages to the project
+            project['pages'] = pages
 
             # save the project
             save_file.write(json.dumps(project))
 
-            print("SJSJSDJLSJDLSJD")
         except Exception as err:
             print("there was an error\n")
             print(err)

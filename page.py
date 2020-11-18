@@ -113,11 +113,6 @@ class Page:
         self.sortLines()
         self._image_object.update()
 
-    # def deleteSelectedPolygon(self):
-    #     """ deletes selected polygon upon a double click """
-    #     self._page_lines.remove(self._selected_polygon)
-    #     self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """

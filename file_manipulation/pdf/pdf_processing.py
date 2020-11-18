@@ -7,9 +7,8 @@ Desc: a slightly more refined way of ripping jpgs from a pdf
 import time
 from PyQt5 import QtGui
 
-# create jpg files for every jpg found in the pdf
-# return a list of all the file names
-def get_jpgs(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wait=False):
+# read the bytes of a file and return a string with the result
+def read_binary(fname, enc="Latin-1"):
     # open the file
     file = open(fname, "rb")
 
@@ -18,6 +17,13 @@ def get_jpgs(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wa
 
     # close the file
     file.close()
+
+    return pdf
+
+# create jpg files for every jpg found in the pdf
+# return a list of all the file names
+def get_jpgs(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wait=False):
+    pdf = read_binary(fname, enc)
 
     # the starting index to search from
     start = 0
@@ -64,14 +70,8 @@ def get_jpgs(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wa
 # create one jpg file that stores every jpg found in the pdf
 # return a list of all of the file contents to be stored in page class
 def get_pdf_contents(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstream", wait=False):
-    # open the file
-    file = open(fname, "rb")
+    pdf = read_binary(fname, enc)
 
-    # read the pdf and decode it into a string
-    pdf = file.read().decode(enc)
-
-    # close the file
-    file.close()
 
     # the starting index to search from
     start = 0
@@ -112,10 +112,3 @@ def get_pdf_contents(fname, enc="Latin-1", start_tag="ÿØÿà", end_tag="endstr
 
     # return the list of filenames
     return imgs
-
-
-def page_break():
-    """
-    docstring
-    """
-    pass
