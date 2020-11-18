@@ -552,13 +552,16 @@ class MainWidget(QtWidgets.QWidget):
         return current_page
 
     # save the project
-    def save(self):
+    def save(self, fname="save"):
         try:
-            # get the name of the save file
-            save_name = ''.join(self.ui.fname.split('.')[:-1]).split('/')[-1]
+            try:
+                # get the name of the save file
+                save_name = ''.join(self.ui.fname.split('.')[:-1]).split('/')[-1]
+            except:
+                pass
 
             # open a file to save
-            save_file = open(save_name + ".json", "w")
+            save_file = open(fname + ".json", "w")
 
             # create a dictionary to hold all of the binaries
             project = {}
