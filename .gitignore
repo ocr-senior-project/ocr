@@ -13,3 +13,4 @@ HandwritingRecognitionSystem_v2/ocr-env
 HandwritingRecognitionSystem_v2/log
 file_manipulation/matricula.pdf
 src
+*.json
