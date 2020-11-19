@@ -258,6 +258,9 @@ class Ui_test:
         if not fname[0]:
             return
 
+        # set the filename
+        self.fname = fname[0]
+
         # clear the list of pages and the current page
         self.page = 0
         self.pages = []
@@ -343,14 +346,19 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_2.clicked.connect(self._ui.get_file)
         self._widgets_list.append(self.pushButton_2)
 
+        self.pushButton_3 = QtWidgets.QPushButton()
+        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self._widgets_list.append(self.pushButton_3)
+
         self.pushButton_10 = QtWidgets.QPushButton()
         self.pushButton_10.setObjectName(_fromUtf8("pushButton_10"))
         self.pushButton_10.clicked.connect(self._ui.load_from_json)
         self._widgets_list.append(self.pushButton_10)
 
-        self.pushButton_3 = QtWidgets.QPushButton()
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self._widgets_list.append(self.pushButton_3)
+        self.pushButton_11 = QtWidgets.QPushButton()
+        self.pushButton_11.setObjectName(_fromUtf8("pushButton_11"))
+        self.pushButton_11.clicked.connect(self._ui.mainWindow.save)
+        self._widgets_list.append(self.pushButton_11)
 
         self.pushButton_7 = QtWidgets.QPushButton()
         self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
@@ -386,6 +394,7 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
         self.pushButton_10.setText(_translate("test", "Load Saved Project", None))
+        self.pushButton_11.setText(_translate("test", "Save Project", None))
         self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
         self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
@@ -590,13 +599,22 @@ class MainWidget(QtWidgets.QWidget):
 
     # save the project
     # TODO: allow the user to pick the filename to which they save their project
-    def save(self, fname="save"):
-        # DEBUGGING CODE
-        return
+    def save(self):
+        # get a nice filename
+        fname = self.ui.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = "".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
 
         try:
             # open a file to save
-            save_file = open(fname + ".json", "w")
+            save_file = open(fname[0], "w")
 
             # create a dictionary to hold all of the binaries
             project = {}
@@ -624,12 +642,6 @@ class MainWidget(QtWidgets.QWidget):
         except Exception as err:
             print("there was an error\n")
             print(err)
-
-    # overload the closeEvent function
-    def closeEvent(self, event):
-        # save the current project
-        self.save()
-        event.accept()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
