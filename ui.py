@@ -28,7 +28,7 @@ except AttributeError:
 mode = "polygon_selection"
 
 class Ui_test:
-    def setupUi(self, test, fname=None):
+    def setupUi(self, test):
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
@@ -61,7 +61,7 @@ class Ui_test:
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
         # save the filename
-        self.fname = fname
+        self.fname = None
 
         # initialize attributes for later use
         self.page = 0
@@ -84,21 +84,18 @@ class Ui_test:
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
 
-        self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+        self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")[0]
 
         # Return if no file name is given
-        if not self.fname[0]:
+        if not self.fname:
             return
-
-        # save the filename
-        self.fname = fname[0]
 
         # clear the list of pages and the current page
         self.page = 0
         self.pages = []
 
         # Returns a list of all of the pixmaps of the pdf
-        imgs = pp.get_pdf_contents(fname[self.page])
+        imgs = pp.get_pdf_contents(self.fname)
 
         # Make the appropriate number of pages and assign them pixmaps
         for pixmap in imgs:
@@ -319,6 +316,8 @@ class Ui_test:
 
         # set the filename
         self.fname = fname[0]
+
+        print(self.fname, " ASKLFHG aslkhdfgA KJSHLDGVK")
 
         # clear the list of pages and the current page
         self.page = 0
@@ -720,7 +719,13 @@ class MainWidget(QtWidgets.QWidget):
         # get the file to save to
         fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
 
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
         try:
+            self.fname = fname[0]
+
             # open a file to save
             save_file = open(fname[0], "w")
 
