@@ -33,7 +33,7 @@ class Ui_test:
         MainWindow.setCentralWidget(test)
 
         test.setObjectName(_fromUtf8("test"))
-        test.resize(1092, 589)
+        MainWindow.resize(1092, 589)
         self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
 
         self.process = QtCore.QProcess(test)
@@ -54,6 +54,11 @@ class Ui_test:
         self.import_f.triggered.connect(self.get_file)
         self.export_f = self.fileMenu.addAction('Export File')
         self.export_f.triggered.connect(self.export_file)
+
+        self.load_save = self.fileMenu.addAction('Load project')
+        self.load_save.triggered.connect(self.load_from_json)
+        self.save_proj = self.fileMenu.addAction('Save project')
+        self.save_proj.triggered.connect(MainWindow.save)
 
         self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
         self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
@@ -404,8 +409,6 @@ class Ui_test:
 
         # set the filename
         self.fname = fname[0]
-
-        print(self.fname, " ASKLFHG aslkhdfgA KJSHLDGVK")
 
         # clear the list of pages and the current page
         self.page = 0
