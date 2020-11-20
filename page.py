@@ -148,11 +148,10 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        self.sortLines()
+        #self._popup.hide()
         self._selected_polygon = None
         self._image_object.update()
         self._image_object._ui.updateTextBox()
-
 
     def updatePolygonCrop(self):
         """ recrops polygon when vertices positions are changed by the user"""
