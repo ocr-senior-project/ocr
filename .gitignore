@@ -5,6 +5,7 @@
 report.txt
 *MATRICULAmodel
 *ocr_v2
+*.json
 
 HandwritingRecognitionSystem_v2/model
 HandwritingRecognitionSystem_v2/summary
