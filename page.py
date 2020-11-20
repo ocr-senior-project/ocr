@@ -68,9 +68,34 @@ class Page:
                 min_a = point.y()
         return min_a
 
+    def writeListFile(self, file_number):
+        list_contents = ""
+        for i in range(file_number):
+            list_contents += str(i)
+            if i != file_number - 1:
+                list_contents += "\n"
+
+        list_file = open("list", "w")
+        list_file.write(list_contents)
+        list_file.close()
+
+    def text_to_label(self, text):
+        with open('../CHAR_LIST') as f:
+            chars = f.read()
+
+        chars = chars.split('\n')
+        label = ''
+        for letter in text:
+            if letter == ' ':
+                letter = '<SPACE>'
+            for ind, char in enumerate(chars):
+                if letter == char:
+                    label += str(ind) + ' '
+        return label
+
     def trainLines(self):
         self.saveLines()
-        os.chdir("HandwritingRecognitionSystem_v2/Train/")
+        os.chdir("HandwritingRecognitionSystem_v2/UImodel/")
         for line in self._page_lines:
             line._is_transcribed = True
             os.chdir("Text/")
@@ -78,6 +103,14 @@ class Page:
             file_number = len(glob.glob('*'))
             text_file = open("%d.txt" % file_number, "w")
             text_file.write(line._transcription)
+            text_file.close()
+
+            os.chdir("..")
+            os.chdir("Labels/")
+            label_file = open("%d.tru" % file_number, "w")
+            label_file.write(self.text_to_label(line._transcription))
+            label_file.close()
+            
             os.chdir("..")
             os.chdir("Images/")
             self._polygon_points = line._vertices.copy()
@@ -180,7 +213,7 @@ class Page:
         self._pixmap.save(file_to_crop, "JPG")
 
     def transcribePolygon(self, image_name):
-        f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
+        f = open("HandwritingRecognitionSystem_v2/UImodel/list", "w")
         f.write(image_name)
         f.close()
         return test.run(self._image_object._ui.model)
