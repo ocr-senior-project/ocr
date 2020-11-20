@@ -19,6 +19,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
+
 class Ui_test:
     def setupUi(self, MainWindow):
         """ Creates layout of UI """
