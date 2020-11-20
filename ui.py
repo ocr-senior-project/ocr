@@ -366,6 +366,14 @@ class Ui_test:
             # make a new line object
             new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
 
+            # backwards compatibility
+            try:
+                # set the _is_transcribed and _ready_for_training attributes
+                new_line._is_transcribed = lines[i]['transcribed']
+                new_line._ready_for_training = lines[i]['training']
+            except:
+                pass
+
             # make the polygon for the line
             new_line.updatePolygon()
 
@@ -658,6 +666,8 @@ class MainWindow(QtWidgets.QMainWindow):
         current_line = {}
 
         current_line['points'] = line._vertices
+        current_line['transcribed'] = line._is_transcribed
+        current_line['training'] = line._ready_for_training
         current_line['block'] = line._block_number
         current_line['transcription'] = line._transcription
 
