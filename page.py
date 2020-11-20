@@ -80,8 +80,8 @@ class Page:
         list_file.close()
 
     def text_to_label(self, text):
-        with open('../CHAR_LIST') as f:
-            chars = f.read()
+        with open('../CHAR_LIST', "rb") as f:
+            chars = f.read().decode("utf-8")
 
         chars = chars.split('\n')
         label = ''
@@ -114,7 +114,7 @@ class Page:
             os.chdir("..")
             os.chdir("Images/")
             self._polygon_points = line._vertices.copy()
-            self.polygonCrop("%d" % file_number)
+            self.polygonCrop(f"{file_number}")
             os.chdir("..")
 
         self.writeListFile(file_number)
@@ -213,7 +213,6 @@ class Page:
         # return test.run(self._image_object._ui.model)
         return test.run()
 
-
     def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
         # read image as RGB and add alpha (transparency)
@@ -250,13 +249,12 @@ class Page:
 
         if fname:
             # if filename is given
-            #samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/"
             newIm.crop(end_crop).save(f'{fname}.png')
-            os.remove("jpg.jpg")
         else:
             # saving to a new file
             samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
             newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
+
         return image_name
 
     def selectClickedPolygon(self, position):
