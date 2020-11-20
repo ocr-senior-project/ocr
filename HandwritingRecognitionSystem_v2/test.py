@@ -75,10 +75,7 @@ def run(model_location="HandwritingRecognitionSystem_v2/MATRICULAmodel"):
 
 	session.run(tf.compat.v1.global_variables_initializer())
 
-	if not model:
-		model = cfg.SaveDir
-
-	LoadModel(session, model+'/')
+	LoadModel(session, model_location+'/')
 
 	try:
 		session.run(tf.compat.v1.assign(phase_train, False))

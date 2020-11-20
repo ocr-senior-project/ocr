@@ -110,7 +110,7 @@ class Page:
             label_file = open("%d.tru" % file_number, "w")
             label_file.write(self.text_to_label(line._transcription))
             label_file.close()
-            
+
             os.chdir("..")
             os.chdir("Images/")
             self._polygon_points = line._vertices.copy()
@@ -143,12 +143,6 @@ class Page:
                     line._is_transcribed = False
                 line_number = line_number + 1
         self._image_object.update()
-#                if line_number <= len(self._page_lines)-1:
-#                    line._transcription = text_lines[line_number]
-#                    line_number = line_number+1
-#                else:
-#                    line._transcription = ""
-
 
     def sortLines(self):
         """ Sorts polygons by position, updating index """
@@ -213,10 +207,12 @@ class Page:
         self._pixmap.save(file_to_crop, "JPG")
 
     def transcribePolygon(self, image_name):
-        f = open("HandwritingRecognitionSystem_v2/UImodel/list", "w")
+        f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        return test.run(self._image_object._ui.model)
+        # return test.run(self._image_object._ui.model)
+        return test.run()
+
 
     def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
