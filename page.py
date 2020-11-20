@@ -5,6 +5,7 @@ import os
 import glob
 from HandwritingRecognitionSystem_v2 import test
 
+
 class Line():
     def __init__(self, polygon, points, image_name):
         self._polygon = polygon
@@ -36,15 +37,16 @@ class Page:
         self._polygon_points = []
         self._polygon = QtGui.QPolygon()
         self._selected_polygon = None
+        self._highlighted_polygon = None
         self._selected_vertex_index = None
         self._pixmap = None
         self._dragging_vertex = False
         self._pixmap_rect = self._image_object.rect()
+        self._polygon_start = None
 
     def selectPolygon(self):
         """ Called when a polygon is done being selected
             Crops polygon and stops drawing lines following mouse """
-
         # Stop drawing lines
         self._image_object._lines = []
         self._image_object._start_of_line = []
@@ -131,14 +133,6 @@ class Page:
         self._polygon_points = []
         self._image_object.update()
 
-    def deletePolygon(self):
-        """ deletes self._polygon from the image """
-        for line_object in self._page_lines:
-            if line_object._polygon == self._polygon:
-                self._page_lines.remove(line_object)
-        self.sortLines()
-        self._image_object.update()
-
     def scalePolygonPoints(self, im):
         """ Scale each point of polygon_points by the ratio of the original image to the
             displayed image """
@@ -151,8 +145,10 @@ class Page:
     def deleteSelectedPolygon(self):
         """ deletes selected polygon upon a double click """
         self._page_lines.remove(self._selected_polygon)
-        #self._popup.hide()
         self._selected_polygon = None
+        self._highlighted_polygon = None
+        self.sortLines()
+
         self._image_object.update()
         self._image_object._ui.updateTextBox()
 
