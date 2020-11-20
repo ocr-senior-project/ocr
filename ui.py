@@ -60,6 +60,8 @@ class Ui_test:
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
+        self._firstTimeTraining = True
+
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
@@ -132,6 +134,9 @@ class Ui_test:
         """ train on selected polygons """
         # only train if the page is loaded
         if self.label._page:
+            starting_epoch = 1
+            if self._firstTimeTraining:
+                starting_epoch = 0
             # change button text and disconnect from trainLines
             self.popupMenu.pushButton_9.setText(_translate("test", "Stop Training", None))
             self.popupMenu.pushButton_9.clicked.disconnect()
@@ -143,12 +148,14 @@ class Ui_test:
                 target=train.run,
                 args=(
                     file_number,
-                    "HandwritingRecognitionSystem_v2/Train/list",
-                    "HandwritingRecognitionSystem_v2/Train/Images/",
-                    "HandwritingRecognitionSystem_v2/Train/Labels/",
+                    "HandwritingRecognitionSystem_v2/UImodel/list",
+                    "HandwritingRecognitionSystem_v2/UImodel/Images/",
+                    "HandwritingRecognitionSystem_v2/UImodel/Labels/",
+                    starting_epoch,
                     )
                 )
             self.process.start()
+            self._firstTimeTraining = False
 
     def stopTraining(self):
         # change button text and disconnect from stopTraining function
@@ -408,6 +415,8 @@ class ImageLabel(QtWidgets.QLabel):
         if self._page:
             scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
             self._page._pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+            if not self._page._original_pixmap_rect:
+                self._page._original_pixmap_rect = self._page._pixmap_rect
             painter.drawPixmap(self._page._pixmap_rect, scaledPixmap)
 
             painter.setPen(QtCore.Qt.red)
@@ -461,9 +470,13 @@ class ImageLabel(QtWidgets.QLabel):
         self._page._pixmap_rect = new_pixmap_rect
         self.update()
 
+    def deselect(self):
+        self._ui.textBrowser.moveCursor(QtGui.QTextCursor.End)
+        self._ui.textBrowser.moveCursor(QtGui.QTextCursor.Left)
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
+        self.deselect()
         if not self._page:
             return
 
@@ -532,9 +545,15 @@ class MainWidget(QtWidgets.QWidget):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
+        if not self.ui.label._page:
+            return
         if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 2:
             self.ui.label._page.selectPolygon()
 
+        if event.key() == QtCore.Qt.Key_Right:
+            self.ui.label.next_page()
+        if event.key() == QtCore.Qt.Key_Left:
+            self.ui.label.previous_page()
 
 
 if __name__ == "__main__":

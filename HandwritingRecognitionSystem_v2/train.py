@@ -26,16 +26,17 @@ from .cnn import WND_SHIFT
 from .cnn import MPoolLayers_H
 from .rnn import RNN
 
-def run(num_training_imgs, list_file, imgs_path, labels_path):
-	cfg.TRAIN_NB = num_training_imgs
-	cfg.TRAIN_LIST = list_file
+def run(num_training_imgs, list_file, imgs_path, labels_path, starting_epoch):
+	cfg.TRAIN_NB = cfg.VAL_NB = num_training_imgs
+	cfg.TRAIN_LIST = cfg.VAL_LIST = list_file
 	cfg.SaveDir = 'HandwritingRecognitionSystem_v2/UImodel'
 	cfg.ModelName = 'UImodel.ckpt'
+	cfg.StartingEpoch = starting_epoch
 
 	# images
 	cfg.TRAIN_LOCATION = imgs_path
 	# labels
-	cfg.TRAIN_TRANS = labels_path
+	cfg.TRAIN_TRANS = cfg.VAL_TRANS = labels_path
 
 	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
 

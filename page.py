@@ -13,6 +13,7 @@ class Line():
         self._vertex_handles = None
         self._block_number = None
         self._transcription = None
+        self._already_trained = False
 
     def set_transcription(self, transcription):
         self._transcription = transcription
@@ -38,6 +39,7 @@ class Page:
         self._selected_vertex_index = None
         self._dragging_vertex = False
         self._pixmap_rect = self._image_object.rect()
+        self._original_pixmap_rect = False
 
     def selectPolygon(self):
         """ Called when a polygon is done being selected
@@ -89,8 +91,15 @@ class Page:
 
     def trainLines(self):
         self.saveLines()
-        os.chdir("HandwritingRecognitionSystem_v2/Train/")
+        os.chdir("HandwritingRecognitionSystem_v2/UImodel/")
+
+        lines_to_be_trained = []
         for line in self._page_lines:
+            if line._already_trained == False:
+                lines_to_be_trained.append(line)
+
+        for line in lines_to_be_trained:
+            line._already_trained = True
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
