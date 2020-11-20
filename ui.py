@@ -30,6 +30,7 @@ class Ui_test:
         """ Creates layout of UI """
         # Main Widget
         test = QtWidgets.QWidget(MainWindow)
+        MainWindow.setWindowTitle("SCRIBE")
         MainWindow.setCentralWidget(test)
 
         test.setObjectName(_fromUtf8("test"))
@@ -208,9 +209,9 @@ class Ui_test:
         # only train if the page is loaded
         if self.label._page:
             # change button text and disconnect from trainLines
-            self.popupMenu.pushButton_9.setText(_translate("test", "Stop Training", None))
-            self.popupMenu.pushButton_9.clicked.disconnect()
-            self.popupMenu.pushButton_9.clicked.connect(self.stopTraining)
+            self.train.triggered.disconnect()
+            self.train = self.polygonMenu.addAction('Stop Training')
+            self.train.triggered.connect(self.stopTraining)
 
             # start training process
             file_number = self.label._page.trainLines()
@@ -218,18 +219,18 @@ class Ui_test:
                 target=train.run,
                 args=(
                     file_number,
-                    "HandwritingRecognitionSystem_v2/Train/list",
-                    "HandwritingRecognitionSystem_v2/Train/Images/",
-                    "HandwritingRecognitionSystem_v2/Train/Labels/",
+                    "HandwritingRecognitionSystem_v2/UImodel/list",
+                    "HandwritingRecognitionSystem_v2/UImodel/Images/",
+                    "HandwritingRecognitionSystem_v2/UImodel/Labels/",
                     )
                 )
             self.process.start()
 
     def stopTraining(self):
         # change button text and disconnect from stopTraining function
-        self.popupMenu.pushButton_9.setText(_translate("test", "Create Training Data", None))
-        self.popupMenu.pushButton_9.clicked.disconnect()
-        self.popupMenu.pushButton_9.clicked.connect(self.trainLines)
+        self.train.triggered.disconnect()
+        self.train = self.polygonMenu.addAction('Train Lines')
+        self.train.triggered.connect(self.trainLines)
 
         # kill the training process
         self.process.terminate()
