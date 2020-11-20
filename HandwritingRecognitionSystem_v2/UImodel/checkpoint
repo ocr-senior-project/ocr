@@ -1,0 +1,2 @@
+model_checkpoint_path: "MATRICULAmodel.ckpt-16"
+all_model_checkpoint_paths: "MATRICULAmodel.ckpt-16"

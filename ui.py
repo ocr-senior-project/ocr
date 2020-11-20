@@ -3,8 +3,12 @@
 import sys
 import page
 import math
+import psutil
+import time
+from multiprocessing import Process
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
+from HandwritingRecognitionSystem_v2 import train
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -29,6 +33,9 @@ class Ui_test:
         test.resize(1092, 589)
         self.mainWindow = test
         self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
+
+        self.process = QtCore.QProcess(test)
+        self._pid = -1
 
         # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
@@ -100,7 +107,7 @@ class Ui_test:
     def updatePage(self):
         self.label._page = self.pages[self.page]
         self.textBrowser.setText(self.label._page._text)
-        self.label.update()
+        self.label.resizePolygonsToPixmap()
         self.updatePageNum()
         self.updatePolygonFiles()
 
@@ -117,7 +124,7 @@ class Ui_test:
 
     def next_page(self):
         """ Next page button """
-        if self.page < len(self.imgs) - 1:
+        if hasattr(self, "page") and self.page < len(self.imgs) - 1:
             # save the text on text browser to the page object
             self.label._page._text = self.textBrowser.toPlainText()
 
@@ -129,7 +136,7 @@ class Ui_test:
 
     def previous_page(self):
         """ Previous page button """
-        if self.page > 0:
+        if hasattr(self, "page") and self.page > 0:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
@@ -137,8 +144,36 @@ class Ui_test:
             print('\a')
 
     def trainLines(self):
+        """ train on selected polygons """
+        # only train if the page is loaded
         if self.label._page:
-            self.label._page.trainLines()
+            # change button text and disconnect from trainLines
+            self.popupMenu.pushButton_9.setText(_translate("test", "Stop Training", None))
+            self.popupMenu.pushButton_9.clicked.disconnect()
+            self.popupMenu.pushButton_9.clicked.connect(self.stopTraining)
+
+            # start training process
+            file_number = self.label._page.trainLines()
+            self.process = Process(
+                target=train.run,
+                args=(
+                    file_number,
+                    "HandwritingRecognitionSystem_v2/Train/list",
+                    "HandwritingRecognitionSystem_v2/Train/Images/",
+                    "HandwritingRecognitionSystem_v2/Train/Labels/",
+                    )
+                )
+            self.process.start()
+
+    def stopTraining(self):
+        # change button text and disconnect from stopTraining function
+        self.popupMenu.pushButton_9.setText(_translate("test", "Create Training Data", None))
+        self.popupMenu.pushButton_9.clicked.disconnect()
+        self.popupMenu.pushButton_9.clicked.connect(self.trainLines)
+
+        # kill the training process
+        self.process.terminate()
+        self.process.join()
 
     def jumpToPage(self):
         pageNumber = int(self.popupMenu.inputPageNumber.text()) - 1
@@ -191,7 +226,7 @@ class Ui_test:
             # clear prevosly highlighted block, if any
             if self.highlighted_cursor:
                 self.textCursor = self.highlighted_cursor
-                fmt.setBackground(QtGui.QColor("white"))
+                fmt.setBackground(QtGui.QColor(0, 0, 0, 255))
                 self.textCursor.setBlockFormat(fmt)
 
             # highlight block cursor is currently on
@@ -263,7 +298,10 @@ class PopupMenu(QtWidgets.QWidget):
 
         # Page number layout
         self.pageNumberHLayout = QtWidgets.QHBoxLayout()
+        self.arrowsHLayout = QtWidgets.QHBoxLayout()
+        self.smallHLayouts = [self.pageNumberHLayout, self.arrowsHLayout]
         self._verticalLayout.addLayout(self.pageNumberHLayout)
+        self._verticalLayout.addLayout(self.arrowsHLayout)
 
         # List of menu widgets
         self._widgets_list = []
@@ -313,12 +351,12 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_4 = QtWidgets.QPushButton()
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_4.clicked.connect(self._ui.previous_page)
-        self._widgets_list.append(self.pushButton_4)
 
         self.pushButton_5 = QtWidgets.QPushButton()
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.pushButton_5.clicked.connect(self._ui.next_page)
-        self._widgets_list.append(self.pushButton_5)
+        self._prev_next_h_layout = [self.pushButton_4, self.pushButton_5]
+        self._widgets_list.append(self._prev_next_h_layout)
 
         self.SelectModelButtton = QtWidgets.QPushButton()
         self.SelectModelButtton.clicked.connect(self._ui.selectModel)
@@ -330,8 +368,8 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
         self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
-        self.pushButton_4.setText(_translate("test", "<- Previous Page", None))
-        self.pushButton_5.setText(_translate("test", "Next Page ->", None))
+        self.pushButton_4.setText(_translate("test", "←", None))
+        self.pushButton_5.setText(_translate("test", "→", None))
         self.pushButton_9.setText(_translate("test", "Create Training Data", None))
 
     def show(self):
@@ -341,10 +379,12 @@ class PopupMenu(QtWidgets.QWidget):
         # Change spacer size
         self._space.changeSize(10, 5)
 
+        hlayout_counter = 0
         for i in range(len(self._widgets_list)):
             if isinstance(self._widgets_list[i], list): # page number layout
                 for widget in self._widgets_list[i]:
-                    self.pageNumberHLayout.addWidget(widget)
+                    self.smallHLayouts[hlayout_counter].addWidget(widget)
+                hlayout_counter += 1
             else: # button
                 self._verticalLayout.addWidget(self._widgets_list[i])
 
@@ -352,12 +392,13 @@ class PopupMenu(QtWidgets.QWidget):
         """ Close hamburger menu """
         self._menu_open = False
         # delete widgets from page number layout
-        for i in reversed(range(self.pageNumberHLayout.count())):
-            self.pageNumberHLayout.itemAt(i).widget().setParent(None)
+        for hlayout in self.smallHLayouts:
+            for i in reversed(range(hlayout.count())):
+                hlayout.itemAt(i).widget().setParent(None)
         # delete buttons
         for i in reversed(range(self._verticalLayout.count())):
-            if i > 2:
-                self._verticalLayout.itemAt(i).widget().setParent(None)
+            if i > 2 and self._verticalLayout.itemAt(i):
+                    self._verticalLayout.itemAt(i).widget().setParent(None)
         # Spacer
         self._space.changeSize(10, 490)
 
@@ -398,8 +439,8 @@ class ImageLabel(QtWidgets.QLabel):
 
         if self._page:
             scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            drawRect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
-            painter.drawPixmap(drawRect, scaledPixmap)
+            self._page._pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+            painter.drawPixmap(self._page._pixmap_rect, scaledPixmap)
 
             painter.setPen(QtCore.Qt.red)
 
@@ -438,8 +479,34 @@ class ImageLabel(QtWidgets.QLabel):
             path.addPolygon(polyf)
             painter.fillPath(path, color)
 
+    def resizeEvent(self, event):
+        """ scale polygons based on the image size during window resizing """
+        if not self._page:
+            return
+
+        self.resizePolygonsToPixmap()
+
+    def resizePolygonsToPixmap(self):
+        scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        new_pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
+
+        scale_x = new_pixmap_rect.size().width() / self._page._pixmap_rect.size().width()
+        scale_y = new_pixmap_rect.size().height() / self._page._pixmap_rect.size().height()
+
+        for page_line in self._page._page_lines:
+            for i, point in enumerate(page_line._vertices):
+                page_line._vertices[i] = (point[0] * scale_x, point[1] * scale_y)
+            page_line.updatePolygon()
+
+        self._page._pixmap_rect = new_pixmap_rect
+        self.update()
+
+
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
+        if not self._page:
+            return
+
         global mode
         point = QtCore.QPoint(event.x(), event.y())
 
@@ -476,6 +543,8 @@ class ImageLabel(QtWidgets.QLabel):
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
             the last clicked point to end """
+        if not self._page:
+            return
         point = event.pos()
         if self._page and self._page._dragging_vertex == True:
             self._page._selected_polygon._vertices[self._page._selected_vertex_index] = (point.x(),point.y())
@@ -486,6 +555,9 @@ class ImageLabel(QtWidgets.QLabel):
         self.update()
 
     def mouseReleaseEvent(self, event):
+        if not self._page:
+            return
+
         if self._page._dragging_vertex:
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()

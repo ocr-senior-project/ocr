@@ -26,7 +26,17 @@ from .cnn import WND_SHIFT
 from .cnn import MPoolLayers_H
 from .rnn import RNN
 
-def run():
+def run(num_training_imgs, list_file, imgs_path, labels_path):
+	cfg.TRAIN_NB = num_training_imgs
+	cfg.TRAIN_LIST = list_file
+	cfg.SaveDir = 'HandwritingRecognitionSystem_v2/UImodel'
+	cfg.ModelName = 'UImodel.ckpt'
+
+	# images
+	cfg.TRAIN_LOCATION = imgs_path
+	# labels
+	cfg.TRAIN_TRANS = labels_path
+
 	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
 
 	nTimesNoProgress = 0
@@ -255,8 +265,8 @@ def run():
 				LogFile.write("######################################################\n\n")
 
 	except (KeyboardInterrupt, SystemExit, Exception) as e:
-		print("[Error/Interruption] %s\n" % str(e))
-		LogFile.write("[Error/Interruption] %s\n" % str(e))
+		print("[Error/Interruption]\n")
+		LogFile.write("[Error/Interruption]\n")
 		LogFile.write("Clossing TF Session...\n")
 		session.close()
 		LogFile.write("Terminating Program...\n")
