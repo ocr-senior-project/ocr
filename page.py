@@ -14,6 +14,8 @@ class Line():
         self._vertex_handles = None
         self._block_number = None
         self._transcription = ""
+        self._is_transcribed = False
+        self._ready_for_training = False
 
     def set_transcription(self, transcription):
         self._transcription = transcription
@@ -67,6 +69,7 @@ class Page:
         self.saveLines()
         os.chdir("HandwritingRecognitionSystem_v2/Train/")
         for line in self._page_lines:
+            line._is_transcribed = True
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
@@ -92,11 +95,22 @@ class Page:
         else:
             line_number = 0
             for line in self._page_lines:
-                if line_number <= len(self._page_lines)-1:
-                    line._transcription = text_lines[line_number]
-                    line_number = line_number+1
-                else:
+                if text_lines[line_number] == "":
                     line._transcription = ""
+                    line._is_transcribed = False
+                    line._ready_for_training = False
+                if text_lines[line_number] != line._transcription:
+                    line._transcription = text_lines[line_number]
+                    line._ready_for_training = True
+                    line._is_transcribed = False
+                line_number = line_number + 1
+        self._image_object.update()
+#                if line_number <= len(self._page_lines)-1:
+#                    line._transcription = text_lines[line_number]
+#                    line_number = line_number+1
+#                else:
+#                    line._transcription = ""
+
 
     def sortLines(self):
         """ Sorts polygons by position, updating index """
@@ -170,7 +184,7 @@ class Page:
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        return test.run()
+        return test.run(self._image_object._ui.model)
 
     def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil

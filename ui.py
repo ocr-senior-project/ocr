@@ -28,6 +28,7 @@ class Ui_test:
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
         self.mainWindow = test
+        self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
 
         # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
@@ -163,32 +164,23 @@ class Ui_test:
         self.label._page._polygon = QtGui.QPolygon()
         self.label._page._polygon_points = []
 
-    def add_transcriptions(self):
-        """ Prints transcriptions onto the text box """
-        self.textBrowser.clear()
-        poly_lines = self.label._page._page_lines
-        for p in poly_lines:
-            if p._transcription:
-                self.textBrowser.append(p._transcription)
-        self.saveText()
-
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
-
         transcript = self.label._page.transcribePolygon(p._image_name)
         self.label._page._selected_polygon.set_transcription(transcript)
-
-        self.add_transcriptions()
+        p._is_transcribed = True
+        self.updateTextBox()
 
     def transcribe_all_polygons(self):
         """ Transcribes all polygons """
         # Add dummy info to text boxes
         for p in self.label._page._page_lines:
-            transcript = self.label._page.transcribePolygon(p._image_name)
-            p.set_transcription(transcript)
-
-        self.add_transcriptions()
+            if not p._is_transcribed and not p._ready_for_training:
+                transcript = self.label._page.transcribePolygon(p._image_name)
+                p.set_transcription(transcript)
+                p._is_transcribed = True
+        self.updateTextBox()
 
     def highlight_line(self):
         global mode
@@ -215,7 +207,6 @@ class Ui_test:
                     self.label._page._polygon = item._polygon
                     self.label.update()
 
-
     def updateTextBox(self):
         if self.label._page:
             text = ""
@@ -231,6 +222,10 @@ class Ui_test:
         else:
             self.textBrowser.undo()
             print('\a')
+
+    def selectModel(self):
+        """allows user to select the model they want to use"""
+        self.model = QtWidgets.QFileDialog.getExistingDirectory()
 
 
 
@@ -325,6 +320,10 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_5.clicked.connect(self._ui.next_page)
         self._widgets_list.append(self.pushButton_5)
 
+        self.SelectModelButtton = QtWidgets.QPushButton()
+        self.SelectModelButtton.clicked.connect(self._ui.selectModel)
+        self._widgets_list.append(self.SelectModelButtton)
+
         # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
@@ -411,7 +410,15 @@ class ImageLabel(QtWidgets.QLabel):
                 painter.drawLine(start, end)
 
             for page_line in self._page._page_lines:
+                if page_line._is_transcribed:
+                    painter.setPen(QtCore.Qt.green)
+                elif page_line._ready_for_training:
+                    painter.setPen(QtCore.Qt.yellow)
+                else:
+                    painter.setPen(QtCore.Qt.red)
                 painter.drawConvexPolygon(page_line._polygon)
+
+            painter.setPen(QtCore.Qt.red)
 
             if self._page._selected_polygon:
                 for vertex in self._page._selected_polygon._vertices:

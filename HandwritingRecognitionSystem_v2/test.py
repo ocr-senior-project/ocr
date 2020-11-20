@@ -37,7 +37,7 @@ from .rnn import RNN
 # 	DecodeLog = codecs.open("decoded.txt", "w", "utf-8")
 
 
-def run():
+def run(model=None):
 	tf.compat.v1.reset_default_graph()
 
 	Classes = LoadClasses(cfg.CHAR_LIST)
@@ -74,7 +74,10 @@ def run():
 
 	session.run(tf.compat.v1.global_variables_initializer())
 
-	LoadModel(session, cfg.SaveDir+'/')
+	if not model:
+		model = cfg.SaveDir
+
+	LoadModel(session, model+'/')
 
 	try:
 		session.run(tf.compat.v1.assign(phase_train, False))
