@@ -6,6 +6,7 @@ import math
 import psutil
 import time
 from multiprocessing import Process
+import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 from HandwritingRecognitionSystem_v2 import train
@@ -27,7 +28,7 @@ except AttributeError:
 mode = "polygon_selection"
 
 class Ui_test:
-    def setupUi(self, test):
+    def setupUi(self, test, fname=None):
         """ Creates layout of UI """
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
@@ -59,6 +60,14 @@ class Ui_test:
         self.highlighted_cursor = None
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
+        # save the filename
+        self.fname = fname
+
+        # initialize attributes for later use
+        self.page = 0
+        self.pages = []
+        self.textCursor = None
+
         self.retranslateUi(test)
         QtCore.QMetaObject.connectSlotsByName(test)
 
@@ -73,7 +82,7 @@ class Ui_test:
         file.write(text)
 
     def get_file(self):
-        """ Gets the embedded jpg from a pdf """
+        """ Gets the embedded jpgs from a pdf """
 
         self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
@@ -81,15 +90,18 @@ class Ui_test:
         if not self.fname[0]:
             return
 
-        # Initialize a page index and a list of page objects
+        # save the filename
+        self.fname = fname[0]
+
+        # clear the list of pages and the current page
         self.page = 0
         self.pages = []
 
         # Returns a list of all of the pixmaps of the pdf
-        self.imgs = pp.get_pdf_contents(self.fname[self.page])
+        imgs = pp.get_pdf_contents(fname[self.page])
 
         # Make the appropriate number of pages and assign them pixmaps
-        for pixmap in self.imgs:
+        for pixmap in imgs:
             self.pages.append(page.Page(self.label))
             self.pages[-1]._pixmap = pixmap
 
@@ -102,14 +114,15 @@ class Ui_test:
     def initializePageNum(self):
         self.updatePageNum()
         self.popupMenu.inputPageNumber.setReadOnly(False)
-        self.popupMenu.pageNumberLabel.setText(f"Page out of {len(self.imgs)}:")
+        self.popupMenu.pageNumberLabel.setText(f"Page out of {len(self.pages)}:")
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
-        self.textBrowser.setText(self.label._page._text)
+
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
         self.updatePolygonFiles()
+        self.updateTextBox()
 
     def updatePageNum(self):
         self.popupMenu.inputPageNumber.setText(str(self.page + 1))
@@ -124,11 +137,8 @@ class Ui_test:
 
     def next_page(self):
         """ Next page button """
-        if hasattr(self, "page") and self.page < len(self.imgs) - 1:
-            # save the text on text browser to the page object
-            self.label._page._text = self.textBrowser.toPlainText()
-
-            # change the page index and object
+        if hasattr(self, "page") and self.page < len(self.pages) - 1:
+            # change the page index and update the page
             self.page += 1
             self.updatePage()
         else:
@@ -137,7 +147,6 @@ class Ui_test:
     def previous_page(self):
         """ Previous page button """
         if hasattr(self, "page") and self.page > 0:
-            self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
         else:
@@ -179,11 +188,8 @@ class Ui_test:
         pageNumber = int(self.popupMenu.inputPageNumber.text()) - 1
         if pageNumber < 0:
             pageNumber  = 0
-        elif pageNumber >= len(self.imgs):
-            pageNumber = len(self.imgs) - 1
-
-        # save the text on text browser to the page object
-        self.label._page._text = self.textBrowser.toPlainText()
+        elif pageNumber >= len(self.pages):
+            pageNumber = len(self.pages) - 1
 
         # change the page index and object
         self.page = pageNumber
@@ -203,7 +209,8 @@ class Ui_test:
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
         transcript = self.label._page.transcribePolygon(p._image_name)
-        self.label._page._selected_polygon.set_transcription(transcript)
+
+        p.set_transcription(transcript)
         p._is_transcribed = True
         self.updateTextBox()
 
@@ -226,7 +233,7 @@ class Ui_test:
             # clear prevosly highlighted block, if any
             if self.highlighted_cursor:
                 self.textCursor = self.highlighted_cursor
-                fmt.setBackground(QtGui.QColor(0, 0, 0, 255))
+                fmt.setBackground(QtGui.QColor("white"))
                 self.textCursor.setBlockFormat(fmt)
 
             # highlight block cursor is currently on
@@ -262,6 +269,85 @@ class Ui_test:
         """allows user to select the model they want to use"""
         self.model = QtWidgets.QFileDialog.getExistingDirectory()
 
+    # load all the lines from the json file
+    def _load_lines(self, new_page, lines):
+        # loop through all the lines in the page
+        for i in range(len(lines)):
+            # make a new line object
+            new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
+
+            # make the polygon for the line
+            new_line.updatePolygon()
+
+            # set the block number for proper rendering order
+            new_line._block_number = lines[i]["block"]
+
+            # set the transcription
+            new_line._transcription = lines[i]["transcription"]
+
+            # append the line object
+            new_page._page_lines.append(new_line)
+
+    # load all the pages from the json file
+    def _load_pages(self, pages):
+        # loop through all the pages
+        for i in range(len(pages)):
+            # make a new page
+            new_page = page.Page(self.label)
+
+            # save the pixmap to the disk
+            with open("jpg.jpg", "wb") as file:
+                file.write(pages[i]["pixmap"].encode("Latin-1"))
+
+            # restore the old pixmap
+            new_page._pixmap = QtGui.QPixmap("jpg.jpg")
+
+            # restore the lines from of the page
+            self._load_lines(new_page, pages[i]["lines"])
+
+            # add the page to the current project
+            self.pages.append(new_page)
+
+    # load the project from a json file
+    def load_from_json(self):
+        # get the file to load from
+        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.json *.prj)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        # set the filename
+        self.fname = fname[0]
+
+        # clear the list of pages and the current page
+        self.page = 0
+        self.pages = []
+
+        # create a convenient way to access the saved information
+        saved = None
+
+        # load the json file as dictionary
+        with open(fname[0], "r") as file:
+            saved = json.loads(file.read())
+
+        # restore the window size
+        self.mainWindow.resize(saved["window"][0], saved["window"][1])
+
+        # load all the pages
+        self._load_pages(saved["pages"])
+
+        # set the page number to the saved page number
+        self.page = saved['index']
+
+        self.label._page = self.pages[self.page]
+        self.label.update()
+
+        # Initialize page number layout
+        self.initializePageNum()
+
+        # add the transcriptions
+        self.updateTextBox()
 
 
 class MenuLabel(QtWidgets.QLabel):
@@ -278,7 +364,6 @@ class MenuLabel(QtWidgets.QLabel):
             self._menu.hide()
         else:
             self._menu.show()
-
 
 class PopupMenu(QtWidgets.QWidget):
     def __init__(self, ui, test, layout):
@@ -328,6 +413,16 @@ class PopupMenu(QtWidgets.QWidget):
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self._widgets_list.append(self.pushButton_3)
 
+        self.pushButton_10 = QtWidgets.QPushButton()
+        self.pushButton_10.setObjectName(_fromUtf8("pushButton_10"))
+        self.pushButton_10.clicked.connect(self._ui.load_from_json)
+        self._widgets_list.append(self.pushButton_10)
+
+        self.pushButton_11 = QtWidgets.QPushButton()
+        self.pushButton_11.setObjectName(_fromUtf8("pushButton_11"))
+        self.pushButton_11.clicked.connect(self._ui.mainWindow.save)
+        self._widgets_list.append(self.pushButton_11)
+
         self.pushButton_7 = QtWidgets.QPushButton()
         self.pushButton_7.setObjectName(_fromUtf8("pushButton"))
         self.pushButton_7.clicked.connect(self._ui.turn_highlighting_on)
@@ -365,6 +460,8 @@ class PopupMenu(QtWidgets.QWidget):
         # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
+        self.pushButton_10.setText(_translate("test", "Load Saved Project", None))
+        self.pushButton_11.setText(_translate("test", "Save Project", None))
         self.pushButton_7.setText(_translate("test", "Highlighting Mode", None))
         self.pushButton_8.setText(_translate("test", "Polygon Selection Mode", None))
         self.pushButton_6.setText(_translate("test", "Transcribe All Polygons", None))
@@ -401,8 +498,6 @@ class PopupMenu(QtWidgets.QWidget):
                     self._verticalLayout.itemAt(i).widget().setParent(None)
         # Spacer
         self._space.changeSize(10, 490)
-
-
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
@@ -562,7 +657,6 @@ class ImageLabel(QtWidgets.QLabel):
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()
 
-
 class MainWidget(QtWidgets.QWidget):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
@@ -575,7 +669,87 @@ class MainWidget(QtWidgets.QWidget):
         if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 2:
             self.ui.label._page.selectPolygon()
 
+    # create a dictionary containing all the information needed to reconstruct
+    # a single line on a page
+    def _save_line(self, line):
+        # create a dictionary for the information in the line
+        current_line = {}
 
+        current_line['points'] = line._vertices
+        current_line['block'] = line._block_number
+        current_line['transcription'] = line._transcription
+
+        return current_line
+
+    # create a dictionary containing all the information needed to reconstruct
+    # a single page of a document
+    def _save_page(self, page):
+        # create a dictionary for the information in each page
+        current_page = {}
+
+        # create a list to hold all the lines
+        lines = []
+
+        # for every line on the page
+        for i in range(len(page._page_lines)):
+            # add the line to the dictionary of lines
+            lines.append(self._save_line(page._page_lines[i]))
+
+        # write the pixmap to a file
+        page.writePixmaptoFile()
+
+        # save the pixmap image data of the page into the dictionary
+        current_page['pixmap'] = pp.read_binary("jpg.jpg")
+
+        # save the lines of the document
+        current_page['lines'] = lines
+
+        return current_page
+
+    # save the project
+    def save(self):
+        # get a nice filename
+        fname = self.ui.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = "".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
+
+        try:
+            # open a file to save
+            save_file = open(fname[0], "w")
+
+            # create a dictionary to hold all of the binaries
+            project = {}
+
+            # get the window size for the project to load polygons properly
+            project['window'] = [self.size().width(), self.size().height()]
+
+            # save the current page number
+            project["index"] = self.ui.page
+
+            # store all the pages in a list
+            pages = []
+
+            # for every page in the document
+            for i in range(len(self.ui.pages)):
+                # add the page to the dictionary of pages
+                pages.append(self._save_page(self.ui.pages[i]))
+
+            # save the pages to the project
+            project['pages'] = pages
+
+            # save the project
+            save_file.write(json.dumps(project))
+
+        except Exception as err:
+            print("there was an error\n")
+            print(err)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

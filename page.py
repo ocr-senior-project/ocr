@@ -32,12 +32,12 @@ class Line():
 class Page:
     def __init__(self, image_object):
         self._image_object = image_object
-        self._text = ""
         self._page_lines = []
         self._polygon_points = []
         self._polygon = QtGui.QPolygon()
         self._selected_polygon = None
         self._selected_vertex_index = None
+        self._pixmap = None
         self._dragging_vertex = False
         self._pixmap_rect = self._image_object.rect()
 
@@ -53,6 +53,7 @@ class Page:
 
         # Crop the image, add the polygon to the image
         file_name = self.polygonCrop()
+
         # self.transcribePolygon(file_name)
         self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
         self._image_object._ui.updateTextBox()
@@ -65,31 +66,6 @@ class Page:
                 min_a = point.y()
         return min_a
 
-    def writeListFile(self, file_number):
-        list_contents = ""
-        for i in range(file_number):
-            list_contents += str(i)
-            if i != file_number - 1:
-                list_contents += "\n"
-
-        list_file = open("list", "w")
-        list_file.write(list_contents)
-        list_file.close()
-
-    def text_to_label(self, text):
-        with open('../CHAR_LIST') as f:
-            chars = f.read()
-
-        chars = chars.split('\n')
-        label = ''
-        for letter in text:
-            if letter == ' ':
-                letter = '<SPACE>'
-            for ind, char in enumerate(chars):
-                if letter == char:
-                    label += str(ind) + ' '
-        return label
-
     def trainLines(self):
         self.saveLines()
         os.chdir("HandwritingRecognitionSystem_v2/Train/")
@@ -100,14 +76,6 @@ class Page:
             file_number = len(glob.glob('*'))
             text_file = open("%d.txt" % file_number, "w")
             text_file.write(line._transcription)
-            text_file.close()
-
-            os.chdir("..")
-            os.chdir("Labels/")
-            label_file = open("%d.tru" % file_number, "w")
-            label_file.write(self.text_to_label(line._transcription))
-            label_file.close()
-
             os.chdir("..")
             os.chdir("Images/")
             self._polygon_points = line._vertices.copy()
@@ -301,33 +269,3 @@ class Page:
                 if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
                     return True
         return False
-
-
-class Polygon_Deletion_Popup(QtWidgets.QWidget):
-    def __init__(self, Page):
-        super(Polygon_Deletion_Popup, self).__init__()
-        #size the popup and move to the ideal position (next to the image viewer)
-        self.resize(150,300)
-        #self.move(400,150)
-
-        # store access to the ImageLabel
-        self._page = Page
-
-        #Create the question label and buttons
-        self._QuestionLabel = QtWidgets.QLabel(self)
-        self._QuestionLabel.setText("Are you sure you want to delete this selection?")
-        self._deleteButton = QtWidgets.QPushButton(self)
-        self._deleteButton.setText("Yes")
-        self._stopDeletionButton = QtWidgets.QPushButton(self)
-        self._stopDeletionButton.setText("No")
-
-        #add a layout to the widget
-        self._layout = QtWidgets.QVBoxLayout(self)
-
-        #put the question text and the buttons in the layout
-        self._layout.addWidget(self._QuestionLabel)
-        self._layout.addWidget(self._deleteButton)
-        self._layout.addWidget(self._stopDeletionButton)
-
-        self._deleteButton.clicked.connect(self._page.deleteSelectedPolygon)
-        self._stopDeletionButton.clicked.connect(self.hide)
