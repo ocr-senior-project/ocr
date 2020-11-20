@@ -598,7 +598,6 @@ class MainWidget(QtWidgets.QWidget):
         return current_page
 
     # save the project
-    # TODO: allow the user to pick the filename to which they save their project
     def save(self):
         # get a nice filename
         fname = self.ui.fname

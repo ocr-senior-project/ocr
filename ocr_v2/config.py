@@ -73,4 +73,3 @@ cfg = flags.FLAGS
 
 if (os.path.exists(cfg.SaveDir) == False): os.makedirs(cfg.SaveDir)
 if (os.path.exists(cfg.LogDir) == False): os.makedirs(cfg.LogDir)
-
