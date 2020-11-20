@@ -32,6 +32,7 @@ class Ui_test:
         test.setObjectName(_fromUtf8("test"))
         test.resize(1092, 589)
         self.mainWindow = test
+        self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
 
         self.process = QtCore.QProcess(test)
         self._pid = -1
@@ -54,6 +55,7 @@ class Ui_test:
         self.textBrowser = QtWidgets.QTextEdit(test)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.textBrowser.cursorPositionChanged.connect(self.highlight_line)
+        self.textBrowser.textChanged.connect(self.saveText)
         self.highlighted_cursor = None
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
@@ -75,10 +77,10 @@ class Ui_test:
     def get_file(self):
         """ Gets the embedded jpg from a pdf """
 
-        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
+        self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")
 
         # Return if no file name is given
-        if not fname[0]:
+        if not self.fname[0]:
             return
 
         # Initialize a page index and a list of page objects
@@ -86,7 +88,7 @@ class Ui_test:
         self.pages = []
 
         # Returns a list of all of the pixmaps of the pdf
-        self.imgs = pp.get_pdf_contents(fname[self.page])
+        self.imgs = pp.get_pdf_contents(self.fname[self.page])
 
         # Make the appropriate number of pages and assign them pixmaps
         for pixmap in self.imgs:
@@ -109,9 +111,18 @@ class Ui_test:
         self.textBrowser.setText(self.label._page._text)
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
+        self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.popupMenu.inputPageNumber.setText(str(self.page + 1))
+
+    def updatePolygonFiles(self):
+        """ updates the polygon crop files in the HandwritingRecognitionSystem to the current page's page lines"""
+        for line in self.label._page._page_lines:
+            file_path = "HandwritingRecognitionSystem_v2/formalsamples/Images/"+line._image_name
+            self.label._page._polygon_points = line._vertices.copy()
+            self.label._page.polygonCrop(file_path)
+            self.label._page._polygon_points = []
 
     def next_page(self):
         """ Next page button """
@@ -122,6 +133,8 @@ class Ui_test:
             # change the page index and object
             self.page += 1
             self.updatePage()
+        else:
+            print('\a')
 
     def previous_page(self):
         """ Previous page button """
@@ -129,6 +142,8 @@ class Ui_test:
             self.label._page._text = self.textBrowser.toPlainText()
             self.page -= 1
             self.updatePage()
+        else:
+            print('\a')
 
     def trainLines(self):
         """ train on selected polygons """
@@ -191,31 +206,23 @@ class Ui_test:
         self.label._page._polygon = QtGui.QPolygon()
         self.label._page._polygon_points = []
 
-    def add_transcriptions(self):
-        """ Prints transcriptions onto the text box """
-        self.textBrowser.clear()
-        poly_lines = self.label._page._page_lines
-        for p in poly_lines:
-            if p._transcription:
-                self.textBrowser.append(p._transcription)
-
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
-
         transcript = self.label._page.transcribePolygon(p._image_name)
         self.label._page._selected_polygon.set_transcription(transcript)
-
-        self.add_transcriptions()
+        p._is_transcribed = True
+        self.updateTextBox()
 
     def transcribe_all_polygons(self):
         """ Transcribes all polygons """
         # Add dummy info to text boxes
         for p in self.label._page._page_lines:
-            transcript = self.label._page.transcribePolygon(p._image_name)
-            p.set_transcription(transcript)
-
-        self.add_transcriptions()
+            if not p._is_transcribed and not p._ready_for_training:
+                transcript = self.label._page.transcribePolygon(p._image_name)
+                p.set_transcription(transcript)
+                p._is_transcribed = True
+        self.updateTextBox()
 
     def highlight_line(self):
         global mode
@@ -241,6 +248,27 @@ class Ui_test:
                 if item._block_number == index:
                     self.label._page._polygon = item._polygon
                     self.label.update()
+
+    def updateTextBox(self):
+        if self.label._page:
+            text = ""
+            for line in self.label._page._page_lines:
+                text = text + line._transcription + "\n"
+            # chops of final newline
+            text = text[:-1]
+            self.textBrowser.setText(text)
+
+    def saveText(self):
+        if self.label._page:
+            self.label._page.saveLines()
+        else:
+            self.textBrowser.undo()
+            print('\a')
+
+    def selectModel(self):
+        """allows user to select the model they want to use"""
+        self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
 
 
 class MenuLabel(QtWidgets.QLabel):
@@ -337,6 +365,10 @@ class PopupMenu(QtWidgets.QWidget):
         self._prev_next_h_layout = [self.pushButton_4, self.pushButton_5]
         self._widgets_list.append(self._prev_next_h_layout)
 
+        self.SelectModelButtton = QtWidgets.QPushButton()
+        self.SelectModelButtton.clicked.connect(self._ui.selectModel)
+        self._widgets_list.append(self.SelectModelButtton)
+
         # retranslate
         self.pushButton_2.setText(_translate("test", "Import PDF", None))
         self.pushButton_3.setText(_translate("test", "Export PDF", None))
@@ -428,7 +460,15 @@ class ImageLabel(QtWidgets.QLabel):
                 painter.drawLine(start, end)
 
             for page_line in self._page._page_lines:
+                if page_line._is_transcribed:
+                    painter.setPen(QtCore.Qt.green)
+                elif page_line._ready_for_training:
+                    painter.setPen(QtCore.Qt.yellow)
+                else:
+                    painter.setPen(QtCore.Qt.red)
                 painter.drawConvexPolygon(page_line._polygon)
+
+            painter.setPen(QtCore.Qt.red)
 
             if self._page._selected_polygon:
                 for vertex in self._page._selected_polygon._vertices:

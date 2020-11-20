@@ -12,8 +12,14 @@ class Line():
         self._vertices = points
         self._vertex_handles = None
         self._block_number = None
+<<<<<<< HEAD
         self._transcription = None
         self._already_trained = False
+=======
+        self._transcription = ""
+        self._is_transcribed = False
+        self._ready_for_training = False
+>>>>>>> 2759eea8ce135e72dac2106f887f7c7a22469cc5
 
     def set_transcription(self, transcription):
         self._transcription = transcription
@@ -55,6 +61,7 @@ class Page:
         file_name = self.polygonCrop()
         # self.transcribePolygon(file_name)
         self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
+        self._image_object._ui.updateTextBox()
 
     def p_line_key(self, poly_line):
         a = poly_line._polygon
@@ -95,11 +102,15 @@ class Page:
 
         lines_to_be_trained = []
         for line in self._page_lines:
+<<<<<<< HEAD
             if line._already_trained == False:
                 lines_to_be_trained.append(line)
 
         for line in lines_to_be_trained:
             line._already_trained = True
+=======
+            line._is_transcribed = True
+>>>>>>> 2759eea8ce135e72dac2106f887f7c7a22469cc5
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
@@ -127,10 +138,30 @@ class Page:
     def saveLines(self):
         text = self._image_object._ui.textBrowser.toPlainText()
         text_lines = text.split("\n")
-        line_number = 0
-        for line in self._page_lines:
-            line._transcription = text_lines[line_number]
-            line_number = line_number+1
+        if len(self._page_lines) == 0:
+            return
+        elif len(text_lines) > len(self._page_lines):
+            self._image_object._ui.textBrowser.undo()
+            print('\a')
+        else:
+            line_number = 0
+            for line in self._page_lines:
+                if text_lines[line_number] == "":
+                    line._transcription = ""
+                    line._is_transcribed = False
+                    line._ready_for_training = False
+                if text_lines[line_number] != line._transcription:
+                    line._transcription = text_lines[line_number]
+                    line._ready_for_training = True
+                    line._is_transcribed = False
+                line_number = line_number + 1
+        self._image_object.update()
+#                if line_number <= len(self._page_lines)-1:
+#                    line._transcription = text_lines[line_number]
+#                    line_number = line_number+1
+#                else:
+#                    line._transcription = ""
+
 
     def sortLines(self):
         """ Sorts polygons by position, updating index """
@@ -171,6 +202,7 @@ class Page:
         #self._popup.hide()
         self._selected_polygon = None
         self._image_object.update()
+        self._image_object._ui.updateTextBox()
 
     def updatePolygonCrop(self):
         """ recrops polygon when vertices positions are changed by the user"""
@@ -203,7 +235,7 @@ class Page:
         f = open("HandwritingRecognitionSystem_v2/formalsamples/list", "w")
         f.write(image_name)
         f.close()
-        return test.run()
+        return test.run(self._image_object._ui.model)
 
     def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
