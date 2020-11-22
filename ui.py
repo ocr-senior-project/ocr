@@ -55,10 +55,9 @@ class Ui_test:
         self.import_f.triggered.connect(self.get_file)
         self.export_f = self.fileMenu.addAction('Export File')
         self.export_f.triggered.connect(self.export_file)
-
-        self.load_save = self.fileMenu.addAction('Load project')
+        self.load_save = self.fileMenu.addAction('Load Project')
         self.load_save.triggered.connect(self.load_from_json)
-        self.save_proj = self.fileMenu.addAction('Save project')
+        self.save_proj = self.fileMenu.addAction('Save Project')
         self.save_proj.triggered.connect(MainWindow.save)
 
         self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
@@ -247,22 +246,6 @@ class Ui_test:
         self.page = pageNumber
         self.updatePage()
 
-    def add_transcriptions(self):
-        """ Prints transcriptions onto the text box """
-        self.highlighter_on = False
-        self.textBrowser.clear()
-        poly_lines = self.label._page._page_lines
-        for p in poly_lines:
-            if p._transcription:
-                self.textBrowser.append(p._transcription)
-        self.highlighter_on = True
-
-        # rehighlight previously highlighted line
-        if self.label._page._highlighted_polygon:
-            index = self.label._page._highlighted_polygon._block_number
-            self.move_cursor(index)
-            self.highlight_line()
-
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
@@ -273,7 +256,7 @@ class Ui_test:
         self.updateTextBox()
 
     def transcribe_all_polygons(self):
-        """ Transcribes all polygons """
+        """ Transcribes all polygons that have not already been transcribed """
         for p in self.label._page._page_lines:
             if not p._is_transcribed and not p._ready_for_training:
                 transcript = self.label._page.transcribePolygon(p._image_name)
@@ -282,6 +265,7 @@ class Ui_test:
         self.updateTextBox()
 
     def toggle_highlighting(self):
+        """ Turn highlighting on if off and off if on """
         if self.highlighter_on:
             self.highlighter_on = False
             self.highlighting.setText('Turn Highlighting On')
@@ -310,7 +294,7 @@ class Ui_test:
 
     def highlight_line(self):
         """ Highlights line where cursor currently is """
-        if self.highlighter_on and self.label._page._selected_polygon and self.label._page._selected_polygon._transcription:
+        if self.highlighter_on and self.label._page._highlighted_polygon:
             fmt = QtGui.QTextBlockFormat()
 
             # clear prevosly highlighted block, if any
@@ -342,12 +326,23 @@ class Ui_test:
 
     def updateTextBox(self):
         if self.label._page:
+            old_highlighter_on = self.highlighter_on
+            self.highlighter_on = False
+
             text = ""
             for line in self.label._page._page_lines:
                 text = text + line._transcription + "\n"
-            # chops of final newline
+            # chops off final newline
             text = text[:-1]
             self.textBrowser.setText(text)
+
+            self.highlighter_on = old_highlighter_on
+
+            if self.label._page._highlighted_polygon:
+                print("YES")
+                index = self.label._page._highlighted_polygon._block_number
+                self.move_cursor(index)
+                self.highlight_line()
 
     def saveText(self):
         if self.label._page:
@@ -570,53 +565,50 @@ class ImageLabel(QtWidgets.QLabel):
 
         point = QtCore.QPoint(event.x(), event.y())
 
-        # make sure not already in polygons
-        if self._polygon_layer and (self._start_of_line or self._page.pointSelectsItem(point) == False):
-            # removes bug where user can select a polygon draw a new one
-            # and then delete the previous selection in one click
-            if (self._page._polygon_start and
-                self._page._polygon_start[0]-5 < point.x() < self._page._polygon_start[0]+5 and
-                self._page._polygon_start[1]-5 < point.y() < self._page._polygon_start[1]+5):
-                # close the polygon
-                self._page.selectPolygon()
-                self._page._selected_polygon = None
-                self._page._polygon_start = None
+        if self._page._pixmap_rect.contains(event.x(), event.y()):
+            # make sure not already in polygons
+            if self._polygon_layer and (self._start_of_line or self._page.pointSelectsItem(point) == False):
+                # removes bug where user can select a polygon draw a new one
+                # and then delete the previous selection in one click
+                if (self._page._polygon_start and
+                    self._page._polygon_start[0]-5 < point.x() < self._page._polygon_start[0]+5 and
+                    self._page._polygon_start[1]-5 < point.y() < self._page._polygon_start[1]+5):
+                    # close the polygon
+                    self._page.selectPolygon()
+                    self._page._selected_polygon = None
+                    self._page._polygon_start = None
+
+                else:
+                    self._page._selected_polygon = None
+
+                    if self._start_of_line:
+                        self._lines.append((self._start_of_line, event.pos()))
+                    else:
+                        # first point in polygon
+                        self._page._polygon_start = event.x(),event.y()
+                    self._start_of_line = event.pos()
+                    self._page._polygon_points.append((event.x(),event.y()))
+                    self._page._polygon << event.pos()
+
+            elif self._polygon_layer and self._page.pointInVertexHandle(point):
+                self._page._dragging_vertex = True
+                self._page.selectClickedVertexHandle(point)
 
             else:
-                self._page._selected_polygon = None
+                # select clicked polygon
+                self._page.selectClickedPolygon(point)
 
-                if self._start_of_line:
-                    self._lines.append((self._start_of_line, event.pos()))
-                else:
-                    # first point in polygon
-                    self._page._polygon_start = event.x(),event.y()
-                self._start_of_line = event.pos()
-                self._page._polygon_points.append((event.x(),event.y()))
-                self._page._polygon << event.pos()
+                # highlight
+                if self._ui.highlighter_on:
+                    self._page._highlighted_polygon = self._page._selected_polygon
 
-        elif self._polygon_layer and self._page.pointInVertexHandle(point):
-            self._page._dragging_vertex = True
-            self._page.selectClickedVertexHandle(point)
-
-        else:
-            # select clicked polygon
-            self._page.selectClickedPolygon(point)
-
-            # highlight if selected polygon has been transcribed
-            if self._page._selected_polygon._transcription and self._ui.highlighter_on:
-                self._page._highlighted_polygon = self._page._selected_polygon
-
-                if self._ui.highlighted_cursor and self._ui.highlighted_cursor.blockNumber == self._page._selected_polygon._block_number:
-                    # unhighlight when clicking a highlighted polygon
-                    pass
-                else:
                     # move cursor to corresponding line
                     self._ui.move_cursor(self._page._selected_polygon._block_number)
 
                     # highlight line
                     self._ui.highlight_line()
 
-        self.update()
+            self.update()
 
     def mouseMoveEvent(self, event):
         """ updates the painter and lets it draw the line from
