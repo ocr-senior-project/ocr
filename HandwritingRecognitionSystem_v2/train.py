@@ -26,16 +26,26 @@ from .cnn import WND_SHIFT
 from .cnn import MPoolLayers_H
 from .rnn import RNN
 
-def run(num_training_imgs, list_file, imgs_path, labels_path):
-	cfg.TRAIN_NB = num_training_imgs
-	cfg.TRAIN_LIST = list_file
-	cfg.SaveDir = 'HandwritingRecognitionSystem_v2/UImodel'
+def run(num_training_imgs, model_location, continue_training):
+	print(num_training_imgs)
+	list_file = f'{model_location}/list'
+	imgs_path = f'{model_location}/Images/'
+	labels_path = f'{model_location}/Labels/'
+
+	cfg.CHAR_LIST = f'{model_location}/CHAR_LIST'
+	cfg.TRAIN_NB = cfg.VAL_NB = num_training_imgs
+	cfg.TRAIN_LIST = cfg.VAL_LIST = list_file
+	cfg.SaveDir = model_location
+	# cfg.SaveDir = 'HandwritingRecognitionSystem_v2/UImodel'
 	cfg.ModelName = 'UImodel.ckpt'
 
 	# images
-	cfg.TRAIN_LOCATION = imgs_path
+	cfg.TRAIN_LOCATION = cfg.VAL_LOCATION = imgs_path
 	# labels
-	cfg.TRAIN_TRANS = labels_path
+	cfg.TRAIN_TRANS = cfg.VAL_TRANS = labels_path
+
+	if continue_training:
+		cfg.StartingEpoch = 1
 
 	VEC_PER_WND = WND_WIDTH / math.pow(2, MPoolLayers_H)
 

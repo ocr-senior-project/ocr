@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+import os
 import page
 import math
 import psutil
@@ -9,6 +10,7 @@ import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 from HandwritingRecognitionSystem_v2 import train
+from shutil import copyfile
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -42,6 +44,8 @@ class Ui_test:
 
         self.mainWindow = test
 
+        self.pathToHandwritingSystem = os.getcwd()
+
         # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -69,8 +73,10 @@ class Ui_test:
         self.polygonMenu = self.menuBar.addMenu('&Polygons') # Alt + P to open
         self.transcribe = self.polygonMenu.addAction('Transcribe All Polygons')
         self.transcribe.triggered.connect(self.transcribe_all_polygons)
-        self.train = self.polygonMenu.addAction('Train Lines')
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
         self.train.triggered.connect(self.trainLines)
+        self.train = self.polygonMenu.addAction('Continue Training Existing Model')
+        self.train.triggered.connect(self.continueTraining)
 
         MainWindow.setMenuBar(self.menuBar)
 
@@ -100,7 +106,7 @@ class Ui_test:
         # Page change stuff
         self.page_layout = QtWidgets.QVBoxLayout()
         self._h_layout = QtWidgets.QHBoxLayout()
-        self.pageNumberLabel = QtWidgets.QLabel("Page:")
+        self.pageNumberLabel = QtWidgets.QLabel("Page ")
         self.inputPageNumber = QtWidgets.QLineEdit()
         self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
         self.inputPageNumber.setValidator(QtGui.QIntValidator())
@@ -129,7 +135,6 @@ class Ui_test:
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
-        self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
         self.previous_page_button.setText(_translate("test", "←", None))
         self.next_page_button.setText(_translate("test", "→", None))
 
@@ -168,7 +173,9 @@ class Ui_test:
     def initializePageNum(self):
         self.updatePageNum()
         self.inputPageNumber.setReadOnly(False)
-        self.pageNumberLabel.setText(f"Page out of {len(self.pages)}:")
+        self.totalPagesLabel = QtWidgets.QLabel(f"of {len(self.pages)}")
+
+        self._h_layout.addWidget(self.totalPagesLabel)
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
@@ -206,10 +213,26 @@ class Ui_test:
         else:
             print('\a')
 
-    def trainLines(self):
+    def trainLines(self, continue_training=False):
         """ train on selected polygons """
         # only train if the page is loaded
         if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+            print(self.model)
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            if not os.path.isdir(f"{self.model}/Text/"):
+                os.mkdir(f"{self.model}/Text/")
+            if not os.path.isdir(f"{self.model}/Images/"):
+                os.mkdir(f"{self.model}/Images/")
+            if not os.path.isdir(f"{self.model}/Labels/"):
+                os.mkdir(f"{self.model}/Labels/")
+            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+
+
             # change button text and disconnect from trainLines
             self.train.triggered.disconnect()
             self.train = self.polygonMenu.addAction('Stop Training')
@@ -221,12 +244,15 @@ class Ui_test:
                 target=train.run,
                 args=(
                     file_number,
-                    "HandwritingRecognitionSystem_v2/UImodel/list",
-                    "HandwritingRecognitionSystem_v2/UImodel/Images/",
-                    "HandwritingRecognitionSystem_v2/UImodel/Labels/",
+                    self.model,
+                    continue_training,
                     )
                 )
             self.process.start()
+
+    def continueTraining(self):
+        """ pick a model to continue training from for selected polygons """
+        self.trainLines(True)
 
     def stopTraining(self):
         # change button text and disconnect from stopTraining function
@@ -276,6 +302,9 @@ class Ui_test:
 
     def transcribe_all_polygons(self):
         """ Transcribes all polygons """
+        if not self.label._page:
+            return
+
         for p in self.label._page._page_lines:
             if not p._is_transcribed and not p._ready_for_training:
                 transcript = self.label._page.transcribePolygon(p._image_name)
