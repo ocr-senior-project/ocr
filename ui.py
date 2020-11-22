@@ -51,14 +51,14 @@ class Ui_test:
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
 
         self.fileMenu = self.menuBar.addMenu('&File') # Alt + F to open
-        self.import_f = self.fileMenu.addAction('Import File')
+        self.import_f = self.fileMenu.addAction('Import File (Ctrl + I)')
         self.import_f.triggered.connect(self.get_file)
-        self.export_f = self.fileMenu.addAction('Export File')
+        self.export_f = self.fileMenu.addAction('Export File (Crtl + E)')
         self.export_f.triggered.connect(self.export_file)
 
-        self.load_save = self.fileMenu.addAction('Load project')
+        self.load_save = self.fileMenu.addAction('Load project (Ctrl + O)')
         self.load_save.triggered.connect(self.load_from_json)
-        self.save_proj = self.fileMenu.addAction('Save project')
+        self.save_proj = self.fileMenu.addAction('Save project (Ctrl + S)')
         self.save_proj.triggered.connect(MainWindow.save)
 
         self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
