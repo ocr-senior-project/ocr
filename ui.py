@@ -6,6 +6,7 @@ import psutil
 import time
 from multiprocessing import Process
 import json
+from fpdf import FPDF
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 from HandwritingRecognitionSystem_v2 import train
@@ -130,6 +131,40 @@ class Ui_test:
         self.previous_page_button.setText(_translate("test", "<- Previous Page", None))
         self.next_page_button.setText(_translate("test", "Next Page ->", None))
 
+    # export the current transcription as a pdf
+    def export_pdf(self):
+        # get a nice filename
+        fname = self.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = ".".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Image files (*.pdf)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        # create a new pdf
+        pdf = FPDF()
+        pdf.set_font("Arial", size=11)
+
+        # for every page of the document
+        for i in range(len(self.pages)):
+            # add a new page to the pdf
+            pdf.add_page()
+
+            # for every line on the page
+            for line in self.pages[i]._page_lines:
+                pdf.cell(0, 10, txt=line._transcription, ln=1, align="L")
+
+        # write to the pdf
+        pdf.output(fname[0])
+
     # get the text data from every page and create one text document with all
     # the current transcriptions
     def export_file(self):
@@ -157,8 +192,6 @@ class Ui_test:
 
             # for every page of the document
             for i in range(len(self.pages)):
-                print("REEEEEE")
-
                 # write a page header
                 file.write(f"\n>>> PAGE {i + 1} <<<\n")
 
@@ -170,8 +203,7 @@ class Ui_test:
             file.close()
 
         except Exception as err:
-            print("there was an error\n")
-            print(err)
+            pass
 
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
