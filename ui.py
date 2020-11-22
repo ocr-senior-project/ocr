@@ -10,7 +10,7 @@ import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 from HandwritingRecognitionSystem_v2 import train
-from shutil import copyfile
+from shutil import copyfile, rmtree
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -75,8 +75,11 @@ class Ui_test:
         self.transcribe.triggered.connect(self.transcribe_all_polygons)
         self.train = self.polygonMenu.addAction('Train Lines from Scratch')
         self.train.triggered.connect(self.trainLines)
-        self.train = self.polygonMenu.addAction('Continue Training Existing Model')
-        self.train.triggered.connect(self.continueTraining)
+        self.continue_train = self.polygonMenu.addAction('Continue Training Existing Model')
+        self.continue_train.triggered.connect(self.continueTraining)
+        self.stop_train = self.polygonMenu.addAction('Stop Training')
+        self.stop_train.triggered.connect(self.stopTraining)
+        self.stop_train.setDisabled(True)
 
         MainWindow.setMenuBar(self.menuBar)
 
@@ -224,6 +227,12 @@ class Ui_test:
             if not self.model:
                 return
 
+            if not continue_training:
+                print("deleting")
+                rmtree(f"{self.model}/Text")
+                rmtree(f"{self.model}/Images")
+                rmtree(f"{self.model}/Labels")
+
             if not os.path.isdir(f"{self.model}/Text/"):
                 os.mkdir(f"{self.model}/Text/")
             if not os.path.isdir(f"{self.model}/Images/"):
@@ -234,9 +243,9 @@ class Ui_test:
 
 
             # change button text and disconnect from trainLines
-            self.train.triggered.disconnect()
-            self.train = self.polygonMenu.addAction('Stop Training')
-            self.train.triggered.connect(self.stopTraining)
+            self.train.setDisabled(True)
+            self.continue_train.setDisabled(True)
+            self.stop_train.setDisabled(False)
 
             # start training process
             file_number = self.label._page.trainLines()
@@ -256,9 +265,9 @@ class Ui_test:
 
     def stopTraining(self):
         # change button text and disconnect from stopTraining function
-        self.train.triggered.disconnect()
-        self.train = self.polygonMenu.addAction('Train Lines')
-        self.train.triggered.connect(self.trainLines)
+        self.train.setDisabled(False)
+        self.continue_train.setDisabled(False)
+        self.stop_train.setDisabled(True)
 
         # kill the training process
         self.process.terminate()

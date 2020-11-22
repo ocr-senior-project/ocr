@@ -118,7 +118,7 @@ class Page:
             self.polygonCrop(f"{file_number}")
             os.chdir("..")
 
-        self.writeListFile(file_number)
+        self.writeListFile(file_number + 1)
 
         os.chdir(self._image_object._ui.pathToHandwritingSystem)
         return file_number + 1
