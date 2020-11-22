@@ -30,9 +30,8 @@ class Ui_test:
         """ Creates layout of UI """
         # Main Widget
         test = QtWidgets.QWidget(MainWindow)
-        MainWindow.setWindowTitle("SCRIBE")
+        MainWindow.setWindowTitle("project::SCRIBE")
         MainWindow.setCentralWidget(test)
-
         test.setObjectName(_fromUtf8("test"))
         MainWindow.resize(1092, 589)
         self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
@@ -472,6 +471,9 @@ class ImageLabel(QtWidgets.QLabel):
 
     def contextMenuEvent(self, event):
         """ Right click menu """
+        if not self._page:
+            return
+
         contextMenu = QtWidgets.QMenu()
         delete = contextMenu.addAction("Delete")
         transcribe = contextMenu.addAction("Transcribe")
@@ -561,7 +563,6 @@ class ImageLabel(QtWidgets.QLabel):
 
         self._page._pixmap_rect = new_pixmap_rect
         self.update()
-
 
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
