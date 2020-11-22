@@ -339,7 +339,6 @@ class Ui_test:
             self.highlighter_on = old_highlighter_on
 
             if self.label._page._highlighted_polygon:
-                print("YES")
                 index = self.label._page._highlighted_polygon._block_number
                 self.move_cursor(index)
                 self.highlight_line()
