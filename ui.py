@@ -130,10 +130,36 @@ class Ui_test:
         self.previous_page_button.setText(_translate("test", "<- Previous Page", None))
         self.next_page_button.setText(_translate("test", "Next Page ->", None))
 
+    # get the text data from every page and create one text document with all
+    # the current transcriptions
     def export_file(self):
-        text = self.textBrowser.toPlainText()
-        file = open('out.txt','w')
-        file.write(text)
+        # get a nice filename
+        fname = self.ui.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = ".".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.txt)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        try:
+            with open(fname, "w") as file:
+                # for every page of the document
+                for i in range(len(self.pages)):
+                    # write a page header
+                    file.write(f"\n>>> PAGE {i} <<<\n")
+
+                    # write the contents of the page
+                    file.write(self.pages[i])
+        except:
+            pass
 
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
@@ -245,22 +271,6 @@ class Ui_test:
         # change the page index and object
         self.page = pageNumber
         self.updatePage()
-
-    def add_transcriptions(self):
-        """ Prints transcriptions onto the text box """
-        self.highlighter_on = False
-        self.textBrowser.clear()
-        poly_lines = self.label._page._page_lines
-        for p in poly_lines:
-            if p._transcription:
-                self.textBrowser.append(p._transcription)
-        self.highlighter_on = True
-
-        # rehighlight previously highlighted line
-        if self.label._page._highlighted_polygon:
-            index = self.label._page._highlighted_polygon._block_number
-            self.move_cursor(index)
-            self.highlight_line()
 
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
@@ -709,7 +719,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if fname == None:
             fname = ""
         else:
-            fname = "".join(fname.split('.')[:-1])
+            fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
         fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
