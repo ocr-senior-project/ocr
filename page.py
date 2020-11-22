@@ -97,25 +97,26 @@ class Page:
         self.saveLines()
         os.chdir("HandwritingRecognitionSystem_v2/UImodel/")
         for line in self._page_lines:
-            line._is_transcribed = True
-            os.chdir("Text/")
-            #number of files in the directory
-            file_number = len(glob.glob('*'))
-            text_file = open("%d.txt" % file_number, "w")
-            text_file.write(line._transcription)
-            text_file.close()
+            if line._ready_for_training:
+                line._is_transcribed = True
+                os.chdir("Text/")
+                #number of files in the directory
+                file_number = len(glob.glob('*'))
+                text_file = open("%d.txt" % file_number, "w")
+                text_file.write(line._transcription)
+                text_file.close()
 
-            os.chdir("..")
-            os.chdir("Labels/")
-            label_file = open("%d.tru" % file_number, "w")
-            label_file.write(self.text_to_label(line._transcription))
-            label_file.close()
+                os.chdir("..")
+                os.chdir("Labels/")
+                label_file = open("%d.tru" % file_number, "w")
+                label_file.write(self.text_to_label(line._transcription))
+                label_file.close()
 
-            os.chdir("..")
-            os.chdir("Images/")
-            self._polygon_points = line._vertices.copy()
-            self.polygonCrop(f"{file_number}")
-            os.chdir("..")
+                os.chdir("..")
+                os.chdir("Images/")
+                self._polygon_points = line._vertices.copy()
+                self.polygonCrop(f"{file_number}")
+                os.chdir("..")
 
         self.writeListFile(file_number)
 
@@ -211,7 +212,7 @@ class Page:
         f.write(image_name)
         f.close()
         # return test.run(self._image_object._ui.model)
-        return test.run()
+        return test.run(self._image_object._ui.model)
 
     def polygonCrop(self, fname=None, fullpath=None):
         # CITE: https://stackoverflow.com/questions/22588074/polygon-crop-clip-using-python-pil
