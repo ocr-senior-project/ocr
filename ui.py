@@ -452,7 +452,7 @@ class Ui_test:
     # load the project from a json file
     def load_from_json(self):
         # get the file to load from
-        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.json *.prj)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Project files (*.json *.prj)")
 
         # Return if no file name is given
         if not fname[0]:
@@ -489,7 +489,6 @@ class Ui_test:
 
         # add the transcriptions
         self.updateTextBox()
-
 
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
@@ -688,7 +687,6 @@ class ImageLabel(QtWidgets.QLabel):
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()
 
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
@@ -698,6 +696,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
+        # cancel polygon selection when ESC is pressed
         if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 0:
             # Delete polygon user is currently making
             self.ui.label._page._selected_polygon = None
@@ -707,6 +706,34 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.label._page._polygon = QtGui.QPolygon()
             self.ui.label._page._polygon_points = []
             self.ui.label.update()
+
+        try:
+            # convert the event text into an interger and compare it to some
+            # control characters
+            ctrl_chr = ord(event.text())
+
+            # save project when CTRL + S is pressed
+            if ctrl_chr == 19:
+                self.save()
+
+            # export a document wehn CTRL + E is pressed
+            elif ctrl_chr == 5:
+                self.ui.export_file()
+
+            # load a save file when CTRL + O is pressed
+            elif ctrl_chr == 15:
+                self.ui.load_from_json()
+
+            # import a pdf when CTRL + I is pressed
+            elif ctrl_chr == 9:
+                self.ui.get_file()
+
+            # close the program when CTRL + Q is pressed
+            elif ctrl_chr == 17:
+                self.close()
+
+        except:
+            pass
 
     # create a dictionary containing all the information needed to reconstruct
     # a single line on a page
@@ -759,7 +786,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Project files (*.json *.prj)")
 
         # Return if no file name is given
         if not fname[0]:
