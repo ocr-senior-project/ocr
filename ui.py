@@ -132,23 +132,7 @@ class Ui_test:
         self.next_page_button.setText(_translate("test", "Next Page ->", None))
 
     # export the current transcription as a pdf
-    def export_pdf(self):
-        # get a nice filename
-        fname = self.fname
-
-        # format the filename nicely
-        if fname == None:
-            fname = ""
-        else:
-            fname = ".".join(fname.split('.')[:-1])
-
-        # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Image files (*.pdf)")
-
-        # Return if no file name is given
-        if not fname[0]:
-            return
-
+    def export_pdf(self, fname):
         # create a new pdf
         pdf = FPDF()
         pdf.set_font("Arial", size=11)
@@ -178,10 +162,15 @@ class Ui_test:
             fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.txt',"Image files (*.txt)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.txt, *.pdf)")
 
         # Return if no file name is given
         if not fname[0]:
+            return
+
+        # if the desired filetype is a pdf export that then return
+        if fname[0].split('.')[-1] == "pdf":
+            self.export_pdf(fname)
             return
 
         try:
