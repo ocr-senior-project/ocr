@@ -134,7 +134,7 @@ class Ui_test:
     # the current transcriptions
     def export_file(self):
         # get a nice filename
-        fname = self.ui.fname
+        fname = self.fname
 
         # format the filename nicely
         if fname == None:
@@ -143,23 +143,35 @@ class Ui_test:
             fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.txt)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.txt',"Image files (*.txt)")
 
         # Return if no file name is given
         if not fname[0]:
             return
 
         try:
-            with open(fname, "w") as file:
-                # for every page of the document
-                for i in range(len(self.pages)):
-                    # write a page header
-                    file.write(f"\n>>> PAGE {i} <<<\n")
+            file = open(fname[0], "w")
 
+            # write out some branding
+            file.write("DOCUMENT TRANSCRIPTION MADE WITH project::SCRIBE\n")
+
+            # for every page of the document
+            for i in range(len(self.pages)):
+                print("REEEEEE")
+
+                # write a page header
+                file.write(f"\n>>> PAGE {i + 1} <<<\n")
+
+                # for every line on the page
+                for line in self.pages[i]._page_lines:
                     # write the contents of the page
-                    file.write(self.pages[i])
-        except:
-            pass
+                    file.write(line._transcription + '\n')
+
+            file.close()
+
+        except Exception as err:
+            print("there was an error\n")
+            print(err)
 
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
@@ -535,7 +547,11 @@ class ImageLabel(QtWidgets.QLabel):
                 if self._polygon_layer:
                     # Show vertices
                     for vertex in self._page._selected_polygon._vertices:
-                        painter.drawEllipse(vertex[0]-5,vertex[1]-5,10,10)
+                        painter.drawEllipse(
+                            int(vertex[0]-5),
+                            int(vertex[1]-5),
+                            10,
+                            10)
 
             # highlight polygon
             if self._ui.highlighter_on and self._page._highlighted_polygon:
