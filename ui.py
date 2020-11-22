@@ -110,14 +110,16 @@ class Ui_test:
         self._h_layout.addWidget(self.inputPageNumber)
         self.page_layout.addLayout(self._h_layout)
 
+        self.prev_next_page_layout = QtWidgets.QHBoxLayout()
         self.previous_page_button = QtWidgets.QPushButton()
         self.previous_page_button.setObjectName(_fromUtf8("previous_page_button"))
         self.previous_page_button.clicked.connect(self.previous_page)
-        self.page_layout.addWidget(self.previous_page_button)
+        self.prev_next_page_layout.addWidget(self.previous_page_button)
         self.next_page_button = QtWidgets.QPushButton()
         self.next_page_button.setObjectName(_fromUtf8("next_page_button"))
         self.next_page_button.clicked.connect(self.next_page)
-        self.page_layout.addWidget(self.next_page_button)
+        self.prev_next_page_layout.addWidget(self.next_page_button)
+        self.page_layout.addLayout(self.prev_next_page_layout)
         self.horizontalLayout.addLayout(self.page_layout)
 
         # Put text on widgets
@@ -128,8 +130,8 @@ class Ui_test:
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
         self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
-        self.previous_page_button.setText(_translate("test", "<- Previous Page", None))
-        self.next_page_button.setText(_translate("test", "Next Page ->", None))
+        self.previous_page_button.setText(_translate("test", "←", None))
+        self.next_page_button.setText(_translate("test", "→", None))
 
     def export_file(self):
         text = self.textBrowser.toPlainText()
