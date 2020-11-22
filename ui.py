@@ -517,7 +517,7 @@ class ImageLabel(QtWidgets.QLabel):
                 if self._polygon_layer:
                     # Show vertices
                     for vertex in self._page._selected_polygon._vertices:
-                        painter.drawEllipse(vertex[0]-5,vertex[1]-5,10,10)
+                        painter.drawEllipse(int(vertex[0]-5),int(vertex[1]-5),10,10)
 
             # highlight polygon
             if self._ui.highlighter_on and self._page._highlighted_polygon:
