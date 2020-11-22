@@ -137,7 +137,6 @@ class Ui_test:
 
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
-
         self.fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.jpg *.pdf)")[0]
 
         # Return if no file name is given

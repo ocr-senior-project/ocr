@@ -30,6 +30,7 @@ class Line():
         """ Sets the index of the polygon/text """
         self._block_number = number
 
+
 class Page:
     def __init__(self, image_object):
         self._image_object = image_object
