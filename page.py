@@ -270,7 +270,6 @@ class Page:
             for vertex in self._selected_polygon._vertices:
                 if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
                     self._selected_vertex_index = self._selected_polygon._vertices.index(vertex)
-                    #self._selected_vertex = vertex
         return False
 
     def pointSelectsItem(self, point):

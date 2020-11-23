@@ -27,7 +27,6 @@ from .cnn import MPoolLayers_H
 from .rnn import RNN
 
 def run(num_training_imgs, model_location, continue_training):
-	print(num_training_imgs)
 	list_file = f'{model_location}/list'
 	imgs_path = f'{model_location}/Images/'
 	labels_path = f'{model_location}/Labels/'

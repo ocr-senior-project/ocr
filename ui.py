@@ -176,9 +176,7 @@ class Ui_test:
     def initializePageNum(self):
         self.updatePageNum()
         self.inputPageNumber.setReadOnly(False)
-        self.totalPagesLabel = QtWidgets.QLabel(f"of {len(self.pages)}")
-
-        self._h_layout.addWidget(self.totalPagesLabel)
+        self.pageNumberLabel.setText(f"Page out of {len(self.pages)}:")
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
@@ -221,14 +219,12 @@ class Ui_test:
         # only train if the page is loaded
         if self.label._page:
             self.model = QtWidgets.QFileDialog.getExistingDirectory()
-            print(self.model)
 
             # Return if no file name is given
             if not self.model:
                 return
 
             if not continue_training:
-                print("deleting")
                 rmtree(f"{self.model}/Text")
                 rmtree(f"{self.model}/Images")
                 rmtree(f"{self.model}/Labels")
