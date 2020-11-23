@@ -35,7 +35,7 @@ class Ui_test:
         MainWindow.setCentralWidget(test)
         test.setObjectName(_fromUtf8("test"))
         MainWindow.resize(1092, 589)
-        self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
+        self.model = "HandwritingRecognitionSystem_v2/UImodel"
 
         self.process = QtCore.QProcess(test)
         self._pid = -1
@@ -60,6 +60,9 @@ class Ui_test:
         self.load_save.triggered.connect(self.load_from_json)
         self.save_proj = self.fileMenu.addAction('Save project (Ctrl + S)')
         self.save_proj.triggered.connect(MainWindow.save)
+
+        self.load_model = self.fileMenu.addAction('Load Model')
+        self.load_model.triggered.connect(self.selectModel)
 
         self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
         self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
@@ -228,11 +231,13 @@ class Ui_test:
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
+        p = Process(target=self.updatePolygonFiles)
+        p.start()
 
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
-        self.updatePolygonFiles()
         self.updateTextBox()
+        #self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
@@ -274,12 +279,12 @@ class Ui_test:
             # start training process
             file_number = self.label._page.trainLines()
             self.process = Process(
-                target=train.run,
+                target=trapythin.run,
                 args=(
                     file_number,
-                    "HandwritingRecognitionSystem_v2/UImodel/list",
-                    "HandwritingRecognitionSystem_v2/UImodel/Images/",
-                    "HandwritingRecognitionSystem_v2/UImodel/Labels/",
+                    self.model + "/list",
+                    self.model + "/Images/",
+                    self.model + "/Labels/",
                     )
                 )
             self.process.start()
