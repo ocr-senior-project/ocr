@@ -173,12 +173,13 @@ class Ui_test:
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
-        self.label.update()
+        p = Process(target=self.updatePolygonFiles)
+        p.start()
 
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
         self.updateTextBox()
-        self.updatePolygonFiles()
+        #self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
