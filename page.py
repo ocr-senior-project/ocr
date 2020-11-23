@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
-from HandwritingRecognitionSystem_v2 import test
+from HandwritingRecognitionSystem_v2 import test, config
 
 
 class Line():
@@ -63,7 +63,7 @@ class Page:
 
     def p_line_key(self, poly_line):
         a = poly_line._polygon
-        min_a = 999999999
+        min_a = a[0].y()
         for point in a:
             if point.y() < min_a:
                 min_a = point.y()
@@ -81,7 +81,8 @@ class Page:
         list_file.close()
 
     def text_to_label(self, text):
-        with open('../CHAR_LIST', "rb") as f:
+
+        with open("../CHAR_LIST", "rb") as f:
             chars = f.read().decode("utf-8")
 
         chars = chars.split('\n')
@@ -96,7 +97,7 @@ class Page:
 
     def trainLines(self):
         self.saveLines()
-        os.chdir("HandwritingRecognitionSystem_v2/UImodel/")
+        os.chdir(self._image_object._ui.model)
         for line in self._page_lines:
             if line._ready_for_training:
                 line._is_transcribed = True
@@ -119,10 +120,10 @@ class Page:
                 self.polygonCrop(f"{file_number}")
                 os.chdir("..")
 
-        self.writeListFile(file_number)
+        self.writeListFile(file_number + 1)
 
-        os.chdir("../..")
-        return file_number
+        os.chdir(self._image_object._ui.pathToHandwritingSystem)
+        return file_number + 1
 
     def saveLines(self):
         text = self._image_object._ui.textBrowser.toPlainText()
@@ -271,7 +272,6 @@ class Page:
             for vertex in self._selected_polygon._vertices:
                 if vertex[0]-5 < point.x() < vertex[0]+5 and vertex[1]-5 < point.y() < vertex[1]+5:
                     self._selected_vertex_index = self._selected_polygon._vertices.index(vertex)
-                    #self._selected_vertex = vertex
         return False
 
     def pointSelectsItem(self, point):
