@@ -240,13 +240,13 @@ class Ui_test:
 
     def updatePage(self):
         self.label._page = self.pages[self.page]
-        p = Process(target=self.updatePolygonFiles)
-        p.start()
 
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
         self.updateTextBox()
-        #self.updatePolygonFiles()
+
+        # potentially multithread to increase speed
+        self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
@@ -308,7 +308,7 @@ class Ui_test:
             # start training process
             file_number = self.label._page.trainLines()
             self.process = Process(
-                target=trapythin.run,
+                target=train.run,
                 args=(
                     file_number,
                     self.model,
