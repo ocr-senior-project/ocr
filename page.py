@@ -108,6 +108,14 @@ class Page:
                 text_file.write(line._transcription)
                 text_file.close()
 
+                with open("../CHAR_LIST", "r") as f:
+                    all_letters = f.read()
+
+                with open("../CHAR_LIST", "a+") as f:
+                    for letter in line._transcription:
+                        if letter not in all_letters:
+                            f.write(letter + "\n")
+
                 os.chdir("..")
                 os.chdir("Labels/")
                 label_file = open("%d.tru" % file_number, "w")
