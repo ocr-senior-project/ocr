@@ -339,6 +339,9 @@ class Ui_test:
         self.process.terminate()
         self.process.join()
 
+        self.remove_old_ckpts()
+
+    def remove_old_ckpts(self):
         with open(f"{self.model}/checkpoint", "r") as f:
             firstline = f.readline()
 
