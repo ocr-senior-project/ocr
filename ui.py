@@ -50,47 +50,10 @@ class Ui_test:
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
 
-        # Menu bar
-        self.menuBar = QtWidgets.QMenuBar(test)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
-
-        self.fileMenu = self.menuBar.addMenu('&File') # Alt + F to open
-        self.import_f = self.fileMenu.addAction('Import File (Ctrl + I)')
-        self.import_f.triggered.connect(self.get_file)
-        self.export_f = self.fileMenu.addAction('Export File (Crtl + E)')
-        self.export_f.triggered.connect(self.export_file)
-
-        self.load_save = self.fileMenu.addAction('Load Project (Ctrl + O)')
-        self.load_save.triggered.connect(self.load_from_json)
-        self.save_proj = self.fileMenu.addAction('Save Project (Ctrl + S)')
-        self.save_proj.triggered.connect(MainWindow.save)
-
-        self.load_model = self.fileMenu.addAction('Load Model')
-        self.load_model.triggered.connect(self.selectModel)
-
-        self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
-        self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
-        self.highlighting = self.viewMenu.addAction('Turn Highlighting Off')
-        self.highlighting.triggered.connect(self.toggle_highlighting)
-
-        self.polygonMenu = self.menuBar.addMenu('&Polygons') # Alt + P to open
-        self.transcribe = self.polygonMenu.addAction('Transcribe All Polygons')
-        self.transcribe.triggered.connect(self.transcribe_all_polygons)
-        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
-        self.train.triggered.connect(self.trainLines)
-        self.continue_train = self.polygonMenu.addAction('Continue Training Existing Model')
-        self.continue_train.triggered.connect(self.continueTraining)
-        self.stop_train = self.polygonMenu.addAction('Stop Training')
-        self.stop_train.triggered.connect(self.stopTraining)
-        self.stop_train.setDisabled(True)
-
-        MainWindow.setMenuBar(self.menuBar)
-
         # Image label
         self.label = ImageLabel(self)
         self.label.setObjectName(_fromUtf8("label_2"))
         self.horizontalLayout.addWidget(self.label, stretch=5)
-        self.polygon_layer.triggered.connect(self.label.toggle_polygon_layer)
 
         # Text box
         self.textBrowser = QtWidgets.QTextEdit()
@@ -100,6 +63,74 @@ class Ui_test:
         self.highlighted_cursor = None
         self.highlighter_on = True
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
+
+        # Menu bar
+        self.menuBar = QtWidgets.QMenuBar(test)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
+
+        ### file menu
+        self.fileMenu = self.menuBar.addMenu('&File')
+
+        # import file
+        self.import_f = self.fileMenu.addAction('Import File')
+        self.import_f.setShortcut("Ctrl+I")
+        self.import_f.triggered.connect(self.get_file)
+
+        # export file
+        self.export_f = self.fileMenu.addAction('Export File')
+        self.export_f.setShortcut("Ctrl+E")
+        self.export_f.triggered.connect(self.export_file)
+
+        # load project
+        self.load_save = self.fileMenu.addAction('Open Project')
+        self.load_save.setShortcut("Ctrl+O")
+        self.load_save.triggered.connect(self.load_from_json)
+
+        # save project
+        self.save_proj = self.fileMenu.addAction('Save Project')
+        self.save_proj.setShortcut("Ctrl+S")
+        self.save_proj.triggered.connect(MainWindow.save)
+
+        # load model
+        self.load_model = self.fileMenu.addAction('Load Model')
+        self.load_model.setShortcut("Ctrl+L")
+        self.load_model.triggered.connect(self.selectModel)
+
+        ### view menu
+        self.viewMenu = self.menuBar.addMenu('&View')
+
+        # toggle polygons
+        self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
+        self.polygon_layer.setShortcut("Ctrl+Shift+P")
+        self.polygon_layer.triggered.connect(self.label.toggle_polygon_layer)
+
+        # toggle highlighting
+        self.highlighting = self.viewMenu.addAction('Turn Highlighting Off')
+        self.highlighting.setShortcut("Ctrl+Shift+H")
+        self.highlighting.triggered.connect(self.toggle_highlighting)
+
+        ### polygon menu
+        self.polygonMenu = self.menuBar.addMenu('&Polygons')
+
+        # transcribe polygons
+        self.transcribe = self.polygonMenu.addAction('Transcribe All Polygons')
+        self.transcribe.setShortcut("Ctrl+T")
+        self.transcribe.triggered.connect(self.transcribe_all_polygons)
+
+        # continue training
+        self.continue_train = self.polygonMenu.addAction('Continue Training Existing Model')
+        self.continue_train.triggered.connect(self.continueTraining)
+
+        # train new model
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
+        self.train.triggered.connect(self.trainLines)
+
+        # stop training
+        self.stop_train = self.polygonMenu.addAction('Stop Training')
+        self.stop_train.triggered.connect(self.stopTraining)
+        self.stop_train.setDisabled(True)
+
+        MainWindow.setMenuBar(self.menuBar)
 
         # save the filename
         self.fname = None
@@ -750,34 +781,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.label._page._polygon = QtGui.QPolygon()
             self.ui.label._page._polygon_points = []
             self.ui.label.update()
-
-        try:
-            # convert the event text into an interger and compare it to some
-            # control characters
-            ctrl_chr = ord(event.text())
-
-            # save project when CTRL + S is pressed
-            if ctrl_chr == 19:
-                self.save()
-
-            # export a document wehn CTRL + E is pressed
-            elif ctrl_chr == 5:
-                self.ui.export_file()
-
-            # load a save file when CTRL + O is pressed
-            elif ctrl_chr == 15:
-                self.ui.load_from_json()
-
-            # import a pdf when CTRL + I is pressed
-            elif ctrl_chr == 9:
-                self.ui.get_file()
-
-            # close the program when CTRL + Q is pressed
-            elif ctrl_chr == 17:
-                self.close()
-
-        except:
-            pass
 
     # create a dictionary containing all the information needed to reconstruct
     # a single line on a page
