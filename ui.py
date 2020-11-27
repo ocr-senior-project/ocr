@@ -276,6 +276,11 @@ class Ui_test:
         else:
             print('\a')
 
+    def find_ckpt_number(self):
+        with open(f"{self.model}/checkpoint", "r") as f:
+            firstline = f.readline()
+        return int(firstline[firstline.find("-") + 1:-2])
+
     def trainLines(self, continue_training=False):
         """ train on selected polygons """
         # only train if the page is loaded
@@ -286,10 +291,13 @@ class Ui_test:
             if not self.model:
                 return
 
+            continue_training_at_epoch = 0
             if not continue_training:
                 rmtree(f"{self.model}/Text")
                 rmtree(f"{self.model}/Images")
                 rmtree(f"{self.model}/Labels")
+            else:
+                continue_training_at_epoch = self.find_ckpt_number()
 
             if not os.path.isdir(f"{self.model}/Text/"):
                 os.mkdir(f"{self.model}/Text/")
@@ -312,7 +320,7 @@ class Ui_test:
                 args=(
                     file_number,
                     self.model,
-                    continue_training,
+                    continue_training_at_epoch,
                     )
                 )
             self.process.start()
@@ -330,6 +338,24 @@ class Ui_test:
         # kill the training process
         self.process.terminate()
         self.process.join()
+
+        with open(f"{self.model}/checkpoint", "r") as f:
+            firstline = f.readline()
+
+        inside_ckpt_name = False
+        checkpoint_name = ""
+        for letter in reversed(firstline):
+            if letter == "/" or letter == "\\":
+                break
+            if inside_ckpt_name and letter != '"':
+                checkpoint_name = letter + checkpoint_name
+            if letter == '"':
+                inside_ckpt_name = not inside_ckpt_name
+
+        for filename in os.listdir(self.model):
+            if "ckpt" in filename and checkpoint_name not in filename:
+                filename_relPath = os.path.join(self.model, filename)
+                os.remove(filename_relPath)
 
     def jumpToPage(self):
         pageNumber = int(self.inputPageNumber.text()) - 1
