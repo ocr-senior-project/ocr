@@ -7,6 +7,7 @@ import psutil
 import time
 from multiprocessing import Process
 import json
+import glob
 from fpdf import FPDF
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
