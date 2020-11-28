@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 import sys
+import os
 import page
 import math
 import psutil
 import time
 from multiprocessing import Process
 import json
+from fpdf import FPDF
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
 from HandwritingRecognitionSystem_v2 import train
+from shutil import copyfile, rmtree
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -30,17 +33,18 @@ class Ui_test:
         """ Creates layout of UI """
         # Main Widget
         test = QtWidgets.QWidget(MainWindow)
-        MainWindow.setWindowTitle("SCRIBE")
+        MainWindow.setWindowTitle("project::SCRIBE")
         MainWindow.setCentralWidget(test)
-
         test.setObjectName(_fromUtf8("test"))
         MainWindow.resize(1092, 589)
-        self.model = "HandwritingRecognitionSystem_v2/MATRICULAmodel"
+        self.model = "HandwritingRecognitionSystem_v2/UImodel"
 
         self.process = QtCore.QProcess(test)
         self._pid = -1
 
         self.mainWindow = test
+
+        self.pathToHandwritingSystem = os.getcwd()
 
         # Horizontal layout
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
@@ -51,14 +55,18 @@ class Ui_test:
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
 
         self.fileMenu = self.menuBar.addMenu('&File') # Alt + F to open
-        self.import_f = self.fileMenu.addAction('Import File')
+        self.import_f = self.fileMenu.addAction('Import File (Ctrl + I)')
         self.import_f.triggered.connect(self.get_file)
-        self.export_f = self.fileMenu.addAction('Export File')
+        self.export_f = self.fileMenu.addAction('Export File (Crtl + E)')
         self.export_f.triggered.connect(self.export_file)
-        self.load_save = self.fileMenu.addAction('Load Project')
+
+        self.load_save = self.fileMenu.addAction('Load Project (Ctrl + O)')
         self.load_save.triggered.connect(self.load_from_json)
-        self.save_proj = self.fileMenu.addAction('Save Project')
+        self.save_proj = self.fileMenu.addAction('Save Project (Ctrl + S)')
         self.save_proj.triggered.connect(MainWindow.save)
+
+        self.load_model = self.fileMenu.addAction('Load Model')
+        self.load_model.triggered.connect(self.selectModel)
 
         self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
         self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
@@ -68,8 +76,13 @@ class Ui_test:
         self.polygonMenu = self.menuBar.addMenu('&Polygons') # Alt + P to open
         self.transcribe = self.polygonMenu.addAction('Transcribe All Polygons')
         self.transcribe.triggered.connect(self.transcribe_all_polygons)
-        self.train = self.polygonMenu.addAction('Train Lines')
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
         self.train.triggered.connect(self.trainLines)
+        self.continue_train = self.polygonMenu.addAction('Continue Training Existing Model')
+        self.continue_train.triggered.connect(self.continueTraining)
+        self.stop_train = self.polygonMenu.addAction('Stop Training')
+        self.stop_train.triggered.connect(self.stopTraining)
+        self.stop_train.setDisabled(True)
 
         MainWindow.setMenuBar(self.menuBar)
 
@@ -99,7 +112,7 @@ class Ui_test:
         # Page change stuff
         self.page_layout = QtWidgets.QVBoxLayout()
         self._h_layout = QtWidgets.QHBoxLayout()
-        self.pageNumberLabel = QtWidgets.QLabel("Page:")
+        self.pageNumberLabel = QtWidgets.QLabel("Page ")
         self.inputPageNumber = QtWidgets.QLineEdit()
         self.inputPageNumber.setAlignment(QtCore.Qt.AlignCenter)
         self.inputPageNumber.setValidator(QtGui.QIntValidator())
@@ -109,14 +122,16 @@ class Ui_test:
         self._h_layout.addWidget(self.inputPageNumber)
         self.page_layout.addLayout(self._h_layout)
 
+        self.prev_next_page_layout = QtWidgets.QHBoxLayout()
         self.previous_page_button = QtWidgets.QPushButton()
         self.previous_page_button.setObjectName(_fromUtf8("previous_page_button"))
         self.previous_page_button.clicked.connect(self.previous_page)
-        self.page_layout.addWidget(self.previous_page_button)
+        self.prev_next_page_layout.addWidget(self.previous_page_button)
         self.next_page_button = QtWidgets.QPushButton()
         self.next_page_button.setObjectName(_fromUtf8("next_page_button"))
         self.next_page_button.clicked.connect(self.next_page)
-        self.page_layout.addWidget(self.next_page_button)
+        self.prev_next_page_layout.addWidget(self.next_page_button)
+        self.page_layout.addLayout(self.prev_next_page_layout)
         self.horizontalLayout.addLayout(self.page_layout)
 
         # Put text on widgets
@@ -126,14 +141,71 @@ class Ui_test:
     def retranslateUi(self, test):
         """ Puts text on QWidgets """
         test.setWindowTitle(_translate("test", "test", None))
-        self.label.setText(_translate("test", "                                               PDF Viewer                                                   ", None))
-        self.previous_page_button.setText(_translate("test", "<- Previous Page", None))
-        self.next_page_button.setText(_translate("test", "Next Page ->", None))
+        self.previous_page_button.setText(_translate("test", "←", None))
+        self.next_page_button.setText(_translate("test", "→", None))
 
+    # export the current transcription as a pdf
+    def export_pdf(self, fname):
+        # create a new pdf
+        pdf = FPDF()
+        pdf.set_font("Arial", size=11)
+
+        # for every page of the document
+        for i in range(len(self.pages)):
+            # add a new page to the pdf
+            pdf.add_page()
+
+            # for every line on the page
+            for line in self.pages[i]._page_lines:
+                pdf.cell(0, 10, txt=line._transcription, ln=1, align="L")
+
+        # write to the pdf
+        pdf.output(fname[0])
+
+    # get the text data from every page and create one text document with all
+    # the current transcriptions
     def export_file(self):
-        text = self.textBrowser.toPlainText()
-        file = open('out.txt','w')
-        file.write(text)
+        # get a nice filename
+        fname = self.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = ".".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.txt, *.pdf)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
+        # if the desired filetype is a pdf export that then return
+        if fname[0].split('.')[-1] == "pdf":
+            self.export_pdf(fname)
+            return
+
+        try:
+            file = open(fname[0], "w")
+
+            # write out some branding
+            file.write("DOCUMENT TRANSCRIPTION MADE WITH project::SCRIBE\n")
+
+            # for every page of the document
+            for i in range(len(self.pages)):
+                # write a page header
+                file.write(f"\n>>> PAGE {i + 1} <<<\n")
+
+                # for every line on the page
+                for line in self.pages[i]._page_lines:
+                    # write the contents of the page
+                    file.write(line._transcription + '\n')
+
+            file.close()
+
+        except Exception as err:
+            pass
 
     def get_file(self):
         """ Gets the embedded jpgs from a pdf """
@@ -171,8 +243,10 @@ class Ui_test:
 
         self.label.resizePolygonsToPixmap()
         self.updatePageNum()
-        self.updatePolygonFiles()
         self.updateTextBox()
+
+        # potentially multithread to increase speed
+        self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
@@ -202,14 +276,34 @@ class Ui_test:
         else:
             print('\a')
 
-    def trainLines(self):
+    def trainLines(self, continue_training=False):
         """ train on selected polygons """
         # only train if the page is loaded
         if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            if not continue_training:
+                rmtree(f"{self.model}/Text")
+                rmtree(f"{self.model}/Images")
+                rmtree(f"{self.model}/Labels")
+
+            if not os.path.isdir(f"{self.model}/Text/"):
+                os.mkdir(f"{self.model}/Text/")
+            if not os.path.isdir(f"{self.model}/Images/"):
+                os.mkdir(f"{self.model}/Images/")
+            if not os.path.isdir(f"{self.model}/Labels/"):
+                os.mkdir(f"{self.model}/Labels/")
+            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+
+
             # change button text and disconnect from trainLines
-            self.train.triggered.disconnect()
-            self.train = self.polygonMenu.addAction('Stop Training')
-            self.train.triggered.connect(self.stopTraining)
+            self.train.setDisabled(True)
+            self.continue_train.setDisabled(True)
+            self.stop_train.setDisabled(False)
 
             # start training process
             file_number = self.label._page.trainLines()
@@ -217,18 +311,21 @@ class Ui_test:
                 target=train.run,
                 args=(
                     file_number,
-                    "HandwritingRecognitionSystem_v2/UImodel/list",
-                    "HandwritingRecognitionSystem_v2/UImodel/Images/",
-                    "HandwritingRecognitionSystem_v2/UImodel/Labels/",
+                    self.model,
+                    continue_training,
                     )
                 )
             self.process.start()
 
+    def continueTraining(self):
+        """ pick a model to continue training from for selected polygons """
+        self.trainLines(True)
+
     def stopTraining(self):
         # change button text and disconnect from stopTraining function
-        self.train.triggered.disconnect()
-        self.train = self.polygonMenu.addAction('Train Lines')
-        self.train.triggered.connect(self.trainLines)
+        self.train.setDisabled(False)
+        self.continue_train.setDisabled(False)
+        self.stop_train.setDisabled(True)
 
         # kill the training process
         self.process.terminate()
@@ -255,7 +352,10 @@ class Ui_test:
         self.updateTextBox()
 
     def transcribe_all_polygons(self):
-        """ Transcribes all polygons that have not already been transcribed """
+        """ Transcribes all polygons """
+        if not self.label._page:
+            return
+
         for p in self.label._page._page_lines:
             if not p._is_transcribed and not p._ready_for_training:
                 transcript = self.label._page.transcribePolygon(p._image_name)
@@ -310,7 +410,7 @@ class Ui_test:
         """ Highlights line where cursor is and the corresponding polygon.
         Called when cursor position changes. """
 
-        if self.highlighter_on:
+        if self.label._page and self.highlighter_on:
             index = self.textBrowser.textCursor().blockNumber()
 
             # select and highlight corresponding polygon
@@ -403,7 +503,7 @@ class Ui_test:
     # load the project from a json file
     def load_from_json(self):
         # get the file to load from
-        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Image files (*.json *.prj)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(test, 'Open file','c:\\\\',"Project files (*.json *.prj)")
 
         # Return if no file name is given
         if not fname[0]:
@@ -441,7 +541,6 @@ class Ui_test:
         # add the transcriptions
         self.updateTextBox()
 
-
 class ImageLabel(QtWidgets.QLabel):
     def __init__(self, ui):
         """ Provides event support for the image label """
@@ -465,6 +564,9 @@ class ImageLabel(QtWidgets.QLabel):
 
     def contextMenuEvent(self, event):
         """ Right click menu """
+        if not self._page:
+            return
+
         contextMenu = QtWidgets.QMenu()
         delete = contextMenu.addAction("Delete")
         transcribe = contextMenu.addAction("Transcribe")
@@ -555,7 +657,6 @@ class ImageLabel(QtWidgets.QLabel):
         self._page._pixmap_rect = new_pixmap_rect
         self.update()
 
-
     def mousePressEvent(self, event):
         """ Collects points for the polygon and creates selection boxes """
         if not self._page:
@@ -630,7 +731,6 @@ class ImageLabel(QtWidgets.QLabel):
             self._page._dragging_vertex = False
             self._page.updatePolygonCrop()
 
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         """ Calls the UI immediately and provides event support """
@@ -640,6 +740,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         """ Called when a key is pressed """
+        # cancel polygon selection when ESC is pressed
         if event.key() == QtCore.Qt.Key_Escape and len(self.ui.label._page._polygon_points) > 0:
             # Delete polygon user is currently making
             self.ui.label._page._selected_polygon = None
@@ -649,6 +750,33 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.label._page._polygon = QtGui.QPolygon()
             self.ui.label._page._polygon_points = []
             self.ui.label.update()
+        try:
+            # convert the event text into an interger and compare it to some
+            # control characters
+            ctrl_chr = ord(event.text())
+
+            # save project when CTRL + S is pressed
+            if ctrl_chr == 19:
+                self.save()
+
+            # export a document wehn CTRL + E is pressed
+            elif ctrl_chr == 5:
+                self.ui.export_file()
+
+            # load a save file when CTRL + O is pressed
+            elif ctrl_chr == 15:
+                self.ui.load_from_json()
+
+            # import a pdf when CTRL + I is pressed
+            elif ctrl_chr == 9:
+                self.ui.get_file()
+
+            # close the program when CTRL + Q is pressed
+            elif ctrl_chr == 17:
+                self.close()
+
+        except:
+            pass
 
     # create a dictionary containing all the information needed to reconstruct
     # a single line on a page
@@ -698,10 +826,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if fname == None:
             fname = ""
         else:
-            fname = "".join(fname.split('.')[:-1])
+            fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Image files (*.json *.prj)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.json',"Project files (*.json *.prj)")
 
         # Return if no file name is given
         if not fname[0]:
