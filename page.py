@@ -132,6 +132,7 @@ class Page:
         if len(self._page_lines) == 0:
             return
         elif len(text_lines) > len(self._page_lines):
+            # trying to add a new line by pressing enter
             self._image_object._ui.textBrowser.undo()
             print('\a')
         elif len(self._page_lines) == len(text_lines) + 1:
