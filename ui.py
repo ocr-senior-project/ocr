@@ -698,7 +698,7 @@ class ImageLabel(QtWidgets.QLabel):
                 self._page.selectClickedPolygon(point)
 
                 # highlight
-                if self._ui.highlighter_on:
+                if self._ui.highlighter_on and self._page._selected_polygon:
                     self._page._highlighted_polygon = self._page._selected_polygon
 
                     # move cursor to corresponding line
