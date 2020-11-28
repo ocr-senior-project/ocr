@@ -135,6 +135,22 @@ class Ui_test:
         self.stop_train.triggered.connect(self.stopTraining)
         self.stop_train.setDisabled(True)
 
+        ### advanced menu
+        self.polygonMenu = self.menuBar.addMenu('&Advanced')
+
+        # add files to training directory
+        self.add_data = self.polygonMenu.addAction('Send Data for Large Batch Training')
+        self.add_data.triggered.connect(self.add_training_files)
+
+        # train new model (do not add new files to training directory)
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch with Current Data Batch (Does Not Send New Data)')
+        self.train.triggered.connect(self.train_current_lines)
+
+        # stop training
+        self.stop_train = self.polygonMenu.addAction('Stop Training')
+        self.stop_train.triggered.connect(self.stopTraining)
+        self.stop_train.setDisabled(True)
+
         MainWindow.setMenuBar(self.menuBar)
 
         # save the filename
@@ -327,6 +343,66 @@ class Ui_test:
         with open(f"{self.model}/checkpoint", "r") as f:
             firstline = f.readline()
         return int(firstline[firstline.find("-") + 1:-2])
+
+    # add files to the training directory without training
+    def add_training_files(self):
+        # only train if the page is loaded
+        if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            continue_training_at_epoch = 0
+            if not continue_training:
+                rmtree(f"{self.model}/Text")
+                rmtree(f"{self.model}/Images")
+                rmtree(f"{self.model}/Labels")
+            else:
+                continue_training_at_epoch = self.find_ckpt_number()
+
+            if not os.path.isdir(f"{self.model}/Text/"):
+                os.mkdir(f"{self.model}/Text/")
+            if not os.path.isdir(f"{self.model}/Images/"):
+                os.mkdir(f"{self.model}/Images/")
+            if not os.path.isdir(f"{self.model}/Labels/"):
+                os.mkdir(f"{self.model}/Labels/")
+            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+
+            self.label._page.trainLines()
+
+    # train only the lines that have already been sent
+    def train_current_lines(self):
+        # only train if the page is loaded
+        if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            # change button text and disconnect from trainLines
+            self.train.setDisabled(True)
+            self.continue_train.setDisabled(True)
+            self.stop_train.setDisabled(False)
+
+            # change to the text directory of the model
+            os.chdir(self.model + "/Text")
+
+            # get the number of files in the directory
+            file_number = len(glob.glob('*')) + 1
+
+            # start training process
+            self.process = Process(
+                target=train.run,
+                args=(
+                    file_number,
+                    self.model,
+                    continue_training_at_epoch,
+                    )
+                )
+            self.process.start()
 
     def trainLines(self, continue_training=False):
         """ train on selected polygons """
