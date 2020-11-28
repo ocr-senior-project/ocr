@@ -76,9 +76,14 @@ class Ui_test:
         self.import_f.setShortcut("Ctrl+I")
         self.import_f.triggered.connect(self.get_file)
 
-        # export file
-        self.export_f = self.fileMenu.addAction('Export File')
+        # export pdf
+        self.export_f = self.fileMenu.addAction('Export PDF')
         self.export_f.setShortcut("Ctrl+E")
+        self.export_f.triggered.connect(self.export_pdf)
+
+        # export txt
+        self.export_f = self.fileMenu.addAction('Export txt')
+        self.export_f.setShortcut("Ctrl+Shift+E")
         self.export_f.triggered.connect(self.export_file)
 
         # load project
@@ -177,6 +182,22 @@ class Ui_test:
 
     # export the current transcription as a pdf
     def export_pdf(self, fname):
+        # get a nice filename
+        fname = self.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = ".".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.pdf)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
         # create a new pdf
         pdf = FPDF()
         pdf.set_font("Arial", size=11)
@@ -206,15 +227,10 @@ class Ui_test:
             fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.txt, *.pdf)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.txt',"Document type (*.txt)")
 
         # Return if no file name is given
         if not fname[0]:
-            return
-
-        # if the desired filetype is a pdf export that then return
-        if fname[0].split('.')[-1] == "pdf":
-            self.export_pdf(fname)
             return
 
         try:
