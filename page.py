@@ -85,7 +85,6 @@ class Page:
             chars = f.read().decode("utf-8")
 
         chars = chars.split('\n')
-        print(chars)
         label = ''
         for letter in text:
             if letter == ' ':
