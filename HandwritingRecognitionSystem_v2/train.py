@@ -65,9 +65,9 @@ def run(num_training_imgs, model_location, continue_training):
 	x_expanded = tf.expand_dims(x, 3)
 
 	#Inputs = CNNLight(x_expanded, phase_train, 'CNN_1')
-	Inputs = CNN(x_expanded, phase_train, 'CNN_1')
+	Inputs = CNN(x_expanded, phase_train, 'CNN_1', cfg)
 
-	logits = RNN(Inputs, SeqLens, 'RNN_1')
+	logits = RNN(Inputs, SeqLens, 'RNN_1', cfg)
 
 	# Target params
 	indices = tf.compat.v1.placeholder(dtype=tf.int64, shape=[None, 2])

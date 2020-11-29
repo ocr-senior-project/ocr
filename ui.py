@@ -11,7 +11,7 @@ import glob
 from fpdf import FPDF
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
-from HandwritingRecognitionSystem_v2 import train
+from HandwritingRecognitionSystem_v2 import train, config
 from shutil import copyfile, rmtree
 
 try:
@@ -381,6 +381,11 @@ class Ui_test:
 
             # get the number of files in the directory
             file_number = len(glob.glob('*')) + 1
+
+            # configure the charlist earlier
+            config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
+
+            print(config.cfg.CHAR_LIST)
 
             # start training process
             self.process = Process(

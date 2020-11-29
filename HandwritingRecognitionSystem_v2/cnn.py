@@ -9,7 +9,7 @@
 import tensorflow as tf
 import math
 
-from .config import cfg
+import HandwritingRecognitionSystem_v2.config
 from .util import batch_norm_conv
 from .util import weight_variable
 from .util import conv2d
@@ -31,31 +31,31 @@ FV = int(WND_HEIGHT / math.pow(2, MPoolLayers_ALL))
 
 NFeatures = FV * LastFilters
 
-def CNNLight(X, Training, Scope):
+def CNNLight(X, Training, Scope, cfg):
 
 	with tf.compat.v1.variable_scope(Scope):
 
-		ConvLayer1 = ConvLayer(X, 1, 64, Training, 'ConvLayer1')
+		ConvLayer1 = ConvLayer(X, 1, 64, Training, 'ConvLayer1', cfg)
 
 		MPool1 = max_pool(ConvLayer1, ksize=(2, 2), stride=(2, 2))
 
-		ConvLayer2 = ConvLayer(MPool1, 64, 128, Training, 'ConvLayer2')
+		ConvLayer2 = ConvLayer(MPool1, 64, 128, Training, 'ConvLayer2', cfg)
 
 		MPool2 = max_pool(ConvLayer2, ksize=(2, 2), stride=(2, 2))
 
-		ConvLayer3 = ConvLayer(MPool2, 128, 256, Training, 'ConvLayer3')
+		ConvLayer3 = ConvLayer(MPool2, 128, 256, Training, 'ConvLayer3', cfg)
 
-		ConvLayer4 = ConvLayer(ConvLayer3, 256, 256, Training, 'ConvLayer4')
+		ConvLayer4 = ConvLayer(ConvLayer3, 256, 256, Training, 'ConvLayer4', cfg)
 
 		MPool4 = max_pool(ConvLayer4, ksize=(2, 1), stride=(2, 1))
 
-		ConvLayer5 = ConvLayer(MPool4, 256, 512, Training, 'ConvLayer5')
+		ConvLayer5 = ConvLayer(MPool4, 256, 512, Training, 'ConvLayer5', cfg)
 
-		ConvLayer6 = ConvLayer(ConvLayer5, 512, 512, Training, 'ConvLayer6')
+		ConvLayer6 = ConvLayer(ConvLayer5, 512, 512, Training, 'ConvLayer6', cfg)
 
 		MPool6 = max_pool(ConvLayer6, ksize=(2, 1), stride=(2, 1))
 
-		ConvLayer7 = ConvLayer(MPool6, 512, 512, Training, 'ConvLayer7')
+		ConvLayer7 = ConvLayer(MPool6, 512, 512, Training, 'ConvLayer7', cfg)
 
 		MPool7 = max_pool(ConvLayer7, ksize=(2, 1), stride=(2, 1))
 
@@ -66,43 +66,43 @@ def CNNLight(X, Training, Scope):
 		return tf.reshape(MPool7_T_RSH, [-1, NFeatures])
 
 
-def CNN(X, Training, Scope):
+def CNN(X, Training, Scope, cfg):
 
 	with tf.compat.v1.variable_scope(Scope):
 
-		ConvLayer1 = ConvLayer(X, 1, 64, Training, 'ConvLayer1')
+		ConvLayer1 = ConvLayer(X, 1, 64, Training, 'ConvLayer1', cfg)
 
-		ConvLayer2 = ConvLayer(ConvLayer1, 64, 64, Training, 'ConvLayer2')
+		ConvLayer2 = ConvLayer(ConvLayer1, 64, 64, Training, 'ConvLayer2', cfg)
 
 		MPool2 = max_pool(ConvLayer2, ksize=(2, 2), stride=(2, 2))
 
-		ConvLayer3 = ConvLayer(MPool2, 64, 128, Training, 'ConvLayer3')
+		ConvLayer3 = ConvLayer(MPool2, 64, 128, Training, 'ConvLayer3', cfg)
 
-		ConvLayer4 = ConvLayer(ConvLayer3, 128, 128, Training, 'ConvLayer4')
+		ConvLayer4 = ConvLayer(ConvLayer3, 128, 128, Training, 'ConvLayer4', cfg)
 
 		MPool4 = max_pool(ConvLayer4, ksize=(2, 2), stride=(2, 2))
 
-		ConvLayer5 = ConvLayer(MPool4, 128, 256, Training, 'ConvLayer5')
+		ConvLayer5 = ConvLayer(MPool4, 128, 256, Training, 'ConvLayer5', cfg)
 
-		ConvLayer6 = ConvLayer(ConvLayer5, 256, 256, Training, 'ConvLayer6')
+		ConvLayer6 = ConvLayer(ConvLayer5, 256, 256, Training, 'ConvLayer6', cfg)
 
-		ConvLayer7 = ConvLayer(ConvLayer6, 256, 256, Training, 'ConvLayer7')
+		ConvLayer7 = ConvLayer(ConvLayer6, 256, 256, Training, 'ConvLayer7', cfg)
 
 		MPool7 = max_pool(ConvLayer7, ksize=(2, 1), stride=(2, 1))
 
-		ConvLayer8 = ConvLayer(MPool7, 256, 512, Training, 'ConvLayer8')
+		ConvLayer8 = ConvLayer(MPool7, 256, 512, Training, 'ConvLayer8', cfg)
 
-		ConvLayer9 = ConvLayer(ConvLayer8, 512, 512, Training, 'ConvLayer9')
+		ConvLayer9 = ConvLayer(ConvLayer8, 512, 512, Training, 'ConvLayer9', cfg)
 
-		ConvLayer10 = ConvLayer(ConvLayer9, 512, 512, Training, 'ConvLayer10')
+		ConvLayer10 = ConvLayer(ConvLayer9, 512, 512, Training, 'ConvLayer10', cfg)
 
 		MPool10 = max_pool(ConvLayer10, ksize=(2, 1), stride=(2, 1))
 
-		ConvLayer11 = ConvLayer(MPool10, 512, 512, Training, 'ConvLayer11')
+		ConvLayer11 = ConvLayer(MPool10, 512, 512, Training, 'ConvLayer11', cfg)
 
-		ConvLayer12 = ConvLayer(ConvLayer11, 512, 512, Training, 'ConvLayer12')
+		ConvLayer12 = ConvLayer(ConvLayer11, 512, 512, Training, 'ConvLayer12', cfg)
 
-		ConvLayer13 = ConvLayer(ConvLayer12, 512, LastFilters, Training, 'ConvLayer13')
+		ConvLayer13 = ConvLayer(ConvLayer12, 512, LastFilters, Training, 'ConvLayer13', cfg)
 
 		MPool13 = max_pool(ConvLayer13, ksize=(2, 1), stride=(2, 1))
 
@@ -112,7 +112,7 @@ def CNN(X, Training, Scope):
 
 		return tf.reshape(MPool13_T_RSH, [-1, NFeatures])
 
-def ConvLayer(Input, FilterIn, FilterOut, Training, Scope):
+def ConvLayer(Input, FilterIn, FilterOut, Training, Scope, cfg):
 
 	with tf.compat.v1.variable_scope(Scope):
 
