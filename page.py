@@ -136,12 +136,16 @@ class Page:
     def saveLines(self):
         text = self._image_object._ui.textBrowser.toPlainText()
         text_lines = text.split("\n")
+
         if len(self._page_lines) == 0:
             self._image_object._ui.textBrowser.undo()
             print('\a')
         elif len(text_lines) != len(self._page_lines):
             self._image_object._ui.textBrowser.undo()
             print('\a')
+        elif len(self._page_lines) == len(text_lines) + 1:
+            # deleted a line by pressing backspace on empty line
+            self._image_object._ui.textBrowser.undo()
         else:
             line_number = 0
             for line in self._page_lines:
