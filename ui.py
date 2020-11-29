@@ -324,19 +324,24 @@ class Ui_test:
 
             continue_training_at_epoch = 0
             if not continue_training:
-                rmtree(f"{self.model}/Text")
-                rmtree(f"{self.model}/Images")
-                rmtree(f"{self.model}/Labels")
+                if os.path.isdir(f"{self.model}/Text/"):
+                    rmtree(f"{self.model}/Text")
+                else:
+                    os.mkdir(f"{self.model}/Text/")
+
+                if os.path.isdir(f"{self.model}/Images/"):
+                    rmtree(f"{self.model}/Images")
+                else:
+                    os.mkdir(f"{self.model}/Images/")
+
+                if os.path.isdir(f"{self.model}/Labels/"):
+                    rmtree(f"{self.model}/Labels")
+                else:
+                    os.mkdir(f"{self.model}/Labels/")
+
+                copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
             else:
                 continue_training_at_epoch = self.find_ckpt_number()
-
-            if not os.path.isdir(f"{self.model}/Text/"):
-                os.mkdir(f"{self.model}/Text/")
-            if not os.path.isdir(f"{self.model}/Images/"):
-                os.mkdir(f"{self.model}/Images/")
-            if not os.path.isdir(f"{self.model}/Labels/"):
-                os.mkdir(f"{self.model}/Labels/")
-            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
 
 
             # change button text and disconnect from trainLines
