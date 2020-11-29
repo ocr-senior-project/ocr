@@ -8,12 +8,17 @@ from HandwritingRecognitionSystem_v2 import test, config
 
 
 class Line():
-    def __init__(self, polygon, points, original_pixmap_width, original_pixmap_height):
-        self._original_pixmap_w_h = (original_pixmap_width, original_pixmap_height)
+    def __init__(self, polygon, points, og_pixmap_w, og_pixmap_h, og_pts=None):
+        self._original_pixmap_w_h = (og_pixmap_w, og_pixmap_h)
         self._polygon = polygon
         self._image_name = None
         self._vertices = points
-        self._original_vertices = copy.deepcopy(points)
+
+        if og_pts != None:
+            self._original_vertices = copy.deepcopy(og_pts)
+        else:
+            self._original_vertices = copy.deepcopy(points)
+
         self._vertex_handles = None
         self._block_number = None
         self._transcription = ""

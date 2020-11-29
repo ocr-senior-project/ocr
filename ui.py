@@ -385,8 +385,6 @@ class Ui_test:
             # configure the charlist earlier
             config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
 
-            print(config.cfg.CHAR_LIST)
-
             # start training process
             self.process = Process(
                 target=train.run,
@@ -616,8 +614,20 @@ class Ui_test:
     def _load_lines(self, new_page, lines):
         # loop through all the lines in the page
         for i in range(len(lines)):
+            # try to get the original pixmap size
+            try:
+                og_wh = lines[i]['og_wh']
+            except:
+                og_wh = (self.mainWindow.size().width(), self.mainWindow.size().height())
+
+            # try to get the original points
+            try:
+                og_pts = lines[i]['og_pts']
+            except:
+                og_pts = lines[i]["points"]
+
             # make a new line object
-            new_line = page.Line(None, lines[i]["points"])
+            new_line = page.Line(None, lines[i]["points"], og_wh[0], og_wh[1], og_pts)
 
             # backwards compatibility
             try:
@@ -942,6 +952,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # create a dictionary for the information in the line
         current_line = {}
 
+        current_line['og_wh'] = line._original_pixmap_w_h
+        current_line['og_pts'] = line._original_vertices
         current_line['points'] = line._vertices
         current_line['transcribed'] = line._is_transcribed
         current_line['training'] = line._ready_for_training
