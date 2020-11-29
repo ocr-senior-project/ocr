@@ -7,9 +7,9 @@ from HandwritingRecognitionSystem_v2 import test, config
 
 
 class Line():
-    def __init__(self, polygon, points, image_name):
+    def __init__(self, polygon, points):
         self._polygon = polygon
-        self._image_name = image_name
+        self._image_name = None
         self._vertices = points
         self._vertex_handles = None
         self._block_number = None
@@ -55,10 +55,10 @@ class Page:
         polygon_points_unscaled = self._polygon_points.copy()
 
         # Crop the image, add the polygon to the image
-        file_name = self.polygonCrop()
+        #file_name = self.polygonCrop()
 
         # self.transcribePolygon(file_name)
-        self.addPolygon(self._polygon, polygon_points_unscaled, file_name)
+        self.addPolygon(self._polygon, polygon_points_unscaled)
         self._image_object._ui.updateTextBox()
 
     def p_line_key(self, poly_line):
@@ -137,8 +137,9 @@ class Page:
         text = self._image_object._ui.textBrowser.toPlainText()
         text_lines = text.split("\n")
         if len(self._page_lines) == 0:
-            return
-        elif len(text_lines) > len(self._page_lines):
+            self._image_object._ui.textBrowser.undo()
+            print('\a')
+        elif len(text_lines) != len(self._page_lines):
             self._image_object._ui.textBrowser.undo()
             print('\a')
         else:
@@ -161,9 +162,9 @@ class Page:
         for i in range(len(self._page_lines)):
             self._page_lines[i].set_block_number(i)
 
-    def addPolygon(self, poly, points, image_name):
+    def addPolygon(self, poly, points):
         """ adds self._polygon to the page"""
-        line_object = Line(poly, points, image_name)
+        line_object = Line(poly, points)
         self._page_lines.append(line_object)
         self.sortLines()
 
@@ -255,8 +256,8 @@ class Page:
         # back to Image from numpy
         newIm = Image.fromarray(newImArray, "RGBA")
 
-        numcuts = len(self._page_lines)
-        image_name = f'000033/out{numcuts}'
+        #numcuts = len(self._page_lines)
+        image_name = f'000033/out'
 
         if fname:
             # if filename is given
@@ -264,7 +265,7 @@ class Page:
         else:
             # saving to a new file
             samples_dir = "HandwritingRecognitionSystem_v2/formalsamples/Images/000033/"
-            newIm.crop(end_crop).save(f'{samples_dir}out{numcuts}.png')
+            newIm.crop(end_crop).save(f'{samples_dir}out.png')
 
         return image_name
 

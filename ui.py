@@ -59,8 +59,7 @@ class Ui_test:
         # Text box
         self.textBrowser = QtWidgets.QTextEdit()
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        self.textBrowser.cursorPositionChanged.connect(self.highlight)
-        self.textBrowser.textChanged.connect(self.saveText)
+        self.textBrowser.cursorPositionChanged.connect(self.saveText)
         self.highlighted_cursor = None
         self.highlighter_on = True
         self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
@@ -310,7 +309,7 @@ class Ui_test:
         self.updateTextBox()
 
         # potentially multithread to increase speed
-        self.updatePolygonFiles()
+        #self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
@@ -424,7 +423,8 @@ class Ui_test:
                 else:
                     os.mkdir(f"{self.model}/Labels/")
 
-                copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+                if not os.path.isfile(f"{self.model}/CHAR_LIST"):
+                    copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
             else:
                 continue_training_at_epoch = self.find_ckpt_number()
 
@@ -495,7 +495,10 @@ class Ui_test:
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
-        transcript = self.label._page.transcribePolygon(p._image_name)
+        self.label._page._polygon_points = p._vertices.copy()
+        image_name = self.label._page.polygonCrop()
+        self.label._page._polygon_points = []
+        transcript = self.label._page.transcribePolygon(image_name)
 
         p.set_transcription(transcript)
         p._is_transcribed = True
@@ -508,7 +511,10 @@ class Ui_test:
 
         for p in self.label._page._page_lines:
             if not p._is_transcribed and not p._ready_for_training:
-                transcript = self.label._page.transcribePolygon(p._image_name)
+                self.label._page._polygon_points = p._vertices.copy()
+                image_name = self.label._page.polygonCrop()
+                self.label._page._polygon_points = []
+                transcript = self.label._page.transcribePolygon(image_name)
                 p.set_transcription(transcript)
                 p._is_transcribed = True
         self.updateTextBox()
@@ -595,6 +601,7 @@ class Ui_test:
     def saveText(self):
         if self.label._page:
             self.label._page.saveLines()
+            self.highlight()
         else:
             self.textBrowser.undo()
             print('\a')
@@ -879,7 +886,7 @@ class ImageLabel(QtWidgets.QLabel):
 
         if self._page._dragging_vertex:
             self._page._dragging_vertex = False
-            self._page.updatePolygonCrop()
+            #self._page.updatePolygonCrop()
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
