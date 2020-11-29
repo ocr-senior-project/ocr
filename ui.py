@@ -778,6 +778,34 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             pass
 
+        try:
+            # convert the event text into an interger and compare it to some
+            # control characters
+            ctrl_chr = ord(event.text())
+
+            # save project when CTRL + S is pressed
+            if ctrl_chr == 19:
+                self.save()
+
+            # export a document wehn CTRL + E is pressed
+            elif ctrl_chr == 5:
+                self.ui.export_file()
+
+            # load a save file when CTRL + O is pressed
+            elif ctrl_chr == 15:
+                self.ui.load_from_json()
+
+            # import a pdf when CTRL + I is pressed
+            elif ctrl_chr == 9:
+                self.ui.get_file()
+
+            # close the program when CTRL + Q is pressed
+            elif ctrl_chr == 17:
+                self.close()
+
+        except:
+            pass
+
     # create a dictionary containing all the information needed to reconstruct
     # a single line on a page
     def _save_line(self, line):

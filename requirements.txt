@@ -10,6 +10,7 @@ configparser==5.0.0
 decorator==4.4.2
 etelemetry==0.2.2
 filelock==3.0.12
+fpdf==1.7.2
 gast==0.3.3
 google-auth==1.21.2
 google-auth-oauthlib==0.4.1
