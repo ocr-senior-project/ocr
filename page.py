@@ -3,14 +3,17 @@ from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
+import copy
 from HandwritingRecognitionSystem_v2 import test, config
 
 
 class Line():
-    def __init__(self, polygon, points):
+    def __init__(self, polygon, points, original_pixmap_width, original_pixmap_height):
+        self._original_pixmap_w_h = (original_pixmap_width, original_pixmap_height)
         self._polygon = polygon
         self._image_name = None
         self._vertices = points
+        self._original_vertices = copy.deepcopy(points)
         self._vertex_handles = None
         self._block_number = None
         self._transcription = ""
@@ -164,7 +167,7 @@ class Page:
 
     def addPolygon(self, poly, points):
         """ adds self._polygon to the page"""
-        line_object = Line(poly, points)
+        line_object = Line(poly, points, self._pixmap_rect.size().width(), self._pixmap_rect.size().height())
         self._page_lines.append(line_object)
         self.sortLines()
 

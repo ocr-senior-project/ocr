@@ -718,15 +718,15 @@ class ImageLabel(QtWidgets.QLabel):
         scaledPixmap = self._page._pixmap.scaled(self.rect().size(), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
         new_pixmap_rect = QtCore.QRect(self.rect().topLeft(), scaledPixmap.size())
 
-        scale_x = new_pixmap_rect.size().width() / self._page._pixmap_rect.size().width()
-        scale_y = new_pixmap_rect.size().height() / self._page._pixmap_rect.size().height()
-
+        # scale from the pixmap size when the polygon was created and the
+        # pixmap from when it was originally created
         for page_line in self._page._page_lines:
-            for i, point in enumerate(page_line._vertices):
+            for i, point in enumerate(page_line._original_vertices):
+                scale_x = new_pixmap_rect.size().width() / page_line._original_pixmap_w_h[0]
+                scale_y = new_pixmap_rect.size().height() / page_line._original_pixmap_w_h[1]
                 page_line._vertices[i] = (point[0] * scale_x, point[1] * scale_y)
             page_line.updatePolygon()
 
-        self._page._pixmap_rect = new_pixmap_rect
         self.update()
 
     def mousePressEvent(self, event):
