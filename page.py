@@ -108,18 +108,18 @@ class Page:
                 text_file.write(line._transcription.encode("utf-8").decode("utf-8"))
                 text_file.close()
 
-                with open("../CHAR_LIST", "r") as f:
-                    all_letters = f.read()
+                with open("../CHAR_LIST", "rb") as f:
+                    all_letters = f.read().decode("utf-8")
 
                 with open("../CHAR_LIST", "a+") as f:
                     for letter in line._transcription:
                         if letter not in all_letters:
-                            f.write(letter + "\n")
+                            f.write((letter + "\n").encode("utf-8").decode("utf-8"))
 
                 os.chdir("..")
                 os.chdir("Labels/")
                 label_file = open("%d.tru" % file_number, "w")
-                label_file.write(self.text_to_label(line._transcription))
+                label_file.write(self.text_to_label(line._transcription).encode("utf-8").decode("utf-8"))
                 label_file.close()
 
                 os.chdir("..")
