@@ -3,14 +3,22 @@ from PIL import Image, ImageDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 import os
 import glob
+import copy
 from HandwritingRecognitionSystem_v2 import test, config
 
 
 class Line():
-    def __init__(self, polygon, points):
+    def __init__(self, polygon, points, og_pixmap_w, og_pixmap_h, og_pts=None):
+        self._original_pixmap_w_h = (og_pixmap_w, og_pixmap_h)
         self._polygon = polygon
         self._image_name = None
         self._vertices = points
+
+        if og_pts != None:
+            self._original_vertices = copy.deepcopy(og_pts)
+        else:
+            self._original_vertices = copy.deepcopy(points)
+
         self._vertex_handles = None
         self._block_number = None
         self._transcription = ""
@@ -90,7 +98,7 @@ class Page:
             if letter == ' ':
                 letter = '<SPACE>'
             for ind, char in enumerate(chars):
-                if letter == char:
+                if letter in char:
                     label += str(ind) + ' '
 
         return label
@@ -111,10 +119,12 @@ class Page:
                 with open("../CHAR_LIST", "rb") as f:
                     all_letters = f.read().decode("utf-8")
 
+                # add characters to the charlist if not already in charlist
                 with open("../CHAR_LIST", "a+", encoding="utf-8") as f:
                     for letter in line._transcription:
                         if letter not in all_letters:
                             f.write((letter + "\n").encode("utf-8").decode("utf-8"))
+                            all_letters += letter
 
                 os.chdir("..")
                 os.chdir("Labels/")
@@ -168,7 +178,7 @@ class Page:
 
     def addPolygon(self, poly, points):
         """ adds self._polygon to the page"""
-        line_object = Line(poly, points)
+        line_object = Line(poly, points, self._pixmap_rect.size().width(), self._pixmap_rect.size().height())
         self._page_lines.append(line_object)
         self.sortLines()
 

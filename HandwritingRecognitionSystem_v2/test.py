@@ -39,6 +39,12 @@ from .rnn import RNN
 
 def run(model_location="HandwritingRecognitionSystem_v2/MATRICULAmodel"):
 	cfg.SaveDir = model_location
+	list_file = f'{model_location}/list'
+	imgs_path = f'{model_location}/Images/'
+	labels_path = f'{model_location}/Labels/'
+
+	cfg.CHAR_LIST = f'{model_location}/CHAR_LIST'
+
 	tf.compat.v1.reset_default_graph()
 
 	Classes = LoadClasses(cfg.CHAR_LIST)
@@ -59,9 +65,9 @@ def run(model_location="HandwritingRecognitionSystem_v2/MATRICULAmodel"):
 
 	x_expanded = tf.expand_dims(x, 3)
 
-	Inputs = CNN(x_expanded, phase_train, 'CNN_1')
+	Inputs = CNN(x_expanded, phase_train, 'CNN_1', cfg)
 
-	logits = RNN(Inputs, SeqLens, 'RNN_1')
+	logits = RNN(Inputs, SeqLens, 'RNN_1', cfg)
 
 	# CTC Beam Search Decoder to decode pred string from the prob map
 	decoded, log_prob = tf.nn.ctc_beam_search_decoder(inputs=logits, sequence_length=SeqLens)

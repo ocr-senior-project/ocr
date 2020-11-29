@@ -10,16 +10,16 @@ import tensorflow as tf
 import numpy as np
 import math
 
-from .config import cfg
+import HandwritingRecognitionSystem_v2.config
 from .util import LoadClasses
 from .cnn import FV
 from .cnn import NFeatures
 
-Classes = LoadClasses(cfg.CHAR_LIST)
+def RNN(Inputs, SeqLens, Scope, cfg):
 
-NClasses = len(Classes)
+	Classes = LoadClasses(cfg.CHAR_LIST)
 
-def RNN(Inputs, SeqLens, Scope):
+	NClasses = len(Classes)
 
 	with tf.compat.v1.variable_scope(Scope):
 
