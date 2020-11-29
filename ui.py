@@ -614,7 +614,7 @@ class Ui_test:
         # loop through all the lines in the page
         for i in range(len(lines)):
             # make a new line object
-            new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
+            new_line = page.Line(None, lines[i]["points"])
 
             # backwards compatibility
             try:
