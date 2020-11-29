@@ -7,6 +7,7 @@ import psutil
 import time
 from multiprocessing import Process
 import json
+import glob
 from fpdf import FPDF
 from PyQt5 import QtCore, QtGui, QtWidgets
 from file_manipulation.pdf import pdf_processing as pp
@@ -26,7 +27,6 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
-
 
 class Ui_test:
     def setupUi(self, MainWindow):
@@ -50,56 +50,107 @@ class Ui_test:
         self.horizontalLayout = QtWidgets.QHBoxLayout(test)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
 
+        # Image label
+        self.label = ImageLabel(self)
+        self.label.setObjectName(_fromUtf8("label_2"))
+        self.horizontalLayout.addWidget(self.label, stretch=5)
+
+        # Text box
+        self.textBrowser = QtWidgets.QTextEdit()
+        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.textBrowser.cursorPositionChanged.connect(self.saveText)
+        self.highlighted_cursor = None
+        self.highlighter_on = True
+        self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
+
         # Menu bar
         self.menuBar = QtWidgets.QMenuBar(test)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 21))
 
-        self.fileMenu = self.menuBar.addMenu('&File') # Alt + F to open
-        self.import_f = self.fileMenu.addAction('Import File (Ctrl + I)')
+        ### file menu
+        self.fileMenu = self.menuBar.addMenu('&File')
+
+        # import file
+        self.import_f = self.fileMenu.addAction('Import File')
+        self.import_f.setShortcut("Ctrl+I")
         self.import_f.triggered.connect(self.get_file)
-        self.export_f = self.fileMenu.addAction('Export File (Crtl + E)')
+
+        # export pdf
+        self.export_f = self.fileMenu.addAction('Export PDF')
+        self.export_f.setShortcut("Ctrl+E")
+        self.export_f.triggered.connect(self.export_pdf)
+
+        # export txt
+        self.export_f = self.fileMenu.addAction('Export txt')
+        self.export_f.setShortcut("Ctrl+Shift+E")
         self.export_f.triggered.connect(self.export_file)
 
-        self.load_save = self.fileMenu.addAction('Load Project (Ctrl + O)')
+        # load project
+        self.load_save = self.fileMenu.addAction('Open Project')
+        self.load_save.setShortcut("Ctrl+O")
         self.load_save.triggered.connect(self.load_from_json)
-        self.save_proj = self.fileMenu.addAction('Save Project (Ctrl + S)')
+
+        # save project
+        self.save_proj = self.fileMenu.addAction('Save Project')
+        self.save_proj.setShortcut("Ctrl+S")
         self.save_proj.triggered.connect(MainWindow.save)
 
+        # load model
         self.load_model = self.fileMenu.addAction('Load Model')
+        self.load_model.setShortcut("Ctrl+L")
         self.load_model.triggered.connect(self.selectModel)
 
-        self.viewMenu = self.menuBar.addMenu('&View') # Alt + V to open
+        ### view menu
+        self.viewMenu = self.menuBar.addMenu('&View')
+
+        # toggle polygons
         self.polygon_layer = self.viewMenu.addAction('Turn Polygon Layer Off')
+        self.polygon_layer.setShortcut("Ctrl+Shift+P")
+        self.polygon_layer.triggered.connect(self.label.toggle_polygon_layer)
+
+        # toggle highlighting
         self.highlighting = self.viewMenu.addAction('Turn Highlighting Off')
+        self.highlighting.setShortcut("Ctrl+Shift+H")
         self.highlighting.triggered.connect(self.toggle_highlighting)
 
-        self.polygonMenu = self.menuBar.addMenu('&Polygons') # Alt + P to open
+        ### polygon menu
+        self.polygonMenu = self.menuBar.addMenu('&Polygons')
+
+        # transcribe polygons
         self.transcribe = self.polygonMenu.addAction('Transcribe All Polygons')
+        self.transcribe.setShortcut("Ctrl+T")
         self.transcribe.triggered.connect(self.transcribe_all_polygons)
-        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
-        self.train.triggered.connect(self.trainLines)
+
+        # continue training
         self.continue_train = self.polygonMenu.addAction('Continue Training Existing Model')
         self.continue_train.triggered.connect(self.continueTraining)
+
+        # train new model
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch')
+        self.train.triggered.connect(self.trainLines)
+
+        # stop training
+        self.stop_train = self.polygonMenu.addAction('Stop Training')
+        self.stop_train.triggered.connect(self.stopTraining)
+        self.stop_train.setDisabled(True)
+
+        ### advanced menu
+        self.polygonMenu = self.menuBar.addMenu('&Advanced')
+
+        # add files to training directory
+        self.add_data = self.polygonMenu.addAction('Send Data for Large Batch Training')
+        self.add_data.triggered.connect(self.add_training_files)
+
+        # train new model (do not add new files to training directory)
+        self.train = self.polygonMenu.addAction('Train Lines from Scratch with Current Data Batch (Does Not Send New Data)')
+        self.train.triggered.connect(self.train_current_lines)
+
+        # stop training
         self.stop_train = self.polygonMenu.addAction('Stop Training')
         self.stop_train.triggered.connect(self.stopTraining)
         self.stop_train.setDisabled(True)
 
         MainWindow.setMenuBar(self.menuBar)
-
-        # Image label
-        self.label = ImageLabel(self)
-        self.label.setObjectName(_fromUtf8("label_2"))
-        self.horizontalLayout.addWidget(self.label, stretch=5)
-        self.polygon_layer.triggered.connect(self.label.toggle_polygon_layer)
-
-        # Text box
-        self.textBrowser = QtWidgets.QTextEdit()
-        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        self.textBrowser.cursorPositionChanged.connect(self.highlight)
-        self.textBrowser.textChanged.connect(self.saveText)
-        self.highlighted_cursor = None
-        self.highlighter_on = True
-        self.horizontalLayout.addWidget(self.textBrowser, stretch=5)
 
         # save the filename
         self.fname = None
@@ -146,6 +197,22 @@ class Ui_test:
 
     # export the current transcription as a pdf
     def export_pdf(self, fname):
+        # get a nice filename
+        fname = self.fname
+
+        # format the filename nicely
+        if fname == None:
+            fname = ""
+        else:
+            fname = ".".join(fname.split('.')[:-1])
+
+        # get the file to save to
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.pdf)")
+
+        # Return if no file name is given
+        if not fname[0]:
+            return
+
         # create a new pdf
         pdf = FPDF()
         pdf.set_font("Arial", size=11)
@@ -175,15 +242,10 @@ class Ui_test:
             fname = ".".join(fname.split('.')[:-1])
 
         # get the file to save to
-        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.pdf',"Document type (*.txt, *.pdf)")
+        fname = QtWidgets.QFileDialog.getSaveFileName(test, 'Save file',f'c:\\\\{fname}.txt',"Document type (*.txt)")
 
         # Return if no file name is given
         if not fname[0]:
-            return
-
-        # if the desired filetype is a pdf export that then return
-        if fname[0].split('.')[-1] == "pdf":
-            self.export_pdf(fname)
             return
 
         try:
@@ -246,7 +308,6 @@ class Ui_test:
         self.updateTextBox()
 
         # potentially multithread to increase speed
-        self.updatePolygonFiles()
 
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
@@ -276,6 +337,64 @@ class Ui_test:
         else:
             print('\a')
 
+    def find_ckpt_number(self):
+        with open(f"{self.model}/checkpoint", "r") as f:
+            firstline = f.readline()
+        return int(firstline[firstline.find("-") + 1:-2])
+
+    # add files to the training directory without training
+    def add_training_files(self):
+        # only train if the page is loaded
+        if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            if not os.path.isdir(f"{self.model}/Text/"):
+                os.mkdir(f"{self.model}/Text/")
+            if not os.path.isdir(f"{self.model}/Images/"):
+                os.mkdir(f"{self.model}/Images/")
+            if not os.path.isdir(f"{self.model}/Labels/"):
+                os.mkdir(f"{self.model}/Labels/")
+            if not os.path.isfile(f"{self.model}/CHAR_LIST"):
+                copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+
+            self.label._page.trainLines()
+
+    # train only the lines that have already been sent
+    def train_current_lines(self):
+        # only train if the page is loaded
+        if self.label._page:
+            self.model = QtWidgets.QFileDialog.getExistingDirectory()
+
+            # Return if no file name is given
+            if not self.model:
+                return
+
+            # change button text and disconnect from trainLines
+            self.train.setDisabled(True)
+            self.continue_train.setDisabled(True)
+            self.stop_train.setDisabled(False)
+
+            # change to the text directory of the model
+            os.chdir(self.model + "/Text")
+
+            # get the number of files in the directory
+            file_number = len(glob.glob('*')) + 1
+
+            # start training process
+            self.process = Process(
+                target=train.run,
+                args=(
+                    file_number,
+                    self.model,
+                    continue_training_at_epoch,
+                    )
+                )
+            self.process.start()
+
     def trainLines(self, continue_training=False):
         """ train on selected polygons """
         # only train if the page is loaded
@@ -286,18 +405,27 @@ class Ui_test:
             if not self.model:
                 return
 
+            continue_training_at_epoch = 0
             if not continue_training:
-                rmtree(f"{self.model}/Text")
-                rmtree(f"{self.model}/Images")
-                rmtree(f"{self.model}/Labels")
+                if os.path.isdir(f"{self.model}/Text/"):
+                    rmtree(f"{self.model}/Text")
+                else:
+                    os.mkdir(f"{self.model}/Text/")
 
-            if not os.path.isdir(f"{self.model}/Text/"):
-                os.mkdir(f"{self.model}/Text/")
-            if not os.path.isdir(f"{self.model}/Images/"):
-                os.mkdir(f"{self.model}/Images/")
-            if not os.path.isdir(f"{self.model}/Labels/"):
-                os.mkdir(f"{self.model}/Labels/")
-            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+                if os.path.isdir(f"{self.model}/Images/"):
+                    rmtree(f"{self.model}/Images")
+                else:
+                    os.mkdir(f"{self.model}/Images/")
+
+                if os.path.isdir(f"{self.model}/Labels/"):
+                    rmtree(f"{self.model}/Labels")
+                else:
+                    os.mkdir(f"{self.model}/Labels/")
+
+                if not os.path.isfile(f"{self.model}/CHAR_LIST"):
+                    copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+            else:
+                continue_training_at_epoch = self.find_ckpt_number()
 
 
             # change button text and disconnect from trainLines
@@ -312,7 +440,7 @@ class Ui_test:
                 args=(
                     file_number,
                     self.model,
-                    continue_training,
+                    continue_training_at_epoch,
                     )
                 )
             self.process.start()
@@ -331,6 +459,27 @@ class Ui_test:
         self.process.terminate()
         self.process.join()
 
+        self.remove_old_ckpts()
+
+    def remove_old_ckpts(self):
+        with open(f"{self.model}/checkpoint", "r") as f:
+            firstline = f.readline()
+
+        inside_ckpt_name = False
+        checkpoint_name = ""
+        for letter in reversed(firstline):
+            if letter == "/" or letter == "\\":
+                break
+            if inside_ckpt_name and letter != '"':
+                checkpoint_name = letter + checkpoint_name
+            if letter == '"':
+                inside_ckpt_name = not inside_ckpt_name
+
+        for filename in os.listdir(self.model):
+            if "ckpt" in filename and checkpoint_name not in filename:
+                filename_relPath = os.path.join(self.model, filename)
+                os.remove(filename_relPath)
+
     def jumpToPage(self):
         pageNumber = int(self.inputPageNumber.text()) - 1
         if pageNumber < 0:
@@ -345,7 +494,10 @@ class Ui_test:
     def transcribe_selected_polygon(self):
         """ Transcribes one polygon """
         p = self.label._page._selected_polygon
-        transcript = self.label._page.transcribePolygon(p._image_name)
+        self.label._page._polygon_points = p._vertices.copy()
+        image_name = self.label._page.polygonCrop()
+        self.label._page._polygon_points = []
+        transcript = self.label._page.transcribePolygon(image_name)
 
         p.set_transcription(transcript)
         p._is_transcribed = True
@@ -358,7 +510,10 @@ class Ui_test:
 
         for p in self.label._page._page_lines:
             if not p._is_transcribed and not p._ready_for_training:
-                transcript = self.label._page.transcribePolygon(p._image_name)
+                self.label._page._polygon_points = p._vertices.copy()
+                image_name = self.label._page.polygonCrop()
+                self.label._page._polygon_points = []
+                transcript = self.label._page.transcribePolygon(image_name)
                 p.set_transcription(transcript)
                 p._is_transcribed = True
         self.updateTextBox()
@@ -445,6 +600,7 @@ class Ui_test:
     def saveText(self):
         if self.label._page:
             self.label._page.saveLines()
+            self.highlight()
         else:
             self.textBrowser.undo()
             print('\a')
@@ -458,7 +614,7 @@ class Ui_test:
         # loop through all the lines in the page
         for i in range(len(lines)):
             # make a new line object
-            new_line = page.Line(None, lines[i]["points"], f"out{i}.png")
+            new_line = page.Line(None, lines[i]["points"])
 
             # backwards compatibility
             try:
@@ -729,7 +885,6 @@ class ImageLabel(QtWidgets.QLabel):
 
         if self._page._dragging_vertex:
             self._page._dragging_vertex = False
-            self._page.updatePolygonCrop()
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -750,34 +905,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.label._page._polygon = QtGui.QPolygon()
             self.ui.label._page._polygon_points = []
             self.ui.label.update()
-        try:
-            # convert the event text into an interger and compare it to some
-            # control characters
-            ctrl_chr = ord(event.text())
-
-            # save project when CTRL + S is pressed
-            if ctrl_chr == 19:
-                self.save()
-
-            # export a document wehn CTRL + E is pressed
-            elif ctrl_chr == 5:
-                self.ui.export_file()
-
-            # load a save file when CTRL + O is pressed
-            elif ctrl_chr == 15:
-                self.ui.load_from_json()
-
-            # import a pdf when CTRL + I is pressed
-            elif ctrl_chr == 9:
-                self.ui.get_file()
-
-            # close the program when CTRL + Q is pressed
-            elif ctrl_chr == 17:
-                self.close()
-
-        except:
-            pass
-
         try:
             # convert the event text into an interger and compare it to some
             # control characters
