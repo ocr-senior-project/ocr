@@ -355,14 +355,6 @@ class Ui_test:
             if not self.model:
                 return
 
-            continue_training_at_epoch = 0
-            if not continue_training:
-                rmtree(f"{self.model}/Text")
-                rmtree(f"{self.model}/Images")
-                rmtree(f"{self.model}/Labels")
-            else:
-                continue_training_at_epoch = self.find_ckpt_number()
-
             if not os.path.isdir(f"{self.model}/Text/"):
                 os.mkdir(f"{self.model}/Text/")
             if not os.path.isdir(f"{self.model}/Images/"):
