@@ -85,13 +85,12 @@ class Page:
             chars = f.read().decode("utf-8")
 
         chars = chars.split('\n')
-        print(chars)
         label = ''
         for letter in text:
             if letter == ' ':
                 letter = '<SPACE>'
             for ind, char in enumerate(chars):
-                if letter == char:
+                if letter in char:
                     label += str(ind) + ' '
 
         return label
@@ -112,10 +111,12 @@ class Page:
                 with open("../CHAR_LIST", "rb") as f:
                     all_letters = f.read().decode("utf-8")
 
+                # add characters to the charlist if not already in charlist
                 with open("../CHAR_LIST", "a+", encoding="utf-8") as f:
                     for letter in line._transcription:
                         if letter not in all_letters:
                             f.write((letter + "\n").encode("utf-8").decode("utf-8"))
+                            all_letters += letter
 
                 os.chdir("..")
                 os.chdir("Labels/")
