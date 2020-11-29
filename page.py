@@ -105,7 +105,7 @@ class Page:
                 #number of files in the directory
                 file_number = len(glob.glob('*'))
                 text_file = open("%d.txt" % file_number, "w")
-                text_file.write(line._transcription)
+                text_file.write(line._transcription.encode("utf-8").decode("utf-8"))
                 text_file.close()
 
                 with open("../CHAR_LIST", "r") as f:
