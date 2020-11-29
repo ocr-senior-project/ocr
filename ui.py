@@ -28,7 +28,6 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-
 class Ui_test:
     def setupUi(self, MainWindow):
         """ Creates layout of UI """
@@ -359,7 +358,8 @@ class Ui_test:
                 os.mkdir(f"{self.model}/Images/")
             if not os.path.isdir(f"{self.model}/Labels/"):
                 os.mkdir(f"{self.model}/Labels/")
-            copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
+            if not os.path.isfile(f"{self.model}/CHAR_LIST"):
+                copyfile('HandwritingRecognitionSystem_v2/UImodel/CHAR_LIST', f"{self.model}/CHAR_LIST")
 
             self.label._page.trainLines()
 

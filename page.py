@@ -81,11 +81,11 @@ class Page:
         list_file.close()
 
     def text_to_label(self, text):
-
         with open("../CHAR_LIST", "rb") as f:
             chars = f.read().decode("utf-8")
 
         chars = chars.split('\n')
+        print(chars)
         label = ''
         for letter in text:
             if letter == ' ':
@@ -93,6 +93,7 @@ class Page:
             for ind, char in enumerate(chars):
                 if letter == char:
                     label += str(ind) + ' '
+
         return label
 
     def trainLines(self):
@@ -104,21 +105,21 @@ class Page:
                 os.chdir("Text/")
                 #number of files in the directory
                 file_number = len(glob.glob('*'))
-                text_file = open("%d.txt" % file_number, "w")
+                text_file = open("%d.txt" % file_number, "w", encoding="utf-8")
                 text_file.write(line._transcription.encode("utf-8").decode("utf-8"))
                 text_file.close()
 
                 with open("../CHAR_LIST", "rb") as f:
                     all_letters = f.read().decode("utf-8")
 
-                with open("../CHAR_LIST", "a+") as f:
+                with open("../CHAR_LIST", "a+", encoding="utf-8") as f:
                     for letter in line._transcription:
                         if letter not in all_letters:
                             f.write((letter + "\n").encode("utf-8").decode("utf-8"))
 
                 os.chdir("..")
                 os.chdir("Labels/")
-                label_file = open("%d.tru" % file_number, "w")
+                label_file = open("%d.tru" % file_number, "w", encoding="utf-8")
                 label_file.write(self.text_to_label(line._transcription).encode("utf-8").decode("utf-8"))
                 label_file.close()
 
