@@ -307,8 +307,6 @@ class Ui_test:
         self.updatePageNum()
         self.updateTextBox()
 
-        # potentially multithread to increase speed
-
     def updatePageNum(self):
         self.inputPageNumber.setText(str(self.page + 1))
 
@@ -390,7 +388,7 @@ class Ui_test:
                 args=(
                     file_number,
                     self.model,
-                    continue_training_at_epoch,
+                    0,
                     )
                 )
             self.process.start()
@@ -1022,6 +1020,16 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as err:
             print("there was an error\n")
             print(err)
+
+    def closeEvent(self, event):
+        # try to stop training
+        try:
+            self.ui.stop_train()
+        except:
+            pass
+
+        # close gracefully
+        event.accept()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
