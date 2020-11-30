@@ -112,13 +112,16 @@ class Page:
             os.chdir("Text/")
             #number of files in the directory
             file_number = len(glob.glob('*'))
+            os.chdir("..")
+
 
         for line in self._page_lines:
             if line._ready_for_training:
                 line._is_transcribed = True
-                os.chdir("Text/")
+                os.chdir("Labels/")
                 #number of files in the directory
                 file_number = len(glob.glob('*'))
+                os.chdir("../Text")
                 text_file = open("%d.txt" % file_number, "w", encoding="utf-8")
                 text_file.write(line._transcription.encode("utf-8").decode("utf-8"))
                 text_file.close()

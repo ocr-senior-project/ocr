@@ -382,10 +382,13 @@ class Ui_test:
             self.stop_train_a.setDisabled(False)
 
             # change to the text directory of the model
-            os.chdir(self.model + "/Text")
+            os.chdir(self.model + "/Labels")
 
             # get the number of files in the directory
             file_number = len(glob.glob('*')) + 1
+
+            os.chdir("..")
+
 
             # configure the charlist earlier
             config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
@@ -453,10 +456,12 @@ class Ui_test:
             self.stop_train_a.setDisabled(False)
 
             # change to the text directory of the model
-            os.chdir(self.model + "/Text")
+            os.chdir(self.model + "/Labels")
 
             # get the number of files in the directory
             file_number = len(glob.glob('*')) + 1
+            os.chdir("..")
+
 
             # configure the charlist earlier
             config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
@@ -722,6 +727,13 @@ class Ui_test:
 
         # restore the window size
         self.mainWindow.resize(saved["window"][0], saved["window"][1])
+
+        # maintain backwards compatibility
+        try:
+            # reload the same model from before
+            self.model = saved['model']
+        except:
+            pass
 
         # load all the pages
         self._load_pages(saved["pages"])
@@ -1044,6 +1056,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # get the window size for the project to load polygons properly
             project['window'] = [self.size().width(), self.size().height()]
+
+            # save the model that the user was using
+            project['model'] = self.ui.model
 
             # save the current page number
             project["index"] = self.ui.page
