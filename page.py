@@ -106,6 +106,13 @@ class Page:
     def trainLines(self):
         self.saveLines()
         os.chdir(self._image_object._ui.model)
+
+        # handle crashing if training is started from a page that has no lines
+        if len(self._page_lines) < 1:
+            os.chdir("Text/")
+            #number of files in the directory
+            file_number = len(glob.glob('*'))
+
         for line in self._page_lines:
             if line._ready_for_training:
                 line._is_transcribed = True
@@ -151,7 +158,7 @@ class Page:
             self._image_object._ui.textBrowser.undo()
         elif len(text_lines) != len(self._page_lines):
             self._image_object._ui.textBrowser.undo()
-            print('\a')
+            print('\a', end="")
         elif len(self._page_lines) == len(text_lines) + 1:
             # deleted a line by pressing backspace on empty line
             self._image_object._ui.textBrowser.undo()

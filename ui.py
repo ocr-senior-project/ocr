@@ -146,9 +146,9 @@ class Ui_test:
         self.train.triggered.connect(self.train_current_lines)
 
         # stop training
-        self.stop_train = self.polygonMenu.addAction('Stop Training')
-        self.stop_train.triggered.connect(self.stopTraining)
-        self.stop_train.setDisabled(True)
+        self.stop_train_a = self.polygonMenu.addAction('Stop Training')
+        self.stop_train_a.triggered.connect(self.stopTraining)
+        self.stop_train_a.setDisabled(True)
 
         MainWindow.setMenuBar(self.menuBar)
 
@@ -325,7 +325,7 @@ class Ui_test:
             self.page += 1
             self.updatePage()
         else:
-            print('\a')
+            print('\a', end="")
 
     def previous_page(self):
         """ Previous page button """
@@ -333,10 +333,10 @@ class Ui_test:
             self.page -= 1
             self.updatePage()
         else:
-            print('\a')
+            print('\a', end="")
 
     def find_ckpt_number(self):
-        with open(f"{self.model}/checkpoint", "r") as f:
+        with open(f"{self.model}/checkpoint", "r", encoding="utf-8") as f:
             firstline = f.readline()
         return int(firstline[firstline.find("-") + 1:-2])
 
@@ -375,6 +375,7 @@ class Ui_test:
             self.train.setDisabled(True)
             self.continue_train.setDisabled(True)
             self.stop_train.setDisabled(False)
+            self.stop_train_a.setDisabled(False)
 
             # change to the text directory of the model
             os.chdir(self.model + "/Text")
@@ -433,6 +434,16 @@ class Ui_test:
             self.train.setDisabled(True)
             self.continue_train.setDisabled(True)
             self.stop_train.setDisabled(False)
+            self.stop_train_a.setDisabled(False)
+
+            # change to the text directory of the model
+            os.chdir(self.model + "/Text")
+
+            # get the number of files in the directory
+            file_number = len(glob.glob('*')) + 1
+
+            # configure the charlist earlier
+            config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
 
             # start training process
             file_number = self.label._page.trainLines()
@@ -455,6 +466,7 @@ class Ui_test:
         self.train.setDisabled(False)
         self.continue_train.setDisabled(False)
         self.stop_train.setDisabled(True)
+        self.stop_train_a.setDisabled(True)
 
         # kill the training process
         self.process.terminate()
@@ -604,7 +616,7 @@ class Ui_test:
             self.highlight()
         else:
             self.textBrowser.undo()
-            print('\a')
+            print('\a', end="")
 
     def selectModel(self):
         """allows user to select the model they want to use"""
