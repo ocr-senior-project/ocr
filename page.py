@@ -149,7 +149,6 @@ class Page:
 
         if len(self._page_lines) == 0:
             self._image_object._ui.textBrowser.undo()
-            print('\a')
         elif len(text_lines) != len(self._page_lines):
             self._image_object._ui.textBrowser.undo()
             print('\a')
