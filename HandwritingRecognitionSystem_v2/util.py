@@ -64,7 +64,11 @@ def target_list_to_sparse_tensor(targetList):
 def LoadClasses(path):
     data = {}
     with codecs.open(path, 'r', encoding='utf-8') as cF:
-	    data = cF.read().split('\n')
+        # remove the carriage return character
+        data = ''.join(cF.read().split('\r'))
+
+        # split the data by newlines
+        data = data.split('\n')
     return data
 
 def LoadList(path):
