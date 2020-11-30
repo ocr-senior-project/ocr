@@ -145,6 +145,10 @@ class Ui_test:
         self.train = self.polygonMenu.addAction('Train Lines from Scratch with Current Data Batch (Does Not Send New Data)')
         self.train.triggered.connect(self.train_current_lines)
 
+        # continue training existing model (do not add new files to training directory)
+        self.train = self.polygonMenu.addAction('Continue Training with Current Data Batch (Does Not Send New Data)')
+        self.train.triggered.connect(self.continue_current_lines)
+
         # stop training
         self.stop_train_a = self.polygonMenu.addAction('Stop Training')
         self.stop_train_a.triggered.connect(self.stopTraining)
@@ -362,7 +366,7 @@ class Ui_test:
             self.label._page.trainLines()
 
     # train only the lines that have already been sent
-    def train_current_lines(self):
+    def train_current_lines(self, resume_training=False):
         # only train if the page is loaded
         if self.label._page:
             self.model = QtWidgets.QFileDialog.getExistingDirectory()
@@ -386,16 +390,28 @@ class Ui_test:
             # configure the charlist earlier
             config.cfg.CHAR_LIST = self.model + "/CHAR_LIST"
 
+            # the checkpoint to resume training
+            ckpt = 0
+
+            # check if were resuming or restarting
+            if resume_training:
+                ckpt = self.find_ckpt_number()
+                print(ckpt)
+
             # start training process
             self.process = Process(
                 target=train.run,
                 args=(
                     file_number,
                     self.model,
-                    0,
+                    ckpt,
                     )
                 )
             self.process.start()
+
+    # continue training without sending new data
+    def continue_current_lines(self):
+        self.train_current_lines(True)
 
     def trainLines(self, continue_training=False):
         """ train on selected polygons """
